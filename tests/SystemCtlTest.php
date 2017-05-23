@@ -126,8 +126,6 @@ EOT;
 
     public function testGetTimerWithName()
     {
-//        $output = 'testTimer.timer Active Running';
-//        $systemctl = $this->buildSystemCtlMock($output);
         $systemctl = new SystemCtl();
 
         $timer = $systemctl->getTimer('testTimer');
