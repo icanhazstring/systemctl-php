@@ -72,7 +72,7 @@ class SystemCtl
      * @param string[] $unitTypes
      * @return array|\string[]
      */
-    public function listUnits(array $unitTypes = self::AVAILABLE_UNITS): array
+    public function listUnits(array $unitTypes = self::SUPPORTED_UNITS): array
     {
         $process = $this->getProcessBuilder()
             ->add('list-units')
@@ -82,8 +82,8 @@ class SystemCtl
         $output = $process->getOutput();
 
         return array_reduce($unitTypes, function ($carry, $unitSuffix) use ($output) {
-            $carry += Utils\OutputFetcher::fetchUnitNames($unitSuffix, $output);
-            return $carry;
+            $result = Utils\OutputFetcher::fetchUnitNames($unitSuffix, $output);
+            return array_merge($carry, $result);
         }, []);
     }
 

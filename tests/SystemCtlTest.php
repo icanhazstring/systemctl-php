@@ -43,11 +43,44 @@ class SystemCtlTest extends TestCase
         return $systemctl;
     }
 
-    public function testListUnits()
+    public function testListUnitsWithAvailableUnits()
     {
-        $systemctl = new SystemCtl();
+        $output = <<<EOT
+  proc-sys-fs-binfmt_misc.timer                      loaded active mounted   Arbitrary Executable File Formats File System
+  run-rpc_pipefs.mount                               loaded active mounted   /run/rpc_pipefs
+  sys-fs-fuse-connections.mount                      loaded active mounted   FUSE Control File System
+  sys-kernel-debug.mount                             loaded active mounted   Debug File System
+  acpid.path                                         loaded active running   ACPI Events Check
+  systemd-ask-password-console.path                  loaded active waiting   Dispatch Password Requests to Console Directory Wa
+  systemd-ask-password-wall.path                     loaded active waiting   Forward Password Requests to Wall Directory Watch
+  acpid.service                                      loaded active running   ACPI event daemon
+  beanstalkd.service                                 loaded active running   Simple, fast work queue
+  console-setup.service                              loaded active exited    LSB: Set console font and keymap
+  cron.service                                       loaded active running   Regular background program processing daemon
+EOT;
+        $systemctl = $this->buildSystemCtlMock($output);
+        $units = $systemctl->listUnits(SystemCtl::AVAILABLE_UNITS);
+        $this->assertCount(11, $units);
+    }
+
+    public function testListUnitsWithSupportedUnits()
+    {
+        $output = <<<EOT
+  proc-sys-fs-binfmt_misc.timer                      loaded active mounted   Arbitrary Executable File Formats File System
+  run-rpc_pipefs.mount                               loaded active mounted   /run/rpc_pipefs
+  sys-fs-fuse-connections.mount                      loaded active mounted   FUSE Control File System
+  sys-kernel-debug.mount                             loaded active mounted   Debug File System
+  acpid.path                                         loaded active running   ACPI Events Check
+  systemd-ask-password-console.path                  loaded active waiting   Dispatch Password Requests to Console Directory Wa
+  systemd-ask-password-wall.path                     loaded active waiting   Forward Password Requests to Wall Directory Watch
+  acpid.service                                      loaded active running   ACPI event daemon
+  beanstalkd.service                                 loaded active running   Simple, fast work queue
+  console-setup.service                              loaded active exited    LSB: Set console font and keymap
+  cron.service                                       loaded active running   Regular background program processing daemon
+EOT;
+        $systemctl = $this->buildSystemCtlMock($output);
         $units = $systemctl->listUnits();
-        $this->assertTrue(count($units) > 0);
+        $this->assertCount(5, $units);
     }
 
     public function testCreateUnitFromSupportedSuffixShouldWord()

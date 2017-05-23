@@ -18,8 +18,3 @@ before_script:
 script:
   - composer cs
   - composer test -- --coverage-clover=build/logs/clover.xml --coverage-text
-
-addons:
-  apt:
-    packages:
-    - systemd
