@@ -1,4 +1,5 @@
 # systemctl-php
+[![Build Status](https://api.travis-ci.org/icanhazstring/systemctl-php.svg?branch=master)](https://travis-ci.org/icanhazstring/systemctl-php)
 PHP wrapper for systemctl (PHP7.1)
 
 ## Current supported units
