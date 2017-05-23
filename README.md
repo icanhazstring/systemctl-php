@@ -32,6 +32,17 @@ Don't worry. Simply set sudo flag to `true`.
 SystemCtl::sudo(true);
 ```
 
+## How do I start/stop/restart a unit?
+Simply is that. First we instantiate a `SystemCtl` instance an load a unit from a specific type. Here we use a `Service`. You will always get back `true` if the command succeeded. Otherwise the method will throw a `CommandFailedException`.
+
+```php
+$systemCtl = new SystemCtl();
+
+// start/stop/enable/disable/reload/restart
+$systemCtl->getService('nginx')->start();
+$systemCtl->getService('nginx')->stop();
+```
+
 # How to Contribute
 Simply clone the repo and install using `composer`
 
