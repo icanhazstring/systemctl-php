@@ -12,7 +12,7 @@ class CommandFailedException extends \Exception
      */
     public static function fromService($name, $command): CommandFailedException
     {
-        return new self(printf('Failed to %s service %s', $command, $name));
+        return new self(sprintf('Failed to %s service %s', $command, $name));
     }
 
     /**
@@ -23,6 +23,6 @@ class CommandFailedException extends \Exception
      */
     public static function fromTimer($name, $command): CommandFailedException
     {
-        return new self(printf('Failed to %s timer %s', $command, $name));
+        return new self(sprintf('Failed to %s timer %s', $command, $name));
     }
 }

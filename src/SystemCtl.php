@@ -122,14 +122,17 @@ class SystemCtl
      */
     public function getTimers(): array
     {
-        $units = $this->listUnits(['timers']);
+        $units = $this->listUnits(['timer']);
 
         return array_map(function ($unitName) {
             return new Timer($unitName, $this->getProcessBuilder());
         }, $units);
     }
 
-    public function getProcessBuilder()
+    /**
+     * @return ProcessBuilder
+     */
+    public function getProcessBuilder(): ProcessBuilder
     {
         $command = explode(' ', self::$binary);
         if (self::$sudo) {

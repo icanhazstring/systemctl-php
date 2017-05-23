@@ -11,6 +11,8 @@ interface UnitInterface
 {
     public function getName(): string;
 
+    public function start(): bool;
+
     public function stop(): bool;
 
     public function disable(): bool;

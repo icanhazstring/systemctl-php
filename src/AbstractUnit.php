@@ -37,6 +37,11 @@ abstract class AbstractUnit implements UnitInterface
      */
     abstract protected function execute(string $command): bool;
 
+    public function start(): bool
+    {
+        return $this->execute(__FUNCTION__);
+    }
+
     public function stop(): bool
     {
         return $this->execute(__FUNCTION__);

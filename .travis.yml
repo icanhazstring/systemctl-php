@@ -1,0 +1,20 @@
+language: php
+php:
+  - 7.1
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+matrix:
+  fast_finish: true
+
+before_script:
+  - composer install --no-interaction
+  - mkdir -p build/logs
+
+script:
+  - composer cs
+  - composer test -- --coverage-clover=build/logs/clover.xml --coverage-text

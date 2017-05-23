@@ -1,3 +1,6 @@
 # Composer files
 composer.phar
 vendor/
+
+# PHPUnit
+build/

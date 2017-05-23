@@ -8,10 +8,41 @@ use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\Service;
 use SystemCtl\SystemCtl;
+use SystemCtl\Timer;
 use SystemCtl\UnitInterface;
 
 class SystemCtlTest extends TestCase
 {
+    /**
+     * @param string $output
+     * @return \PHPUnit_Framework_MockObject_MockObject|SystemCtl
+     */
+    private function buildSystemCtlMock($output)
+    {
+
+        $process = $this->getMockBuilder(Process::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOutput'])
+            ->getMock();
+
+        $process->method('getOutput')->willReturn($output);
+
+        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getProcess'])
+            ->getMock();
+
+        $processBuilder->method('getProcess')->willReturn($process);
+
+        $systemctl = $this->getMockBuilder(SystemCtl::class)
+            ->setMethods(['getProcessBuilder'])
+            ->getMock();
+
+        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
+
+        return $systemctl;
+    }
+
     public function testListUnits()
     {
         $systemctl = new SystemCtl();
@@ -60,33 +91,60 @@ EOT;
         $this->assertCount(2, $services);
     }
 
-    /**
-     * @param string $output
-     * @return \PHPUnit_Framework_MockObject_MockObject|SystemCtl
-     */
-    private function buildSystemCtlMock($output)
+    public function testGetTimerWithName()
     {
+//        $output = 'testTimer.timer Active Running';
+//        $systemctl = $this->buildSystemCtlMock($output);
+        $systemctl = new SystemCtl();
 
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getOutput'])
-            ->getMock();
+        $timer = $systemctl->getTimer('testTimer');
+        $this->assertInstanceOf(Timer::class, $timer);
+        $this->assertEquals('testTimer', $timer->getName());
+    }
 
-        $process->method('getOutput')->willReturn($output);
+    public function testGetTimers()
+    {
+        $output = <<<EOT
+PLACEHOLDER STUFF
+  superservice.service      Active running
+  awesomeservice.timer      Active running
+  nonservice.timer          Active running
+PLACEHOLDER STUFF
 
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
+EOT;
 
-        $processBuilder->method('getProcess')->willReturn($process);
+        $systemctl = $this->buildSystemCtlMock($output);
+        $timers = $systemctl->getTimers();
 
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
+        $this->assertCount(2, $timers);
+    }
 
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
+    public function testSetSudoShouldChangeCommand()
+    {
+        $systemCtl = new SystemCtl();
 
-        return $systemctl;
+        $processBuilder = $systemCtl->getProcessBuilder();
+        $this->assertEquals("'/bin/systemctl'", $processBuilder->getProcess()->getCommandLine());
+
+        SystemCtl::sudo(true);
+        $processBuilder = $systemCtl->getProcessBuilder();
+        $this->assertEquals("'sudo' '/bin/systemctl'", $processBuilder->getProcess()->getCommandLine());
+    }
+
+    /**
+     * @depends testSetSudoShouldChangeCommand
+     */
+    public function testSetBinaryShouldChangeCommand()
+    {
+        // Reset sudo to default
+        SystemCtl::sudo(false);
+        $systemCtl = new SystemCtl();
+
+        $processBuilder = $systemCtl->getProcessBuilder();
+        $this->assertEquals("'/bin/systemctl'", $processBuilder->getProcess()->getCommandLine());
+
+        SystemCtl::setBinary('/usr/sbin/systemctl');
+        $processBuilder = $systemCtl->getProcessBuilder();
+        $this->assertEquals("'/usr/sbin/systemctl'", $processBuilder->getProcess()->getCommandLine());
     }
 }
