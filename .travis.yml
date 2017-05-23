@@ -19,5 +19,7 @@ script:
   - composer cs
   - composer test -- --coverage-clover=build/logs/clover.xml --coverage-text
 
-before_install:
-  - sudo apt-get install systemd -y
+addons:
+  apt:
+    packages:
+    - systemd
