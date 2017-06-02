@@ -126,12 +126,8 @@ class SystemCtl
      */
     public function getProcessBuilder(): ProcessBuilder
     {
-        $command = explode(' ', self::$binary);
-        if (self::$sudo) {
-            array_unshift($command, 'sudo');
-        }
-
-        $builder = ProcessBuilder::create($command);
+        $builder = ProcessBuilder::create();
+        $builder->setPrefix(self::$binary);
         $builder->setTimeout(3);
 
         return $builder;
