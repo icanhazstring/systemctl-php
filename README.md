@@ -26,11 +26,8 @@ SystemCtl::setBinary('/bin/systemctl');
 ```
 
 ## "I need sudo to run commands"
-Don't worry. Simply set sudo flag to `true`.
-
-```php
-SystemCtl::sudo(true);
-```
+If you need sudo, you should execute the bin executable with sudo.
+The incode support was dropped due to security reason.
 
 ## How do I start/stop/restart a unit?
 Simply is that. First we instantiate a `SystemCtl` instance an load a unit from a specific type. Here we use a `Service`. You will always get back `true` if the command succeeded. Otherwise the method will throw a `CommandFailedException`.
