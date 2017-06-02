@@ -150,25 +150,9 @@ EOT;
         $this->assertCount(2, $timers);
     }
 
-    public function testSetSudoShouldChangeCommand()
-    {
-        $systemCtl = new SystemCtl();
-
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals("'/bin/systemctl'", $processBuilder->getProcess()->getCommandLine());
-
-        SystemCtl::sudo(true);
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals("'sudo' '/bin/systemctl'", $processBuilder->getProcess()->getCommandLine());
-    }
-
-    /**
-     * @depends testSetSudoShouldChangeCommand
-     */
     public function testSetBinaryShouldChangeCommand()
     {
         // Reset sudo to default
-        SystemCtl::sudo(false);
         $systemCtl = new SystemCtl();
 
         $processBuilder = $systemCtl->getProcessBuilder();

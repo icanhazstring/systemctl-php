@@ -41,14 +41,6 @@ class SystemCtl
     }
 
     /**
-     * @param bool $flag
-     */
-    public static function sudo(bool $flag): void
-    {
-        self::$sudo = $flag;
-    }
-
-    /**
      * @param string $unitSuffix
      * @param string $unitName
      *
