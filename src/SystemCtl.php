@@ -61,14 +61,20 @@ class SystemCtl
     /**
      * List all supported units
      *
+     * @param null|string $unitPrefix
      * @param string[] $unitTypes
      * @return array|\string[]
      */
-    public function listUnits(array $unitTypes = self::SUPPORTED_UNITS): array
+    public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
     {
-        $process = $this->getProcessBuilder()
-            ->add('list-units')
-            ->getProcess();
+        $processBuilder = $this->getProcessBuilder()
+            ->add('list-units');
+
+        if ($unitPrefix) {
+            $processBuilder->add($unitPrefix . '*');
+        }
+
+        $process = $processBuilder->getProcess();
 
         $process->run();
         $output = $process->getOutput();
@@ -89,11 +95,12 @@ class SystemCtl
     }
 
     /**
-     * @return Service[]
+     * @param null|string $unitPrefix
+     * @return array|Service[]
      */
-    public function getServices(): array
+    public function getServices(?string $unitPrefix = null): array
     {
-        $units = $this->listUnits(['service']);
+        $units = $this->listUnits($unitPrefix, ['service']);
 
         return array_map(function ($unitName) {
             return new Service($unitName, $this->getProcessBuilder());
@@ -110,11 +117,12 @@ class SystemCtl
     }
 
     /**
-     * @return Timer[]
+     * @param null|string $unitPrefix
+     * @return array|Timer[]
      */
-    public function getTimers(): array
+    public function getTimers(?string $unitPrefix = null): array
     {
-        $units = $this->listUnits(['timer']);
+        $units = $this->listUnits($unitPrefix, ['timer']);
 
         return array_map(function ($unitName) {
             return new Timer($unitName, $this->getProcessBuilder());
