@@ -59,7 +59,7 @@ class SystemCtlTest extends TestCase
   cron.service                                       loaded active running
 EOT;
         $systemctl = $this->buildSystemCtlMock($output);
-        $units = $systemctl->listUnits(null,SystemCtl::AVAILABLE_UNITS);
+        $units = $systemctl->listUnits(null, SystemCtl::AVAILABLE_UNITS);
         $this->assertCount(11, $units);
     }
 
