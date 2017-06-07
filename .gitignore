@@ -4,3 +4,6 @@ vendor/
 
 # PHPUnit
 build/
+
+# Vagrant
+.vagrant
