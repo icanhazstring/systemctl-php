@@ -1,12 +1,14 @@
 <?php
 
 
-namespace SystemCtl;
+namespace SystemCtl\Unit;
 
 use SystemCtl\Exception\CommandFailedException;
 
-class Timer extends AbstractUnit
+class Service extends AbstractUnit
 {
+    public const UNIT = 'service';
+
     protected function execute(string $command): bool
     {
         $process = $this->processBuilder
@@ -16,7 +18,7 @@ class Timer extends AbstractUnit
         $process->run();
 
         if (!$process->isSuccessful()) {
-            throw CommandFailedException::fromTimer($this->getName(), $command);
+            throw CommandFailedException::fromService($this->getName(), $command);
         }
 
         return true;

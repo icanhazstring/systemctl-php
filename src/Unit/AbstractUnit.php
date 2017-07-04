@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl;
+namespace SystemCtl\Unit;
 
 use Symfony\Component\Process\ProcessBuilder;
 
@@ -24,9 +24,29 @@ abstract class AbstractUnit implements UnitInterface
         $this->processBuilder = $processBuilder;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isMultiInstance(): bool
+    {
+        return strpos($this->name, '@') !== false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInstanceName(): ?string
+    {
+        $parts = explode('@', $this->name);
+        return $parts[1] ?? null;
     }
 
     /**

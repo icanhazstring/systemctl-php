@@ -1,12 +1,13 @@
 <?php
 
-namespace SystemCtl\Test;
+namespace SystemCtl\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Exception\CommandFailedException;
 use SystemCtl\SystemCtl;
+use SystemCtl\Unit\Service;
 
 class UnitTest extends TestCase
 {
@@ -127,8 +128,27 @@ class UnitTest extends TestCase
 
         $timer = $systemctl->getTimer('AwesomeTimer');
 
-        $process->method('isSuccessful')->willReturn(false);
         $this->expectException(CommandFailedException::class);
         $timer->start();
+    }
+
+    public function testMultiInstanceUnit()
+    {
+        $process = $this->getMockBuilder(Process::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|ProcessBuilder $processBuilder */
+        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getProcess'])
+            ->getMock();
+
+        $processBuilder->method('getProcess')->willReturn($process);
+
+        $unit = new Service('service@1', $processBuilder);
+        $this->assertEquals('service@1', $unit->getName());
+        $this->assertTrue($unit->isMultiInstance());
+        $this->assertEquals('1', $unit->getInstanceName());
     }
 }

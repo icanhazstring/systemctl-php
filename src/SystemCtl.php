@@ -4,17 +4,20 @@ namespace SystemCtl;
 
 use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
+use SystemCtl\Unit\Service;
+use SystemCtl\Unit\Timer;
+use SystemCtl\Unit\UnitInterface;
 
 class SystemCtl
 {
     /** @var string systemctl binary path */
     private static $binary = '/bin/systemctl';
 
-    /** @var bool */
-    private static $sudo = false;
+    /** @var int timeout for commands */
+    private static $timeout = 3;
 
     public const AVAILABLE_UNITS = [
-        'service',
+        Service::UNIT,
         'socket',
         'device',
         'mount',
@@ -22,22 +25,34 @@ class SystemCtl
         'swap',
         'target',
         'path',
-        'timer',
+        Timer::UNIT,
         'slice',
         'scope'
     ];
 
     public const SUPPORTED_UNITS = [
-        'service',
-        'timer'
+        Service::UNIT,
+        Timer::UNIT,
     ];
 
     /**
+     * Change systemctl binary
+     *
      * @param string $binary
      */
     public static function setBinary(string $binary): void
     {
         self::$binary = $binary;
+    }
+
+    /**
+     * Change command execution timeout
+     *
+     * @param int $timeout
+     */
+    public static function setTimeout(int $timeout): void
+    {
+        self::$timeout = $timeout;
     }
 
     /**
@@ -49,13 +64,13 @@ class SystemCtl
      */
     public static function unitFromSuffix(string $unitSuffix, string $unitName): UnitInterface
     {
-        $unitClass = 'SystemCtl\\' . ucfirst($unitSuffix);
+        $unitClass = 'SystemCtl\\Unit\\' . ucfirst($unitSuffix);
 
         if (!class_exists($unitClass)) {
             throw new UnitTypeNotSupportedException('Unit type ' . $unitSuffix . ' not supported');
         }
 
-        return new $unitClass($unitName, new ProcessBuilder(['sudo', self::$binary]));
+        return new $unitClass($unitName, new ProcessBuilder([self::$binary]));
     }
 
     /**
@@ -100,7 +115,7 @@ class SystemCtl
      */
     public function getServices(?string $unitPrefix = null): array
     {
-        $units = $this->listUnits($unitPrefix, ['service']);
+        $units = $this->listUnits($unitPrefix, [Service::UNIT]);
 
         return array_map(function ($unitName) {
             return new Service($unitName, $this->getProcessBuilder());
@@ -122,7 +137,7 @@ class SystemCtl
      */
     public function getTimers(?string $unitPrefix = null): array
     {
-        $units = $this->listUnits($unitPrefix, ['timer']);
+        $units = $this->listUnits($unitPrefix, [Timer::UNIT]);
 
         return array_map(function ($unitName) {
             return new Timer($unitName, $this->getProcessBuilder());
@@ -136,7 +151,7 @@ class SystemCtl
     {
         $builder = ProcessBuilder::create();
         $builder->setPrefix(self::$binary);
-        $builder->setTimeout(3);
+        $builder->setTimeout(self::$timeout);
 
         return $builder;
     }

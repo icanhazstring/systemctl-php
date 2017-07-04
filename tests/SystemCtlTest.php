@@ -6,10 +6,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
-use SystemCtl\Service;
+use SystemCtl\Unit\Service;
 use SystemCtl\SystemCtl;
-use SystemCtl\Timer;
-use SystemCtl\UnitInterface;
+use SystemCtl\Unit\Timer;
+use SystemCtl\Unit\UnitInterface;
 
 class SystemCtlTest extends TestCase
 {
