@@ -155,4 +155,20 @@ class SystemCtl
 
         return $builder;
     }
+
+    /**
+     * Restart the daemon to reload specs and new units
+     *
+     * @return bool
+     */
+    public function daemonReload(): bool
+    {
+        $processBuilder = $this->getProcessBuilder();
+        $processBuilder->add('daemon-reload');
+
+        $process = $processBuilder->getProcess();
+        $process->run();
+
+        return $process->isSuccessful();
+    }
 }
