@@ -152,7 +152,6 @@ EOT;
 
     public function testSetBinaryShouldChangeCommand()
     {
-        // Reset sudo to default
         $systemCtl = new SystemCtl();
 
         $processBuilder = $systemCtl->getProcessBuilder();

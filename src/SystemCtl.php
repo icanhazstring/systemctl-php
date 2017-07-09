@@ -111,7 +111,7 @@ class SystemCtl
 
     /**
      * @param null|string $unitPrefix
-     * @return array|Service[]
+     * @return Service[]
      */
     public function getServices(?string $unitPrefix = null): array
     {
@@ -133,7 +133,7 @@ class SystemCtl
 
     /**
      * @param null|string $unitPrefix
-     * @return array|Timer[]
+     * @return Timer[]
      */
     public function getTimers(?string $unitPrefix = null): array
     {

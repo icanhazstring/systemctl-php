@@ -25,6 +25,14 @@ PHP wrapper for systemctl (PHP7.1)
 SystemCtl::setBinary('/bin/systemctl');
 ```
 
+## How to change command timeout
+To change command tmeout simply call the static method `setTimeout`.
+```php
+SystemCtl::setTimeout(10);
+```
+
+> The default timeout is set to `3` seconds
+
 ## "I need sudo to run commands"
 If you need sudo, you should execute the bin executable with sudo.
 The incode support was dropped due to security reason.
