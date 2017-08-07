@@ -4,10 +4,23 @@ namespace SystemCtl;
 
 use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
+use SystemCtl\Unit\AbstractUnit;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 use SystemCtl\Unit\UnitInterface;
 
+/**
+ * SystemCtl
+ *
+ * @method Service getService(string $unit)
+ * @method Timer getTimer(string $unit)
+ *
+ * @method array getServices(?string $unitPrefix = null)
+ * @method array getTimers(?string $unitPrefix = null)
+ *
+ * @package SystemCtl
+ * @author icanhazstring <blubb0r05+github@gmail.com>
+ */
 class SystemCtl
 {
     /** @var string systemctl binary path */
@@ -100,47 +113,52 @@ class SystemCtl
         }, []);
     }
 
-    /**
-     * @param string $name
-     * @return Service
-     */
-    public function getService(string $name): Service
+    public function __call($name, $arguments)
     {
-        return new Service($name, $this->getProcessBuilder());
+        preg_match('/get(?<unit>[^s]+)(?<plural>s)?/', $name, $match);
+
+        $isPlural = isset($match['plural']);
+        $unitName = strtolower($match['unit']);
+
+        if (!in_array($unitName, self::SUPPORTED_UNITS)) {
+            throw new UnitTypeNotSupportedException("Unit {$unitName} not supported");
+        }
+
+        // Singular differs requested name?
+        // Get a list of units
+        if ($isPlural) {
+            return $this->getUnits(ucfirst($unitName), $arguments);
+        }
+
+        return $this->getUnit(ucfirst($unitName), $arguments);
     }
 
     /**
-     * @param null|string $unitPrefix
-     * @return Service[]
+     * @param string $unitClass
+     * @param $args
+     * @return AbstractUnit
      */
-    public function getServices(?string $unitPrefix = null): array
+    private function getUnit(string $unitClass, $args): AbstractUnit
     {
-        $units = $this->listUnits($unitPrefix, [Service::UNIT]);
+        $args[] = $this->getProcessBuilder();
+        $className = '\SystemCtl\Unit\\' . $unitClass;
 
-        return array_map(function ($unitName) {
-            return new Service($unitName, $this->getProcessBuilder());
-        }, $units);
+        return new $className(...$args);
     }
 
     /**
-     * @param string $name
-     * @return Timer
+     * @param string $unitName
+     * @param $arguments
+     * @return array
      */
-    public function getTimer(string $name): Timer
+    private function getUnits(string $unitName, $arguments): array
     {
-        return new Timer($name, $this->getProcessBuilder());
-    }
+        $unitPrefix = $arguments[0] ?? null;
+        $units = $this->listUnits($unitPrefix, [strtolower($unitName)]);
+        $unitClass = '\SystemCtl\Unit\\' . $unitName;
 
-    /**
-     * @param null|string $unitPrefix
-     * @return Timer[]
-     */
-    public function getTimers(?string $unitPrefix = null): array
-    {
-        $units = $this->listUnits($unitPrefix, [Timer::UNIT]);
-
-        return array_map(function ($unitName) {
-            return new Timer($unitName, $this->getProcessBuilder());
+        return array_map(function ($unitName) use ($unitClass) {
+            return new $unitClass($unitName, $this->getProcessBuilder());
         }, $units);
     }
 

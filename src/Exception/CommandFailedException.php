@@ -2,27 +2,27 @@
 
 namespace SystemCtl\Exception;
 
+/**
+ * CommandFailedException
+ *
+ * @method static CommandFailedException fromService(string $unitName, string $command)
+ * @method static CommandFailedException fromTimer(string $unitName, string $command)
+ *
+ * @package SystemCtl\Exception
+ *
+ * @author icanhazstring <blubb0r05@gmail.com>
+ */
 class CommandFailedException extends \Exception
 {
-    /**
-     * @param $name
-     * @param $command
-     *
-     * @return CommandFailedException
-     */
-    public static function fromService($name, $command): CommandFailedException
+    public static function __callStatic($name, $arguments)
     {
-        return new self(sprintf('Failed to %s service %s', $command, $name));
-    }
+        preg_match('/from(?<unit>.*)/', $name, $match);
 
-    /**
-     * @param $name
-     * @param $command
-     *
-     * @return CommandFailedException
-     */
-    public static function fromTimer($name, $command): CommandFailedException
-    {
-        return new self(sprintf('Failed to %s timer %s', $command, $name));
+        $unit = strtolower($match['unit']);
+
+        $unitName = $arguments[0];
+        $command = $arguments[1];
+
+        return new self("Failed to {$command} {$unit} {$unitName}");
     }
 }

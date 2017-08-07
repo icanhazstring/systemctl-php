@@ -2,24 +2,18 @@
 
 namespace SystemCtl\Unit;
 
-use SystemCtl\Exception\CommandFailedException;
+use Symfony\Component\Process\ProcessBuilder;
 
 class Timer extends AbstractUnit
 {
     public const UNIT = 'timer';
 
-    protected function execute(string $command): bool
+    /**
+     * @inheritdoc
+     */
+    public function __construct($name, ProcessBuilder $processBuilder)
     {
-        $process = $this->processBuilder
-            ->setArguments([$command, $this->getName()])
-            ->getProcess();
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw CommandFailedException::fromTimer($this->getName(), $command);
-        }
-
-        return true;
+        parent::__construct($name, $processBuilder);
+        $this->type = self::UNIT;
     }
 }

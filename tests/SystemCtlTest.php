@@ -97,6 +97,14 @@ EOT;
         SystemCtl::unitFromSuffix('unsupported', 'FailUnit');
     }
 
+    public function testGetUnitFromUnsupportedShouldRaiseException()
+    {
+        $systemctl = $this->buildSystemCtlMock('');
+
+        $this->expectException(UnitTypeNotSupportedException::class);
+        $systemctl->getFubar('Test');
+    }
+
     public function testGetServiceWithName()
     {
         $output = 'testService.service Active Running';

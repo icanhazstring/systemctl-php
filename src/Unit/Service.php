@@ -3,24 +3,15 @@
 
 namespace SystemCtl\Unit;
 
-use SystemCtl\Exception\CommandFailedException;
+use Symfony\Component\Process\ProcessBuilder;
 
 class Service extends AbstractUnit
 {
     public const UNIT = 'service';
 
-    protected function execute(string $command): bool
+    public function __construct($name, ProcessBuilder $processBuilder)
     {
-        $process = $this->processBuilder
-            ->setArguments([$command, $this->getName()])
-            ->getProcess();
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw CommandFailedException::fromService($this->getName(), $command);
-        }
-
-        return true;
+        parent::__construct($name, $processBuilder);
+        $this->type = self::UNIT;
     }
 }

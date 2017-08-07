@@ -5,7 +5,7 @@ namespace SystemCtl\Unit;
 /**
  * UnitInterface for handling single units
  *
- * @package SystemCtl
+ * @package SystemCtl\Unit
  */
 interface UnitInterface
 {
