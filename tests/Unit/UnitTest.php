@@ -108,6 +108,12 @@ class UnitTest extends TestCase
     {
         $systemctl = $this->getSystemCtlMock(false);
         $service = $systemctl->getService('AwesomeService');
+
         $this->assertFalse($service->start(false));
+        $this->assertFalse($service->stop(false));
+        $this->assertFalse($service->disable(false));
+        $this->assertFalse($service->enable(false));
+        $this->assertFalse($service->restart(false));
+        $this->assertFalse($service->reload(false));
     }
 }

@@ -19,7 +19,7 @@ use SystemCtl\Unit\UnitInterface;
  * @method array getTimers(?string $unitPrefix = null)
  *
  * @package SystemCtl
- * @author icanhazstring <blubb0r05+github@gmail.com>
+ * @author icanhazstring frömer <blubb0r05+github@gmail.com>
  */
 class SystemCtl
 {
@@ -124,8 +124,6 @@ class SystemCtl
             throw new UnitTypeNotSupportedException("Unit {$unitName} not supported");
         }
 
-        // Singular differs requested name?
-        // Get a list of units
         if ($isPlural) {
             return $this->getUnits(ucfirst($unitName), $arguments);
         }
