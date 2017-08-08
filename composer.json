@@ -12,10 +12,8 @@
     },
     "autoload": {
         "psr-4": {
-            "SystemCtl\\": [
-                "src/",
-                "tests/"
-            ]
+            "SystemCtl\\": "src/",
+            "SystemCtl\\Test\\": "tests/"
         }
     },
     "license": "MIT",

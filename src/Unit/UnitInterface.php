@@ -33,42 +33,48 @@ interface UnitInterface
     /**
      * Start command
      *
+     * @param bool $raise Raise exception on failure instead of process result
      * @return bool
      */
-    public function start(): bool;
+    public function start(bool $raise = false): bool;
 
     /**
      * Stop command
      *
+     * @param bool $raise Raise exception on failure instead of process result
      * @return bool
      */
-    public function stop(): bool;
+    public function stop(bool $raise = false): bool;
 
     /**
      * Disable command
      *
+     * @param bool $raise Raise exception on failure instead of process result
      * @return bool
      */
-    public function disable(): bool;
+    public function disable(bool $raise = false): bool;
 
     /**
      * Reload command
      *
+     * @param bool $raise Raise exception on failure instead of process result
      * @return bool
      */
-    public function reload(): bool;
+    public function reload(bool $raise = false): bool;
 
     /**
      * Restart command
      *
+     * @param bool $raise Raise exception on failure instead of process result
      * @return bool
      */
-    public function restart(): bool;
+    public function restart(bool $raise = false): bool;
 
     /**
      * Enable command
      *
+     * @param bool $raise Raise exception on failure instead of process result
      * @return bool
      */
-    public function enable(): bool;
+    public function enable(bool $raise = false): bool;
 }

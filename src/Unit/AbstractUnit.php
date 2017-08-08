@@ -80,32 +80,50 @@ abstract class AbstractUnit implements UnitInterface
         return $process->isSuccessful();
     }
 
-    public function start(bool $raise = true): bool
+    /**
+     * @inheritdoc
+     */
+    public function start(bool $raise = false): bool
     {
         return $this->execute(__FUNCTION__, $raise);
     }
 
-    public function stop(bool $raise = true): bool
+    /**
+     * @inheritdoc
+     */
+    public function stop(bool $raise = false): bool
     {
         return $this->execute(__FUNCTION__, $raise);
     }
 
-    public function disable(bool $raise = true): bool
+    /**
+     * @inheritdoc
+     */
+    public function disable(bool $raise = false): bool
     {
         return $this->execute(__FUNCTION__, $raise);
     }
 
-    public function reload(bool $raise = true): bool
+    /**
+     * @inheritdoc
+     */
+    public function reload(bool $raise = false): bool
     {
         return $this->execute(__FUNCTION__, $raise);
     }
 
-    public function restart(bool $raise = true): bool
+    /**
+     * @inheritdoc
+     */
+    public function restart(bool $raise = false): bool
     {
         return $this->execute(__FUNCTION__, $raise);
     }
 
-    public function enable(bool $raise = true): bool
+    /**
+     * @inheritdoc
+     */
+    public function enable(bool $raise = false): bool
     {
         return $this->execute(__FUNCTION__, $raise);
     }

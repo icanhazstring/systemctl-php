@@ -89,11 +89,11 @@ class SystemCtl
     /**
      * List all supported units
      *
-     * @param null|string $unitPrefix
      * @param string[] $unitTypes
-     * @return array|\string[]
+     * @param null|string $unitPrefix
+     * @return array
      */
-    public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
+    public function listUnits(array $unitTypes, ?string $unitPrefix = null): array
     {
         $processBuilder = $this->getProcessBuilder()
             ->add('list-units');
@@ -113,6 +113,15 @@ class SystemCtl
         }, []);
     }
 
+    /**
+     * Invoke getUnit or getUnits depending on the requested method.
+     * The method name needs to contain the unit type u want to call.
+     * 
+     * @param $name
+     * @param $arguments
+     * @return array|AbstractUnit
+     * @throws UnitTypeNotSupportedException
+     */
     public function __call($name, $arguments)
     {
         preg_match('/get(?<unit>[^s]+)(?<plural>s)?/', $name, $match);
@@ -121,7 +130,7 @@ class SystemCtl
         $unitName = strtolower($match['unit']);
 
         if (!in_array($unitName, self::SUPPORTED_UNITS)) {
-            throw new UnitTypeNotSupportedException("Unit {$unitName} not supported");
+            throw new UnitTypeNotSupportedException("Unit '{$unitName}'' not supported");
         }
 
         if ($isPlural) {
@@ -152,7 +161,7 @@ class SystemCtl
     private function getUnits(string $unitName, $arguments): array
     {
         $unitPrefix = $arguments[0] ?? null;
-        $units = $this->listUnits($unitPrefix, [strtolower($unitName)]);
+        $units = $this->listUnits([strtolower($unitName)], $unitPrefix);
         $unitClass = '\SystemCtl\Unit\\' . $unitName;
 
         return array_map(function ($unitName) use ($unitClass) {

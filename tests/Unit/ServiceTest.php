@@ -5,10 +5,10 @@ namespace SystemCtl\Test\Unit;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
+use SystemCtl\Exception\CommandFailedException;
 use SystemCtl\SystemCtl;
-use SystemCtl\Unit\Service;
 
-class UnitTest extends TestCase
+class ServiceTest extends TestCase
 {
     protected function getSystemCtlMock(bool $processState = true): SystemCtl
     {
@@ -35,36 +35,28 @@ class UnitTest extends TestCase
         return $systemctl;
     }
 
-    public function testMultiInstanceUnit()
+    public function testServiceCommandsIfProcessIsSuccessfulShouldReturnTrue()
     {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|ProcessBuilder $processBuilder */
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
-
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        $unit = new Service('service@1', $processBuilder);
-        $this->assertEquals('service@1', $unit->getName());
-        $this->assertTrue($unit->isMultiInstance());
-        $this->assertEquals('1', $unit->getInstanceName());
-    }
-
-    public function testProcessShouldReturnExitCode()
-    {
-        $systemctl = $this->getSystemCtlMock(false);
+        $systemctl = $this->getSystemCtlMock();
         $service = $systemctl->getService('AwesomeService');
 
-        $this->assertFalse($service->start());
-        $this->assertFalse($service->stop());
-        $this->assertFalse($service->disable());
-        $this->assertFalse($service->enable());
-        $this->assertFalse($service->restart());
-        $this->assertFalse($service->reload());
+        $this->assertTrue($service->start());
+        $this->assertTrue($service->stop());
+        $this->assertTrue($service->enable());
+        $this->assertTrue($service->disable());
+        $this->assertTrue($service->reload());
+        $this->assertTrue($service->restart());
+    }
+
+    public function testServiceCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    {
+        $systemctl = $this->getSystemCtlMock(false);
+
+        $service = $systemctl->getService('AwesomeService');
+
+        $this->expectException(CommandFailedException::class);
+        $this->expectExceptionMessage('Failed to start service AwesomeService');
+
+        $service->start(true);
     }
 }
