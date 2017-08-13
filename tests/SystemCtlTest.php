@@ -63,6 +63,43 @@ EOT;
         $this->assertCount(11, $units);
     }
 
+    public function testListUnitsWithAvailableUnitsAndPrefix()
+    {
+        $process = $this->getMockBuilder(Process::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOutput'])
+            ->getMock();
+
+        $process->method('getOutput')->willReturn('');
+
+        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
+            ->setMethods(['add', 'getProcesS'])
+            ->getMock();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
+        $systemctl = $this->getMockBuilder(SystemCtl::class)
+            ->setMethods(['getProcessBuilder'])
+            ->getMock();
+
+        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
+
+        $processBuilder->method('getProcess')->willReturn($process);
+
+        $processBuilder
+            ->expects(self::at(0))
+            ->method('add')
+            ->with('list-units')
+            ->willReturn($processBuilder);
+
+        $processBuilder
+            ->expects(self::at(1))
+            ->method('add')
+            ->with('sys*')
+            ->willReturn($processBuilder);
+
+        $systemctl->listUnits(SystemCtl::AVAILABLE_UNITS, 'sys');
+    }
+
     public function testListUnitsWithSupportedUnits()
     {
         $output = <<<EOT
@@ -168,5 +205,46 @@ EOT;
         SystemCtl::setBinary('/usr/sbin/systemctl');
         $processBuilder = $systemCtl->getProcessBuilder();
         $this->assertEquals("'/usr/sbin/systemctl'", $processBuilder->getProcess()->getCommandLine());
+    }
+
+    public function testSetTimeoutShouldChangeCommandTimeout()
+    {
+        $systemCtl = new SystemCtl();
+        $processBuilder = $systemCtl->getProcessBuilder();
+        $this->assertEquals(3, $processBuilder->getProcess()->getTimeout());
+
+        SystemCtl::setTimeout(5);
+        $processBuilder = $systemCtl->getProcessBuilder();
+        $this->assertEquals(5, $processBuilder->getProcess()->getTimeout());
+    }
+
+    public function testDaemonReload()
+    {
+        $process = $this->getMockBuilder(Process::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isSuccessful'])
+            ->getMock();
+
+        $process->method('isSuccessful')->willReturn(true);
+
+        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
+            ->setMethods(['add', 'getProcess'])
+            ->getMock();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
+        $systemctl = $this->getMockBuilder(SystemCtl::class)
+            ->setMethods(['getProcessBuilder'])
+            ->getMock();
+
+        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
+
+        $processBuilder->method('getProcess')->willReturn($process);
+
+        $processBuilder
+            ->method('add')
+            ->with('daemon-reload')
+            ->willReturn($processBuilder);
+
+        $this->assertTrue($systemctl->daemonReload());
     }
 }

@@ -19,7 +19,7 @@ use SystemCtl\Unit\UnitInterface;
  * @method array getTimers(?string $unitPrefix = null)
  *
  * @package SystemCtl
- * @author icanhazstring frömer <blubb0r05+github@gmail.com>
+ * @author icanhazstring <blubb0r05+github@gmail.com>
  */
 class SystemCtl
 {
@@ -116,7 +116,7 @@ class SystemCtl
     /**
      * Invoke getUnit or getUnits depending on the requested method.
      * The method name needs to contain the unit type u want to call.
-     * 
+     *
      * @param $name
      * @param $arguments
      * @return array|AbstractUnit
