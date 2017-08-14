@@ -16,6 +16,9 @@ class SystemCtl
     /** @var int timeout for commands */
     private static $timeout = 3;
 
+    /**
+     * @var array
+     */
     public const AVAILABLE_UNITS = [
         Service::UNIT,
         'socket',
@@ -27,13 +30,21 @@ class SystemCtl
         'path',
         Timer::UNIT,
         'slice',
-        'scope'
+        'scope',
     ];
 
+    /**
+     * @var array
+     */
     public const SUPPORTED_UNITS = [
         Service::UNIT,
         Timer::UNIT,
     ];
+
+    /**
+     * @var bool
+     */
+    private $useSudo = false;
 
     /**
      * Change systemctl binary
@@ -102,6 +113,7 @@ class SystemCtl
 
     /**
      * @param string $name
+     *
      * @return Service
      */
     public function getService(string $name): Service
@@ -111,6 +123,7 @@ class SystemCtl
 
     /**
      * @param null|string $unitPrefix
+     *
      * @return Service[]
      */
     public function getServices(?string $unitPrefix = null): array
@@ -124,6 +137,7 @@ class SystemCtl
 
     /**
      * @param string $name
+     *
      * @return Timer
      */
     public function getTimer(string $name): Timer
@@ -150,10 +164,24 @@ class SystemCtl
     public function getProcessBuilder(): ProcessBuilder
     {
         $builder = ProcessBuilder::create();
-        $builder->setPrefix(self::$binary);
+        $builder->setPrefix($this->getProcessPrefix());
         $builder->setTimeout(self::$timeout);
 
         return $builder;
+    }
+
+    /**
+     * @return string
+     */
+    private function getProcessPrefix(): string
+    {
+        $result = self::$binary;
+
+        if ($this->useSudo) {
+            $result = 'sudo ' . $result;
+        }
+
+        return $result;
     }
 
     /**
@@ -171,4 +199,25 @@ class SystemCtl
 
         return $process->isSuccessful();
     }
+
+    /**
+     * @return bool
+     */
+    public function isUseSudo(): bool
+    {
+        return $this->useSudo;
+    }
+
+    /**
+     * @param bool $useSudo
+     *
+     * @return SystemCtl
+     */
+    public function setUseSudo(bool $useSudo): SystemCtl
+    {
+        $this->useSudo = $useSudo;
+
+        return $this;
+    }
+
 }
