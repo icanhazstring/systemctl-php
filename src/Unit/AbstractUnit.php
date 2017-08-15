@@ -129,4 +129,42 @@ abstract class AbstractUnit implements UnitInterface
     {
         return $this->execute(__FUNCTION__, $raise);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function isActive(bool $raise = false): bool
+    {
+        $process = $this->processBuilder
+            ->setArguments(['is-active', $this->getName()])
+            ->getProcess();
+
+        $process->run();
+
+        if (!$process->isSuccessful() && $raise) {
+            $exceptionCall = CommandFailedException::class . '::from' . ucfirst($this->type);
+            throw call_user_func_array($exceptionCall, [$this->getName(), 'is-active']);
+        }
+
+        return trim($process->getOutput()) === 'active';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isEnabled(bool $raise = false): bool
+    {
+        $process = $this->processBuilder
+            ->setArguments(['is-enabled', $this->getName()])
+            ->getProcess();
+
+        $process->run();
+
+        if (!$process->isSuccessful() && $raise) {
+            $exceptionCall = CommandFailedException::class . '::from' . ucfirst($this->type);
+            throw call_user_func_array($exceptionCall, [$this->getName(), 'is-enabled']);
+        }
+
+        return trim($process->getOutput()) === 'enabled';
+    }
 }

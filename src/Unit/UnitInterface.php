@@ -34,6 +34,7 @@ interface UnitInterface
      * Start command
      *
      * @param bool $raise Raise exception on failure instead of process result
+     *
      * @return bool
      */
     public function start(bool $raise = false): bool;
@@ -42,6 +43,7 @@ interface UnitInterface
      * Stop command
      *
      * @param bool $raise Raise exception on failure instead of process result
+     *
      * @return bool
      */
     public function stop(bool $raise = false): bool;
@@ -50,6 +52,7 @@ interface UnitInterface
      * Disable command
      *
      * @param bool $raise Raise exception on failure instead of process result
+     *
      * @return bool
      */
     public function disable(bool $raise = false): bool;
@@ -58,6 +61,7 @@ interface UnitInterface
      * Reload command
      *
      * @param bool $raise Raise exception on failure instead of process result
+     *
      * @return bool
      */
     public function reload(bool $raise = false): bool;
@@ -66,6 +70,7 @@ interface UnitInterface
      * Restart command
      *
      * @param bool $raise Raise exception on failure instead of process result
+     *
      * @return bool
      */
     public function restart(bool $raise = false): bool;
@@ -74,7 +79,26 @@ interface UnitInterface
      * Enable command
      *
      * @param bool $raise Raise exception on failure instead of process result
+     *
      * @return bool
      */
     public function enable(bool $raise = false): bool;
+
+    /**
+     * Check whether unit is active
+     *
+     * @param bool $raise Raise exception on failure instead of process result
+     *
+     * @return bool
+     */
+    public function isActive(bool $raise = false): bool;
+
+    /**
+     * Check whether unit is enabled
+     *
+     * @param bool $raise Raise exception on failure instead of process result
+     *
+     * @return bool
+     */
+    public function isEnabled(bool $raise = false): bool;
 }

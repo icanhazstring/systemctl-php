@@ -10,11 +10,11 @@ use SystemCtl\Unit\Service;
 
 class UnitTest extends TestCase
 {
-    protected function getSystemCtlMock(bool $processState = true): SystemCtl
+    protected function getSystemCtlMock(bool $processState = true, string $processOutput = ''): SystemCtl
     {
         $process = $this->getMockBuilder(Process::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isSuccessful'])
+            ->setMethods(['isSuccessful', 'getOutput'])
             ->getMock();
 
         $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
@@ -31,6 +31,7 @@ class UnitTest extends TestCase
 
         $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
         $process->method('isSuccessful')->willReturn($processState);
+        $process->method('getOutput')->willReturn($processOutput);
 
         return $systemctl;
     }
@@ -66,5 +67,31 @@ class UnitTest extends TestCase
         $this->assertFalse($service->enable());
         $this->assertFalse($service->restart());
         $this->assertFalse($service->reload());
+    }
+
+    public function testIsEnabled()
+    {
+        $systemctl = $this->getSystemCtlMock(true, 'enabled');
+        $service = $systemctl->getService('TestService');
+
+        $this->assertTrue($service->isEnabled());
+
+        $systemctl = $this->getSystemCtlMock(true, 'disabled');
+        $service = $systemctl->getService('TestService');
+
+        $this->assertFalse($service->isEnabled());
+    }
+
+    public function testIsActive()
+    {
+        $systemctl = $this->getSystemCtlMock(true, 'active');
+        $service = $systemctl->getService('TestService');
+
+        $this->assertTrue($service->isActive());
+
+        $systemctl = $this->getSystemCtlMock(true, 'inactive');
+        $service = $systemctl->getService('TestService');
+
+        $this->assertFalse($service->isActive());
     }
 }
