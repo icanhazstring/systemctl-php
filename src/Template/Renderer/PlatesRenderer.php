@@ -1,8 +1,10 @@
 <?php
 
-namespace SystemCtl\Template;
+namespace SystemCtl\Template\Renderer;
 
 use League\Plates;
+use SystemCtl\Template\RendererInterface;
+use SystemCtl\Template\AbstractUnitTemplate;
 
 /**
  * PlatesRenderer
@@ -29,8 +31,8 @@ class PlatesRenderer implements RendererInterface
     /**
      * @inheritdoc
      */
-    public function render(string $templateFile, UnitTemplate $unitTemplate): string
+    public function render(string $templateFile, AbstractUnitTemplate $unitTemplate): string
     {
-        return $this->engine->render($templateFile, ['unitTemplate' => $unitTemplate]);
+        return $this->engine->render($templateFile, ['sections' => $unitTemplate->getDefinitions()]);
     }
 }

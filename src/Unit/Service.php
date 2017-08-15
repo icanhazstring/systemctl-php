@@ -13,7 +13,6 @@ class Service extends AbstractUnit
      */
     public function __construct($name, ProcessBuilder $processBuilder)
     {
-        parent::__construct($name, $processBuilder);
-        $this->type = self::UNIT;
+        parent::__construct($name, self::UNIT, $processBuilder);
     }
 }

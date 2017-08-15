@@ -1,11 +1,12 @@
 <?php
 
-namespace SystemCtl\Test\Template;
+namespace SystemCtl\Test\Template\Renderer;
 
 use League\Plates\Engine;
 use PHPUnit\Framework\TestCase;
-use SystemCtl\Template\PlatesRenderer;
-use SystemCtl\Template\UnitTemplate;
+use SystemCtl\Template\Renderer\PlatesRenderer;
+use SystemCtl\Template\Section\ServiceSection;
+use SystemCtl\Template\ServiceUnitTemplate;
 use Vfs\FileSystem;
 use Vfs\Node\Directory;
 use Vfs\Node\File;
@@ -14,7 +15,7 @@ class PlatesRendererTest extends TestCase
 {
     /** @var FileSystem */
     protected static $fileSystem;
-    
+
     /**
      * @inheritDoc
      */
@@ -25,7 +26,7 @@ class PlatesRendererTest extends TestCase
 
         self::$fileSystem->get('/')->add('assets', new Directory());
         self::$fileSystem->get('/assets/')->add('unit-template.tpl', new File(
-            file_get_contents(__DIR__ . '/../assets/test-minimal.tpl')
+            file_get_contents(__DIR__ . '/../../../assets/unit-template.tpl')
         ));
     }
 
@@ -39,18 +40,22 @@ class PlatesRendererTest extends TestCase
         $engine = new Engine('vfs://assets/', 'tpl');
         $renderer = new PlatesRenderer($engine);
 
-        $unitTemplate = new UnitTemplate('test', 'vfs://');
-        $unitTemplate->setExecStart('/test/command/start');
+        $unitTemplate = new ServiceUnitTemplate('test');
+
+        $unitTemplate->getUnitSection()->setDescription('TestDescription');
+        $unitTemplate->getServiceSection()->setType(ServiceSection::TYPE_SIMPLE);
+        $unitTemplate->getInstallSection()->setWantedBy(['multi-user.target']);
 
         $result = $renderer->render('unit-template', $unitTemplate);
         $this->assertEquals(<<<EOT
 [Unit]
-
-[Service]
-
+Description=TestDescription
 [Install]
 WantedBy=multi-user.target
+[Service]
+Type=simple
+
 EOT
-        , $result);
+            , $result);
     }
 }

@@ -19,13 +19,15 @@ abstract class AbstractUnit implements UnitInterface
     /**
      * Create new service with given name
      *
-     * @param string $name
+     * @param string         $name
+     * @param string         $type
      * @param ProcessBuilder $processBuilder
      */
-    public function __construct(string $name, ProcessBuilder $processBuilder)
+    public function __construct(string $name, string $type, ProcessBuilder $processBuilder)
     {
         $this->name = $name;
         $this->processBuilder = $processBuilder;
+        $this->type = $type;
     }
 
     /**
