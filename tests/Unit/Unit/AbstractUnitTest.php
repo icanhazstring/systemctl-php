@@ -179,8 +179,10 @@ class AbstractUnitTest extends TestCase
      * @test
      * @dataProvider itShouldReturnFalseIfServiceEnabledCommandOutputDoesNotEqualEnabledDataProvider
      */
-    public function itShouldReturnFalseIfServiceEnabledCommandOutputDoesNotEqualEnabled($commandSuccessful, $commandOutput)
-    {
+    public function itShouldReturnFalseIfServiceEnabledCommandOutputDoesNotEqualEnabled(
+        $commandSuccessful,
+        $commandOutput
+    ) {
         $processBuilderStub = $this->buildProcessBuilderMock($commandSuccessful, $commandOutput);
         $processBuilderStub->setArguments(['is-enabled', static::SERVICE_NAME,])->willReturn($processBuilderStub);
 
@@ -243,7 +245,10 @@ class AbstractUnitTest extends TestCase
      * @test
      * @dataProvider itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActiveDataProvider
      */
-    public function itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActive($commandSuccessful, $commandOutput)
+    public function itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActive(
+        $commandSuccessful,
+        $commandOutput
+    )
     {
         $processBuilderStub = $this->buildProcessBuilderMock($commandSuccessful, $commandOutput);
         $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
