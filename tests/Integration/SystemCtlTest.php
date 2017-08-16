@@ -84,40 +84,6 @@ EOT;
         $this->assertCount(2, $services);
     }
 
-    /**
-     * @return array
-     */
-    public function getTimerWithNameDataProvider()
-    {
-        $textToSearchFor = 'testTimer';
-
-        return [
-            [
-                'output' => '
-                testService.service Active Running
-                ',
-                'timer_name' => $textToSearchFor,
-            ],
-            [
-                'output' => '
-                testService.service Active Running
-                lalal.service Active Running
-                huiii.service Active Running
-                ',
-                'timer_name' => $textToSearchFor,
-            ],
-            [
-                'output' => '
-                testService.service Active Running
-                testService.timer Active Running
-                testService.mount Active Running
-                testService.service Active Running
-                ',
-                'timer_name' => $textToSearchFor,
-            ],
-        ];
-    }
-
     public function testGetTimers()
     {
         $output = <<<EOT
