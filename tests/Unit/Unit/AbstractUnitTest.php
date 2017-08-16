@@ -248,8 +248,7 @@ class AbstractUnitTest extends TestCase
     public function itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActive(
         $commandSuccessful,
         $commandOutput
-    )
-    {
+    ) {
         $processBuilderStub = $this->buildProcessBuilderMock($commandSuccessful, $commandOutput);
         $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
 
