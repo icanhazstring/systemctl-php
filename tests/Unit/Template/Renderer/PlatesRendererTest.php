@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Template\Renderer;
+namespace SystemCtl\Test\Unit\Template\Renderer;
 
 use League\Plates\Engine;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +26,7 @@ class PlatesRendererTest extends TestCase
 
         self::$fileSystem->get('/')->add('assets', new Directory());
         self::$fileSystem->get('/assets/')->add('unit-template.tpl', new File(
-            file_get_contents(__DIR__ . '/../../../assets/unit-template.tpl')
+            file_get_contents(__DIR__ . '/../../../../assets/unit-template.tpl')
         ));
     }
 

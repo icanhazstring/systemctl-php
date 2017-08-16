@@ -6,6 +6,9 @@ use Symfony\Component\Process\ProcessBuilder;
 
 class Timer extends AbstractUnit
 {
+    /**
+     * @var string
+     */
     public const UNIT = 'timer';
 
     /**

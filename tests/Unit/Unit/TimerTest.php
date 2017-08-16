@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit;
+namespace SystemCtl\Test\Unit\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -38,7 +38,6 @@ class TimerTest extends TestCase
     public function testTimerCommandsIfProcessIsSuccessfulShouldReturnTrue()
     {
         $systemctl = $this->getSystemCtlMock();
-
         $timer = $systemctl->getTimer('AwesomeTimer');
 
         $this->assertTrue($timer->start());
@@ -53,8 +52,9 @@ class TimerTest extends TestCase
     {
         $systemctl = $this->getSystemCtlMock(false);
         $timer = $systemctl->getTimer('AwesomeTimer');
+        $timer->yell(true);
 
         $this->expectException(CommandFailedException::class);
-        $timer->start(true);
+        $timer->start();
     }
 }

@@ -1,42 +1,42 @@
 <?php
 
-namespace SystemCtl\Test\Template;
+namespace SystemCtl\Test\Unit\Template;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Template\Section\InstallSection;
-use SystemCtl\Template\Section\ServiceSection;
+use SystemCtl\Template\Section\TimerSection;
 use SystemCtl\Template\Section\UnitSection;
-use SystemCtl\Template\ServiceUnitTemplate;
-use SystemCtl\Unit\Service;
+use SystemCtl\Template\TimerUnitTemplate;
+use SystemCtl\Unit\Timer;
 
-class ServiceUnitTemplateTest extends TestCase
+class TimerUnitTemplateTest extends TestCase
 {
     public function testSimpleUnitCreation()
     {
-        $unitTemplate = new ServiceUnitTemplate('TestService');
+        $unitTemplate = new TimerUnitTemplate('TestTimer');
 
-        $this->assertInstanceOf(ServiceUnitTemplate::class, $unitTemplate);
-        $this->assertEquals(Service::UNIT, $unitTemplate->getUnitSuffix());
-        $this->assertEquals('TestService', $unitTemplate->getName());
+        $this->assertInstanceOf(TimerUnitTemplate::class, $unitTemplate);
+        $this->assertEquals(Timer::UNIT, $unitTemplate->getUnitSuffix());
+        $this->assertEquals('TestTimer', $unitTemplate->getName());
     }
 
     public function testEmptySectionAfterCreation()
     {
-        $unitTemplate = new ServiceUnitTemplate('TestService');
+        $unitTemplate = new TimerUnitTemplate('TestTimer');
 
         $this->assertInstanceOf(UnitSection::class, $unitTemplate->getUnitSection());
         $this->assertInstanceOf(InstallSection::class, $unitTemplate->getInstallSection());
-        $this->assertInstanceOf(ServiceSection::class, $unitTemplate->getServiceSection());
+        $this->assertInstanceOf(TimerSection::class, $unitTemplate->getTimerSection());
 
         $this->assertEmpty($unitTemplate->getDefinitions());
         $this->assertEmpty($unitTemplate->getUnitSection()->getProperties());
         $this->assertEmpty($unitTemplate->getInstallSection()->getProperties());
-        $this->assertEmpty($unitTemplate->getServiceSection()->getProperties());
+        $this->assertEmpty($unitTemplate->getTimerSection()->getProperties());
     }
 
     public function testUnitCreationWithSections()
     {
-        $unitTemplate = new ServiceUnitTemplate('TestService');
+        $unitTemplate = new TimerUnitTemplate('TestTimer');
 
         $unitTemplate
             ->getUnitSection()
@@ -46,11 +46,11 @@ class ServiceUnitTemplateTest extends TestCase
         $this->assertArrayHasKey('Unit', $unitTemplate->getDefinitions());
 
         $unitTemplate
-            ->getServiceSection()
-            ->setType(ServiceSection::TYPE_FORKING);
+            ->getTimerSection()
+            ->setUnit('superservice');
 
         $this->assertCount(2, $unitTemplate->getDefinitions());
-        $this->assertArrayHasKey('Service', $unitTemplate->getDefinitions());
+        $this->assertArrayHasKey('Timer', $unitTemplate->getDefinitions());
 
         $unitTemplate
             ->getInstallSection()
@@ -61,6 +61,6 @@ class ServiceUnitTemplateTest extends TestCase
 
         $this->assertNotEmpty($unitTemplate->getUnitSection()->getProperties());
         $this->assertNotEmpty($unitTemplate->getInstallSection()->getProperties());
-        $this->assertNotEmpty($unitTemplate->getServiceSection()->getProperties());
+        $this->assertNotEmpty($unitTemplate->getTimerSection()->getProperties());
     }
 }

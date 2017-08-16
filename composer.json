@@ -14,12 +14,16 @@
     },
     "autoload": {
         "psr-4": {
-            "SystemCtl\\": "src/"
+            "SystemCtl\\": [
+                "src/"
+            ]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SystemCtl\\Test\\": "tests/"
+            "SystemCtl\\Tests\\": [
+                "tests/"
+            ]
         }
     },
     "license": "MIT",

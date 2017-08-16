@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Template\Section;
+namespace SystemCtl\Test\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Exception\PropertyNotSupportedException;

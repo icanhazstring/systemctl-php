@@ -2,19 +2,23 @@
 
 namespace SystemCtl\Unit;
 
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Exception\CommandFailedException;
 
 abstract class AbstractUnit implements UnitInterface
 {
     /** @var string */
-    protected $type;
-
-    /** @var string */
     private $name;
 
+    /** @var string */
+    private $type;
+
     /** @var ProcessBuilder */
-    protected $processBuilder;
+    private $processBuilder;
+
+    /** @var bool */
+    private $yell = false;
 
     /**
      * Create new service with given name
@@ -39,6 +43,16 @@ abstract class AbstractUnit implements UnitInterface
     }
 
     /**
+     * Set a flag whether to yell with an exception if an command failes or not
+     *
+     * @param $state
+     */
+    public function yell($state)
+    {
+        $this->yell = $state;
+    }
+
+    /**
      * @inheritDoc
      */
     public function isMultiInstance(): bool
@@ -48,33 +62,35 @@ abstract class AbstractUnit implements UnitInterface
 
     /**
      * @inheritDoc
+     * @todo: Everything in here should happen inside the constructor and stored
+     *      afterwards.
      */
     public function getInstanceName(): ?string
     {
-        $parts = explode('@', $this->name);
-        return $parts[1] ?? null;
+        $instanceName = explode('@', $this->name, 2)[1] ?? null;
+
+        if (is_string($instanceName) && strpos($instanceName, '.') !== false) {
+            $instanceName = explode('.', $instanceName, 2)[0];
+        }
+
+        return $instanceName;
     }
 
     /**
      * Execute a single command
      *
      * @param string $command
-     * @param bool $raise
      *
      * @throws CommandFailedException Raised if process was not successful and user wants to raise exception
      *                                instead of returning the actual process exit code
      *
      * @return bool
      */
-    protected function execute(string $command, bool $raise = true): bool
+    protected function execute(string $command): bool
     {
-        $process = $this->processBuilder
-            ->setArguments([$command, $this->getName()])
-            ->getProcess();
+        $process = $this->runCommandAgainstService($command);
 
-        $process->run();
-
-        if (!$process->isSuccessful() && $raise) {
+        if (!$process->isSuccessful() && $this->yell) {
             $exceptionCall = CommandFailedException::class . '::from' . ucfirst($this->type);
             throw call_user_func_array($exceptionCall, [$this->getName(), $command]);
         }
@@ -83,88 +99,94 @@ abstract class AbstractUnit implements UnitInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $command
+     *
+     * @return Process
      */
-    public function start(bool $raise = false): bool
-    {
-        return $this->execute(__FUNCTION__, $raise);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function stop(bool $raise = false): bool
-    {
-        return $this->execute(__FUNCTION__, $raise);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function disable(bool $raise = false): bool
-    {
-        return $this->execute(__FUNCTION__, $raise);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function reload(bool $raise = false): bool
-    {
-        return $this->execute(__FUNCTION__, $raise);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function restart(bool $raise = false): bool
-    {
-        return $this->execute(__FUNCTION__, $raise);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function enable(bool $raise = false): bool
-    {
-        return $this->execute(__FUNCTION__, $raise);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isActive(bool $raise = false): bool
+    protected function runCommandAgainstService(string $command): Process
     {
         $process = $this->processBuilder
-            ->setArguments(['is-active', $this->getName()])
+            ->setArguments([$command, $this->getName()])
             ->getProcess();
 
         $process->run();
 
-        if (!$process->isSuccessful() && $raise) {
-            $exceptionCall = CommandFailedException::class . '::from' . ucfirst($this->type);
-            throw call_user_func_array($exceptionCall, [$this->getName(), 'is-active']);
-        }
-
-        return trim($process->getOutput()) === 'active';
+        return $process;
     }
 
     /**
-     * @inheritDoc
+     * @return bool
      */
-    public function isEnabled(bool $raise = false): bool
+    public function start(): bool
     {
-        $process = $this->processBuilder
-            ->setArguments(['is-enabled', $this->getName()])
-            ->getProcess();
+        return $this->execute(__FUNCTION__);
+    }
 
-        $process->run();
+    /**
+     * @return bool
+     */
+    public function stop(): bool
+    {
+        return $this->execute(__FUNCTION__);
+    }
 
-        if (!$process->isSuccessful() && $raise) {
-            $exceptionCall = CommandFailedException::class . '::from' . ucfirst($this->type);
-            throw call_user_func_array($exceptionCall, [$this->getName(), 'is-enabled']);
-        }
+    /**
+     * @return bool
+     */
+    public function disable(): bool
+    {
+        return $this->execute(__FUNCTION__);
+    }
 
-        return trim($process->getOutput()) === 'enabled';
+    /**
+     * @return bool
+     */
+    public function reload(): bool
+    {
+        return $this->execute(__FUNCTION__);
+    }
+
+    /**
+     * @return bool
+     */
+    public function restart(): bool
+    {
+        return $this->execute(__FUNCTION__);
+    }
+
+    /**
+     * @return bool
+     */
+    public function enable(): bool
+    {
+        return $this->execute(__FUNCTION__);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        $process = $this->runCommandAgainstService('is-enabled');
+
+        return $process->isSuccessful() && trim($process->getOutput()) === 'enabled';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        $process = $this->runCommandAgainstService('is-active');
+
+        return $process->isSuccessful() && trim($process->getOutput()) === 'active';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRunning(): bool
+    {
+        return $this->isActive();
     }
 }

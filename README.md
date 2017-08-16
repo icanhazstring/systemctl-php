@@ -18,6 +18,8 @@ PHP wrapper for systemctl (PHP7.1)
 - disable
 - reload
 - restart
+- isEnabled
+- isActive
 
 > If you like to add support for more commands, feel free to contribute.
 

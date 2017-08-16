@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Utils;
+namespace SystemCtl\Test\Unit\Utils;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Utils\DefinitionConverter;

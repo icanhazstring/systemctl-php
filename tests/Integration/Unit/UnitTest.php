@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit;
+namespace SystemCtl\Test\Integration\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -67,31 +67,5 @@ class UnitTest extends TestCase
         $this->assertFalse($service->enable());
         $this->assertFalse($service->restart());
         $this->assertFalse($service->reload());
-    }
-
-    public function testIsEnabled()
-    {
-        $systemctl = $this->getSystemCtlMock(true, 'enabled');
-        $service = $systemctl->getService('TestService');
-
-        $this->assertTrue($service->isEnabled());
-
-        $systemctl = $this->getSystemCtlMock(true, 'disabled');
-        $service = $systemctl->getService('TestService');
-
-        $this->assertFalse($service->isEnabled());
-    }
-
-    public function testIsActive()
-    {
-        $systemctl = $this->getSystemCtlMock(true, 'active');
-        $service = $systemctl->getService('TestService');
-
-        $this->assertTrue($service->isActive());
-
-        $systemctl = $this->getSystemCtlMock(true, 'inactive');
-        $service = $systemctl->getService('TestService');
-
-        $this->assertFalse($service->isActive());
     }
 }

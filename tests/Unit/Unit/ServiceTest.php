@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit;
+namespace SystemCtl\Test\Unit\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -53,10 +53,11 @@ class ServiceTest extends TestCase
         $systemctl = $this->getSystemCtlMock(false);
 
         $service = $systemctl->getService('AwesomeService');
+        $service->yell(true);
 
         $this->expectException(CommandFailedException::class);
         $this->expectExceptionMessage('Failed to start service AwesomeService');
 
-        $service->start(true);
+        $service->start();
     }
 }
