@@ -145,4 +145,156 @@ class AbstractUnitTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnTrueIfServiceEnabledCommandRanSuccessfully()
+    {
+        $processBuilderStub = $this->buildProcessBuilderMock(true, 'enabled');
+        $processBuilderStub->setArguments(['is-enabled', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+
+        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+
+        $this->assertTrue($unit->isEnabled());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnFalseIfServiceEnabledCommandFailed()
+    {
+        $processBuilderStub = $this->buildProcessBuilderMock(false, 'enabled');
+        $processBuilderStub->setArguments(['is-enabled', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+
+        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+
+        $this->assertFalse($unit->isEnabled());
+    }
+
+    /**
+     * @param bool $commandSuccessful
+     * @param string $commandOutput
+     *
+     * @test
+     * @dataProvider itShouldReturnFalseIfServiceEnabledCommandOutputDoesNotEqualEnabledDataProvider
+     */
+    public function itShouldReturnFalseIfServiceEnabledCommandOutputDoesNotEqualEnabled(
+        $commandSuccessful,
+        $commandOutput
+    ) {
+        $processBuilderStub = $this->buildProcessBuilderMock($commandSuccessful, $commandOutput);
+        $processBuilderStub->setArguments(['is-enabled', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+
+        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+
+        $this->assertFalse($unit->isEnabled());
+    }
+
+    /**
+     * @return array
+     */
+    public function itShouldReturnFalseIfServiceEnabledCommandOutputDoesNotEqualEnabledDataProvider(): array
+    {
+        return [
+            [
+                'commandSuccessful' => true,
+                'commandOutput' => 'static',
+            ],
+            [
+                'commandSuccessful' => false,
+                'commandOutput' => 'static',
+            ],
+            [
+                'commandSuccessful' => true,
+                'commandOutput' => 'enable',
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnTrueIfServiceActiveCommandRanSuccessfully()
+    {
+        $processBuilderStub = $this->buildProcessBuilderMock(true, 'active');
+        $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+
+        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+
+        $this->assertTrue($unit->isRunning());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnFalseIfServiceActiveCommandFailed()
+    {
+        $processBuilderStub = $this->buildProcessBuilderMock(false, 'active');
+        $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+
+        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+
+        $this->assertFalse($unit->isRunning());
+    }
+
+    /**
+     * @param bool $commandSuccessful
+     * @param string $commandOutput
+     *
+     * @test
+     * @dataProvider itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActiveDataProvider
+     */
+    public function itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActive(
+        $commandSuccessful,
+        $commandOutput
+    ) {
+        $processBuilderStub = $this->buildProcessBuilderMock($commandSuccessful, $commandOutput);
+        $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+
+        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+
+        $this->assertFalse($unit->isRunning());
+    }
+
+    /**
+     * @return array
+     */
+    public function itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActiveDataProvider(): array
+    {
+        return [
+            [
+                'commandSuccessful' => true,
+                'commandOutput' => 'static',
+            ],
+            [
+                'commandSuccessful' => false,
+                'commandOutput' => 'static',
+            ],
+            [
+                'commandSuccessful' => true,
+                'commandOutput' => 'enable',
+            ],
+        ];
+    }
+
+    /**
+     * @param bool   $processRanSuccessful
+     * @param string $processOutput
+     *
+     * @return \Prophecy\Prophecy\ObjectProphecy
+     */
+    private function buildProcessBuilderMock($processRanSuccessful = true, $processOutput = ''): ObjectProphecy
+    {
+        $processBuilderStub = $this->prophesize(ProcessBuilder::class);
+
+        $processStub = $this->prophesize(Process::class);
+        $processStub->run()->willReturn(!$processRanSuccessful);
+        $processStub->isSuccessful()->willReturn($processRanSuccessful);
+        $processStub->getOutput()->willReturn($processOutput);
+
+        $processBuilderStub->getProcess()->willReturn($processStub);
+
+        return $processBuilderStub;
+    }
 }
