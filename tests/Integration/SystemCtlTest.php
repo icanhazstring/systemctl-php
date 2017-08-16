@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test;
+namespace SystemCtl\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -13,36 +13,6 @@ use SystemCtl\Unit\UnitInterface;
 
 class SystemCtlTest extends TestCase
 {
-    /**
-     * @param string $output
-     * @return \PHPUnit_Framework_MockObject_MockObject|SystemCtl
-     */
-    private function buildSystemCtlMock($output)
-    {
-
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getOutput'])
-            ->getMock();
-
-        $process->method('getOutput')->willReturn($output);
-
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
-
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-
-        return $systemctl;
-    }
-
     public function testListUnitsWithAvailableUnits()
     {
         $output = <<<EOT
@@ -55,7 +25,7 @@ class SystemCtlTest extends TestCase
   systemd-ask-password-wall.path                     loaded active waiting
   acpid.service                                      loaded active running
   beanstalkd.service                                 loaded active running
-  console-setup.service                              loaded active exited 
+  console-setup.service                              loaded active exited
   cron.service                                       loaded active running
 EOT;
         $systemctl = $this->buildSystemCtlMock($output);
@@ -75,7 +45,7 @@ EOT;
   systemd-ask-password-wall.path                     loaded active waiting
   acpid.service                                      loaded active running
   beanstalkd.service                                 loaded active running
-  console-setup.service                              loaded active exited 
+  console-setup.service                              loaded active exited
   cron.service                                       loaded active running
 EOT;
         $systemctl = $this->buildSystemCtlMock($output);
@@ -97,16 +67,6 @@ EOT;
         SystemCtl::unitFromSuffix('unsupported', 'FailUnit');
     }
 
-    public function testGetServiceWithName()
-    {
-        $output = 'testService.service Active Running';
-        $systemctl = $this->buildSystemCtlMock($output);
-
-        $service = $systemctl->getService('testService');
-        $this->assertInstanceOf(Service::class, $service);
-        $this->assertEquals('testService', $service->getName());
-    }
-
     public function testGetServices()
     {
         $output = <<<EOT
@@ -115,22 +75,13 @@ PLACEHOLDER STUFF
   awesomeservice.service    Active running
   nonservice.timer          Active running
 PLACEHOLDER STUFF
-  
+
 EOT;
 
         $systemctl = $this->buildSystemCtlMock($output);
         $services = $systemctl->getServices();
 
         $this->assertCount(2, $services);
-    }
-
-    public function testGetTimerWithName()
-    {
-        $systemctl = new SystemCtl();
-
-        $timer = $systemctl->getTimer('testTimer');
-        $this->assertInstanceOf(Timer::class, $timer);
-        $this->assertEquals('testTimer', $timer->getName());
     }
 
     public function testGetTimers()
@@ -160,5 +111,34 @@ EOT;
         SystemCtl::setBinary('/usr/sbin/systemctl');
         $processBuilder = $systemCtl->getProcessBuilder();
         $this->assertEquals("'/usr/sbin/systemctl'", $processBuilder->getProcess()->getCommandLine());
+    }
+
+    /**
+     * @param string $output
+     * @return \PHPUnit_Framework_MockObject_MockObject|SystemCtl
+     */
+    private function buildSystemCtlMock($output)
+    {
+        $process = $this->getMockBuilder(Process::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getOutput'])
+            ->getMock();
+
+        $process->method('getOutput')->willReturn($output);
+
+        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getProcess'])
+            ->getMock();
+
+        $processBuilder->method('getProcess')->willReturn($process);
+
+        $systemctl = $this->getMockBuilder(SystemCtl::class)
+            ->setMethods(['getProcessBuilder'])
+            ->getMock();
+
+        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
+
+        return $systemctl;
     }
 }

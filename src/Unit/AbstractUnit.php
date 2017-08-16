@@ -42,11 +42,18 @@ abstract class AbstractUnit implements UnitInterface
 
     /**
      * @inheritDoc
+     * @todo: Everything in here should happen inside the constructor and stored
+     *      afterwards.
      */
     public function getInstanceName(): ?string
     {
-        $parts = explode('@', $this->name);
-        return $parts[1] ?? null;
+        $instanceName = explode('@', $this->name, 2)[1] ?? null;
+
+        if (is_string($instanceName) && strpos($instanceName, '.') !== false) {
+            $instanceName = explode('.', $instanceName, 2)[0];
+        }
+
+        return $instanceName;
     }
 
     /**
