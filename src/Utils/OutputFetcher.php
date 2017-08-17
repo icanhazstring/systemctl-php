@@ -2,6 +2,11 @@
 
 namespace SystemCtl\Utils;
 
+/**
+ * Class OutputFetcher
+ *
+ * @package SystemCtl\Utils
+ */
 class OutputFetcher
 {
     /**
@@ -14,7 +19,7 @@ class OutputFetcher
      */
     public static function fetchUnitNames(string $suffix, string $output): array
     {
-        preg_match_all('/(?<unit>.*)\.' . $suffix . '\s/', $output, $matches);
+        preg_match_all('/^\s*(?<unit>.*)\.' . $suffix . '\s.*$/m', $output, $matches);
         return $matches['unit'] ?? [];
     }
 }

@@ -2,9 +2,14 @@
 
 namespace SystemCtl\Unit;
 
-use Symfony\Component\Process\Process;
 use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\CommandInterface;
 
+/**
+ * Class AbstractUnit
+ *
+ * @package SystemCtl\Unit
+ */
 abstract class AbstractUnit implements UnitInterface
 {
     /** @var string */
@@ -12,6 +17,11 @@ abstract class AbstractUnit implements UnitInterface
 
     /** @var CommandDispatcherInterface */
     protected $commandDispatcher;
+
+    /**
+     * @var string
+     */
+    protected $unitSuffix;
 
     /**
      * Create new service with given name
@@ -58,11 +68,34 @@ abstract class AbstractUnit implements UnitInterface
     }
 
     /**
+     * @return string
+     */
+    abstract protected function getUnitSuffix(): string;
+
+    /**
+     * @param array $commands
+     *
+     * @return CommandInterface
+     */
+    public function execute(...$commands): CommandInterface
+    {
+        $commands[] = implode(
+            '.',
+            [
+                $this->name,
+                $this->getUnitSuffix(),
+            ]
+        );
+
+        return $this->commandDispatcher->dispatch(...$commands);
+    }
+
+    /**
      * @return bool
      */
     public function start(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -70,7 +103,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function stop(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -78,7 +111,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function disable(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -86,7 +119,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function reload(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -94,7 +127,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function restart(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -102,7 +135,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function enable(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -110,7 +143,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isEnabled(): bool
     {
-        $output = $this->commandDispatcher->dispatch('is-enabled')->getOutput();
+        $output = $this->execute('is-enabled')->getOutput();
 
         return trim($output) === 'enabled';
     }
@@ -120,7 +153,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isActive(): bool
     {
-        $output = $this->commandDispatcher->dispatch('is-active')->getOutput();
+        $output = $this->execute('is-active')->getOutput();
 
         return trim($output) === 'active';
     }

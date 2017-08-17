@@ -2,6 +2,7 @@
 
 namespace SystemCtl\Unit;
 
+use SystemCtl\Command\CommandInterface;
 use SystemCtl\Exception\CommandFailedException;
 
 /**
@@ -31,6 +32,11 @@ interface UnitInterface
      * @return null|string
      */
     public function getInstanceName(): ?string;
+
+    /**
+     * @return CommandInterface
+     */
+    public function execute(): CommandInterface;
 
     /**
      * Start command
@@ -79,4 +85,6 @@ interface UnitInterface
      * @throws CommandFailedException
      */
     public function enable(): bool;
+
+    // @todo: Add missing methods from AbstractUnit.
 }
