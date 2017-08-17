@@ -3,38 +3,33 @@
 namespace SystemCtl\Test\Integration\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
+use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Exception\CommandFailedException;
 use SystemCtl\SystemCtl;
 use SystemCtl\Unit\Service;
 
 class UnitTest extends TestCase
 {
+    public function createCommandDispatcherStub(): ObjectProphecy
+    {
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->setTimeout(Argument::any())->willReturn($commandDispatcher);
+        $commandDispatcher->setBinary(Argument::any())->willReturn($commandDispatcher);
+
+        return $commandDispatcher;
+    }
+
     public function testServiceCommandsIfProcessIsSuccessfulShouldReturnTrue()
     {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isSuccessful'])
-            ->getMock();
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn(true);
 
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
-
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
         $service = $systemctl->getService('AwesomeService');
-
-        $process->method('isSuccessful')->willReturn(true);
 
         $this->assertTrue($service->start());
         $this->assertTrue($service->stop());
@@ -46,56 +41,23 @@ class UnitTest extends TestCase
 
     public function testServiceCommandsIfProcessIsUnsuccessFulShouldRaiseException()
     {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isSuccessful'])
-            ->getMock();
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
-
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
         $service = $systemctl->getService('AwesomeService');
 
-        $process->method('isSuccessful')->willReturn(false);
         $this->expectException(CommandFailedException::class);
         $service->start();
     }
 
     public function testTimerCommandsIfProcessIsSuccessfulShouldReturnTrue()
     {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isSuccessful'])
-            ->getMock();
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn(true);
 
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
-
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
         $timer = $systemctl->getTimer('AwesomeTimer');
-
-        $process->method('isSuccessful')->willReturn(true);
 
         $this->assertTrue($timer->start());
         $this->assertTrue($timer->stop());
@@ -107,25 +69,10 @@ class UnitTest extends TestCase
 
     public function testTimerCommandsIfProcessIsUnsuccessFulShouldRaiseException()
     {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isSuccessful'])
-            ->getMock();
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
-
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
         $timer = $systemctl->getTimer('AwesomeTimer');
 
         $this->expectException(CommandFailedException::class);

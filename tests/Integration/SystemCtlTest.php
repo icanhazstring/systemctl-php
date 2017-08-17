@@ -3,16 +3,26 @@
 namespace SystemCtl\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\SymfonyCommandDispatcher;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
-use SystemCtl\Unit\Service;
 use SystemCtl\SystemCtl;
-use SystemCtl\Unit\Timer;
+use SystemCtl\Unit\Service;
 use SystemCtl\Unit\UnitInterface;
 
 class SystemCtlTest extends TestCase
 {
+    public function createCommandDispatcherStub(): ObjectProphecy
+    {
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->setTimeout(Argument::any())->willReturn($commandDispatcher);
+        $commandDispatcher->setBinary(Argument::any())->willReturn($commandDispatcher);
+
+        return $commandDispatcher;
+    }
+
     public function testListUnitsWithAvailableUnits()
     {
         $output = <<<EOT
@@ -28,7 +38,13 @@ class SystemCtlTest extends TestCase
   console-setup.service                              loaded active exited
   cron.service                                       loaded active running
 EOT;
-        $systemctl = $this->buildSystemCtlMock($output);
+
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
+
         $units = $systemctl->listUnits(null, SystemCtl::AVAILABLE_UNITS);
         $this->assertCount(11, $units);
     }
@@ -48,7 +64,13 @@ EOT;
   console-setup.service                              loaded active exited
   cron.service                                       loaded active running
 EOT;
-        $systemctl = $this->buildSystemCtlMock($output);
+
+        $dispatcherStub = $this->createCommandDispatcherStub();;
+        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
+
         $units = $systemctl->listUnits();
         $this->assertCount(5, $units);
     }
@@ -78,7 +100,12 @@ PLACEHOLDER STUFF
 
 EOT;
 
-        $systemctl = $this->buildSystemCtlMock($output);
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
+
         $services = $systemctl->getServices();
 
         $this->assertCount(2, $services);
@@ -95,50 +122,13 @@ PLACEHOLDER STUFF
 
 EOT;
 
-        $systemctl = $this->buildSystemCtlMock($output);
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
         $timers = $systemctl->getTimers();
 
         $this->assertCount(2, $timers);
-    }
-
-    public function testSetBinaryShouldChangeCommand()
-    {
-        $systemCtl = new SystemCtl();
-
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals("'/bin/systemctl'", $processBuilder->getProcess()->getCommandLine());
-
-        SystemCtl::setBinary('/usr/sbin/systemctl');
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals("'/usr/sbin/systemctl'", $processBuilder->getProcess()->getCommandLine());
-    }
-
-    /**
-     * @param string $output
-     * @return \PHPUnit_Framework_MockObject_MockObject|SystemCtl
-     */
-    private function buildSystemCtlMock($output)
-    {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getOutput'])
-            ->getMock();
-
-        $process->method('getOutput')->willReturn($output);
-
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
-
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-
-        return $systemctl;
     }
 }

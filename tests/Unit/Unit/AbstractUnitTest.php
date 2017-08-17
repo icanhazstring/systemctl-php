@@ -3,9 +3,13 @@
 namespace SystemCtl\Tests\Unit\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
+use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Exception\CommandFailedException;
+use SystemCtl\Unit\Service;
 
 /**
  * Class AbstractUnitTest
@@ -25,7 +29,8 @@ class AbstractUnitTest extends TestCase
      */
     public function itShouldReturnCorrectName(string $name)
     {
-        $unit = new UnitStub($name, new ProcessBuilder());
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $unit = new Service($name, $commandDispatcher->reveal());
 
         $this->assertEquals($name, $unit->getName());
     }
@@ -63,7 +68,9 @@ class AbstractUnitTest extends TestCase
      */
     public function itDetectsMultiInstanceUnitsCorrectly(string $name, bool $isMultiInstance)
     {
-        $unit = new UnitStub($name, new ProcessBuilder());
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $unit = new Service($name, $commandDispatcher->reveal());
+
         $this->assertEquals($isMultiInstance, $unit->isMultiInstance());
     }
 
@@ -109,7 +116,9 @@ class AbstractUnitTest extends TestCase
      */
     public function itDetectsMultiInstanceInstanceNamesCorrectly(string $name, ?string $instanceName)
     {
-        $unit = new UnitStub($name, new ProcessBuilder());
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $unit = new Service($name, $commandDispatcher->reveal());
+
         $this->assertEquals($instanceName, $unit->getInstanceName());
     }
 
@@ -151,10 +160,10 @@ class AbstractUnitTest extends TestCase
      */
     public function itShouldReturnTrueIfServiceEnabledCommandRanSuccessfully()
     {
-        $processBuilderStub = $this->buildProcessBuilderMock(true, 'enabled');
-        $processBuilderStub->setArguments(['is-enabled', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn('enabled');
 
-        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
         $this->assertTrue($unit->isEnabled());
     }
@@ -162,14 +171,15 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnFalseIfServiceEnabledCommandFailed()
+    public function itShouldRaiseAnExceptionIfServiceEnabledCommandFailed()
     {
-        $processBuilderStub = $this->buildProcessBuilderMock(false, 'enabled');
-        $processBuilderStub->setArguments(['is-enabled', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->fetchOutput(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
+        $this->expectException(CommandFailedException::class);
 
-        $this->assertFalse($unit->isEnabled());
+        $unit->isEnabled();
     }
 
     /**
@@ -183,10 +193,10 @@ class AbstractUnitTest extends TestCase
         $commandSuccessful,
         $commandOutput
     ) {
-        $processBuilderStub = $this->buildProcessBuilderMock($commandSuccessful, $commandOutput);
-        $processBuilderStub->setArguments(['is-enabled', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn($commandOutput);
 
-        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
         $this->assertFalse($unit->isEnabled());
     }
@@ -217,10 +227,10 @@ class AbstractUnitTest extends TestCase
      */
     public function itShouldReturnTrueIfServiceActiveCommandRanSuccessfully()
     {
-        $processBuilderStub = $this->buildProcessBuilderMock(true, 'active');
-        $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn('active');
 
-        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
         $this->assertTrue($unit->isRunning());
     }
@@ -228,14 +238,15 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnFalseIfServiceActiveCommandFailed()
+    public function itShouldRaiseExceptionIfServiceActiveCommandFailed()
     {
-        $processBuilderStub = $this->buildProcessBuilderMock(false, 'active');
-        $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->fetchOutput(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
-        $this->assertFalse($unit->isRunning());
+        $this->expectException(CommandFailedException::class);
+        $unit->isRunning();
     }
 
     /**
@@ -249,10 +260,10 @@ class AbstractUnitTest extends TestCase
         $commandSuccessful,
         $commandOutput
     ) {
-        $processBuilderStub = $this->buildProcessBuilderMock($commandSuccessful, $commandOutput);
-        $processBuilderStub->setArguments(['is-active', static::SERVICE_NAME,])->willReturn($processBuilderStub);
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn($commandOutput);
 
-        $unit = new UnitStub(static::SERVICE_NAME, $processBuilderStub->reveal());
+        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
         $this->assertFalse($unit->isRunning());
     }
@@ -276,25 +287,5 @@ class AbstractUnitTest extends TestCase
                 'commandOutput' => 'enable',
             ],
         ];
-    }
-
-    /**
-     * @param bool   $processRanSuccessful
-     * @param string $processOutput
-     *
-     * @return \Prophecy\Prophecy\ObjectProphecy
-     */
-    private function buildProcessBuilderMock($processRanSuccessful = true, $processOutput = ''): ObjectProphecy
-    {
-        $processBuilderStub = $this->prophesize(ProcessBuilder::class);
-
-        $processStub = $this->prophesize(Process::class);
-        $processStub->run()->willReturn(!$processRanSuccessful);
-        $processStub->isSuccessful()->willReturn($processRanSuccessful);
-        $processStub->getOutput()->willReturn($processOutput);
-
-        $processBuilderStub->getProcess()->willReturn($processStub);
-
-        return $processBuilderStub;
     }
 }
