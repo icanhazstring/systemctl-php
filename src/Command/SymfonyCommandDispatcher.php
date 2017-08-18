@@ -43,7 +43,7 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
         $processBuilder = new ProcessBuilder();
         $processBuilder->setPrefix($this->binary);
         $processBuilder->setTimeout($this->timetout);
-        $processBuilder->setArguments(...$commands);
+        $processBuilder->setArguments($commands);
 
         $process = new SymfonyCommand($processBuilder->getProcess());
 

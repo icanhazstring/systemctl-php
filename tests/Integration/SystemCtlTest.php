@@ -144,4 +144,21 @@ EOT;
 
         $this->assertCount(2, $timers);
     }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnTrueOnSuccessfulDaemonReload()
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
+
+        $dispatcher = $this->createCommandDispatcherStub();
+        $dispatcher->dispatch(Argument::exact('daemon-reload'))->willReturn($command);
+
+        $systemCtl = new SystemCtl();
+        $systemCtl->setCommandDispatcher($dispatcher->reveal());
+
+        $this->assertTrue($systemCtl->daemonReload());
+    }
 }
