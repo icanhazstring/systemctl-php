@@ -3,27 +3,26 @@
 namespace SystemCtl\Unit;
 
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
-use SystemCtl\Exception\CommandFailedException;
+use SystemCtl\Command\CommandDispatcherInterface;
 
 abstract class AbstractUnit implements UnitInterface
 {
     /** @var string */
     private $name;
 
-    /** @var ProcessBuilder */
-    protected $processBuilder;
+    /** @var CommandDispatcherInterface */
+    protected $commandDispatcher;
 
     /**
      * Create new service with given name
      *
-     * @param string $name
-     * @param ProcessBuilder $processBuilder
+     * @param string                     $name
+     * @param CommandDispatcherInterface $commandDispatcher
      */
-    public function __construct(string $name, ProcessBuilder $processBuilder)
+    public function __construct(string $name, CommandDispatcherInterface $commandDispatcher)
     {
         $this->name = $name;
-        $this->processBuilder = $processBuilder;
+        $this->commandDispatcher = $commandDispatcher;
     }
 
     /**
@@ -59,36 +58,11 @@ abstract class AbstractUnit implements UnitInterface
     }
 
     /**
-     * Execute a single command
-     *
-     * @param string $command
-     * @return bool
-     */
-    abstract protected function execute(string $command): bool;
-
-    /**
-     * @param string $command
-     *
-     * @return Process
-     */
-    protected function runCommandAgainstService(string $command): Process
-    {
-        $process = $this->processBuilder
-            ->setArguments([$command, $this->getName()])
-            ->getProcess();
-
-
-        $process->run();
-
-        return $process;
-    }
-
-    /**
      * @return bool
      */
     public function start(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -96,7 +70,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function stop(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -104,7 +78,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function disable(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -112,7 +86,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function reload(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -120,7 +94,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function restart(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -128,7 +102,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function enable(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -136,9 +110,9 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isEnabled(): bool
     {
-        $process = $this->runCommandAgainstService('is-enabled');
+        $output = $this->commandDispatcher->dispatch('is-enabled')->getOutput();
 
-        return $process->isSuccessful() && trim($process->getOutput()) === 'enabled';
+        return trim($output) === 'enabled';
     }
 
     /**
@@ -146,9 +120,9 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isActive(): bool
     {
-        $process = $this->runCommandAgainstService('is-active');
+        $output = $this->commandDispatcher->dispatch('is-active')->getOutput();
 
-        return $process->isSuccessful() && trim($process->getOutput()) === 'active';
+        return trim($output) === 'active';
     }
 
     /**

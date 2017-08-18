@@ -2,7 +2,8 @@
 
 namespace SystemCtl;
 
-use Symfony\Component\Process\ProcessBuilder;
+use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\SymfonyCommandDispatcher;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
@@ -35,6 +36,8 @@ class SystemCtl
         Timer::UNIT,
     ];
 
+    private $commandDispatcher;
+
     /**
      * Change systemctl binary
      *
@@ -61,6 +64,7 @@ class SystemCtl
      *
      * @return UnitInterface
      * @throws UnitTypeNotSupportedException
+     * @deprecated This static method is deprecated, please refer to a specifc get method for a unit
      */
     public static function unitFromSuffix(string $unitSuffix, string $unitName): UnitInterface
     {
@@ -70,47 +74,51 @@ class SystemCtl
             throw new UnitTypeNotSupportedException('Unit type ' . $unitSuffix . ' not supported');
         }
 
-        return new $unitClass($unitName, new ProcessBuilder([self::$binary]));
+        $commandDispatcher = (new SymfonyCommandDispatcher)
+            ->setTimeout(self::$timeout)
+            ->setBinary(self::$binary);
+
+        return new $unitClass($unitName, $commandDispatcher);
     }
 
     /**
      * List all supported units
      *
      * @param null|string $unitPrefix
-     * @param string[] $unitTypes
+     * @param string[]    $unitTypes
+     *
      * @return array|\string[]
      */
     public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
     {
-        $processBuilder = $this->getProcessBuilder()
-            ->add('list-units');
+        $commands = ['list-units'];
 
         if ($unitPrefix) {
-            $processBuilder->add($unitPrefix . '*');
+            $commands[] = [$unitPrefix . '*'];
         }
 
-        $process = $processBuilder->getProcess();
-
-        $process->run();
-        $output = $process->getOutput();
+        $output = $this->getCommandDispatcher()->dispatch(...$commands)->getOutput();
 
         return array_reduce($unitTypes, function ($carry, $unitSuffix) use ($output) {
             $result = Utils\OutputFetcher::fetchUnitNames($unitSuffix, $output);
+
             return array_merge($carry, $result);
         }, []);
     }
 
     /**
      * @param string $name
+     *
      * @return Service
      */
     public function getService(string $name): Service
     {
-        return new Service($name, $this->getProcessBuilder());
+        return new Service($name, $this->getCommandDispatcher());
     }
 
     /**
      * @param null|string $unitPrefix
+     *
      * @return Service[]
      */
     public function getServices(?string $unitPrefix = null): array
@@ -118,21 +126,23 @@ class SystemCtl
         $units = $this->listUnits($unitPrefix, [Service::UNIT]);
 
         return array_map(function ($unitName) {
-            return new Service($unitName, $this->getProcessBuilder());
+            return new Service($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 
     /**
      * @param string $name
+     *
      * @return Timer
      */
     public function getTimer(string $name): Timer
     {
-        return new Timer($name, $this->getProcessBuilder());
+        return new Timer($name, $this->getCommandDispatcher());
     }
 
     /**
      * @param null|string $unitPrefix
+     *
      * @return Timer[]
      */
     public function getTimers(?string $unitPrefix = null): array
@@ -140,20 +150,8 @@ class SystemCtl
         $units = $this->listUnits($unitPrefix, [Timer::UNIT]);
 
         return array_map(function ($unitName) {
-            return new Timer($unitName, $this->getProcessBuilder());
+            return new Timer($unitName, $this->getCommandDispatcher());
         }, $units);
-    }
-
-    /**
-     * @return ProcessBuilder
-     */
-    public function getProcessBuilder(): ProcessBuilder
-    {
-        $builder = ProcessBuilder::create();
-        $builder->setPrefix(self::$binary);
-        $builder->setTimeout(self::$timeout);
-
-        return $builder;
     }
 
     /**
@@ -163,12 +161,34 @@ class SystemCtl
      */
     public function daemonReload(): bool
     {
-        $processBuilder = $this->getProcessBuilder();
-        $processBuilder->add('daemon-reload');
+        return $this->getCommandDispatcher()->dispatch('daemon-reload')->isSuccessful();
+    }
 
-        $process = $processBuilder->getProcess();
-        $process->run();
+    /**
+     * @return CommandDispatcherInterface
+     */
+    public function getCommandDispatcher(): CommandDispatcherInterface
+    {
+        if ($this->commandDispatcher === null) {
+            $this->commandDispatcher = (new SymfonyCommandDispatcher)
+                ->setTimeout(self::$timeout)
+                ->setBinary(self::$binary);
+        }
 
-        return $process->isSuccessful();
+        return $this->commandDispatcher;
+    }
+
+    /**
+     * @param CommandDispatcherInterface $dispatcher
+     *
+     * @return SystemCtl
+     */
+    public function setCommandDispatcher(CommandDispatcherInterface $dispatcher)
+    {
+        $this->commandDispatcher = $dispatcher
+            ->setTimeout(self::$timeout)
+            ->setBinary(self::$binary);
+
+        return $this;
     }
 }
