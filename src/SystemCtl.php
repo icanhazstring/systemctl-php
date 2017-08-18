@@ -161,7 +161,7 @@ class SystemCtl
      */
     public function daemonReload(): bool
     {
-        return $this->getCommandDispatcher()->dispatch('daemon-reload');
+        return $this->getCommandDispatcher()->dispatch('daemon-reload')->isSuccessful();
     }
 
     /**
