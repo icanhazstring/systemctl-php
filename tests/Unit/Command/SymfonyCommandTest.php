@@ -56,7 +56,7 @@ class SymfonyCommandTest extends TestCase
     public function itShouldReturnTheCommandIfCommandRanSuccessFul()
     {
         $process = $this->prophesize(Process::class);
-        $process->run()->will(function() {});
+        $process->run()->shouldBeCalled();
         $process->getErrorOutput()->willReturn('testError');
         $process->isSuccessful()->willReturn(true);
 
@@ -70,7 +70,7 @@ class SymfonyCommandTest extends TestCase
     public function itShouldRaiseAnExceptionIfProcessWasNotSuccessfull()
     {
         $process = $this->prophesize(Process::class);
-        $process->run()->will(function() {});
+        $process->run()->shouldBeCalled();
         $process->getErrorOutput()->willReturn('testError');
         $process->isSuccessful()->willReturn(false);
 
