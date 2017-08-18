@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\CommandInterface;
 use SystemCtl\Command\SymfonyCommandDispatcher;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\SystemCtl;
@@ -39,8 +40,11 @@ class SystemCtlTest extends TestCase
   cron.service                                       loaded active running
 EOT;
 
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
         $dispatcherStub = $this->createCommandDispatcherStub();
-        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
 
         $systemctl = new SystemCtl();
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
@@ -65,8 +69,11 @@ EOT;
   cron.service                                       loaded active running
 EOT;
 
-        $dispatcherStub = $this->createCommandDispatcherStub();;
-        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
 
         $systemctl = new SystemCtl();
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
@@ -100,8 +107,11 @@ PLACEHOLDER STUFF
 
 EOT;
 
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
         $dispatcherStub = $this->createCommandDispatcherStub();
-        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
 
         $systemctl = new SystemCtl();
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
@@ -122,8 +132,11 @@ PLACEHOLDER STUFF
 
 EOT;
 
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
         $dispatcherStub = $this->createCommandDispatcherStub();
-        $dispatcherStub->fetchOutput(Argument::cetera())->willReturn($output);
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
 
         $systemctl = new SystemCtl();
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());

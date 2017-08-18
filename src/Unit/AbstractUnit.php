@@ -62,7 +62,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function start(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function stop(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -78,7 +78,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function disable(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function reload(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function restart(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -102,7 +102,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function enable(): bool
     {
-        return $this->commandDispatcher->dispatch(__FUNCTION__);
+        return $this->commandDispatcher->dispatch(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -110,7 +110,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isEnabled(): bool
     {
-        $output = $this->commandDispatcher->fetchOutput('is-enabled');
+        $output = $this->commandDispatcher->dispatch('is-enabled')->getOutput();
 
         return trim($output) === 'enabled';
     }
@@ -120,7 +120,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isActive(): bool
     {
-        $output = $this->commandDispatcher->fetchOutput('is-active');
+        $output = $this->commandDispatcher->dispatch('is-active')->getOutput();
 
         return trim($output) === 'active';
     }

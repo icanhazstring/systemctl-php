@@ -25,21 +25,13 @@ interface CommandDispatcherInterface
     public function setBinary(string $binary): CommandDispatcherInterface;
 
     /**
-     * Fetch output from a given command
+     * Dispatch given commands against implementers logic and creating a new command
+     * to read results
      *
      * @param array $commands
      *
-     * @return string
-     *
+     * @return CommandInterface
+     * @throws CommandFailedException
      */
-    public function fetchOutput(...$commands): string;
-
-    /**
-     * Dispatch command and return whether the command was successful or not
-     *
-     * @param array $commands
-     *
-     * @return bool
-     */
-    public function dispatch(...$commands): bool;
+    public function dispatch(...$commands): CommandInterface;
 }

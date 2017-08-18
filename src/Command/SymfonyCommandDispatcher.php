@@ -2,9 +2,7 @@
 
 namespace SystemCtl\Command;
 
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
-use SystemCtl\Exception\CommandFailedException;
 
 /**
  * Class SymfonyCommandDispatcher
@@ -16,9 +14,6 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
 {
     private $binary;
     private $timetout;
-
-    /** @var Process */
-    private $lastCommand;
 
     /**
      * @inheritdoc
@@ -41,43 +36,17 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function fetchOutput(...$commands): string
-    {
-        $process = $this->run($commands);
-
-        if (!$process->isSuccessful()) {
-            throw new CommandFailedException($process->getErrorOutput());
-        }
-
-        return $process->getOutput();
-    }
-
-    /**
      * @inheritDoc
      */
-    public function dispatch(...$commands): bool
-    {
-        $process = $this->run($commands);
-
-        if (!$process->isSuccessful()) {
-            throw new CommandFailedException($process->getErrorOutput());
-        }
-
-        return $process->isSuccessful();
-    }
-
-    private function run(...$commands): Process
+    public function dispatch(...$commands): CommandInterface
     {
         $processBuilder = new ProcessBuilder();
         $processBuilder->setPrefix($this->binary);
         $processBuilder->setTimeout($this->timetout);
         $processBuilder->setArguments(...$commands);
 
-        $process = $processBuilder->getProcess();
-        $process->run();
+        $process = new SymfonyCommand($processBuilder->getProcess());
 
-        return $process;
+        return $process->run();
     }
 }

@@ -97,7 +97,7 @@ class SystemCtl
             $commands[] = [$unitPrefix . '*'];
         }
 
-        $output = $this->getCommandDispatcher()->fetchOutput(...$commands);
+        $output = $this->getCommandDispatcher()->dispatch(...$commands)->getOutput();
 
         return array_reduce($unitTypes, function ($carry, $unitSuffix) use ($output) {
             $result = Utils\OutputFetcher::fetchUnitNames($unitSuffix, $output);

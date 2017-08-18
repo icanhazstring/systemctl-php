@@ -8,6 +8,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\CommandInterface;
 use SystemCtl\Exception\CommandFailedException;
 use SystemCtl\Unit\Service;
 
@@ -160,8 +161,10 @@ class AbstractUnitTest extends TestCase
      */
     public function itShouldReturnTrueIfServiceEnabledCommandRanSuccessfully()
     {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn('enabled');
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn('enabled');
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
         $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
@@ -174,7 +177,7 @@ class AbstractUnitTest extends TestCase
     public function itShouldRaiseAnExceptionIfServiceEnabledCommandFailed()
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $commandDispatcher->fetchOutput(Argument::cetera())->willThrow(CommandFailedException::class);
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
         $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
         $this->expectException(CommandFailedException::class);
@@ -193,8 +196,12 @@ class AbstractUnitTest extends TestCase
         $commandSuccessful,
         $commandOutput
     ) {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn($commandSuccessful);
+        $command->getOutput()->willReturn($commandOutput);
+
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn($commandOutput);
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
         $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
@@ -227,8 +234,11 @@ class AbstractUnitTest extends TestCase
      */
     public function itShouldReturnTrueIfServiceActiveCommandRanSuccessfully()
     {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn('active');
+
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn('active');
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
         $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
@@ -241,7 +251,7 @@ class AbstractUnitTest extends TestCase
     public function itShouldRaiseExceptionIfServiceActiveCommandFailed()
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $commandDispatcher->fetchOutput(Argument::cetera())->willThrow(CommandFailedException::class);
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
         $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
@@ -260,8 +270,12 @@ class AbstractUnitTest extends TestCase
         $commandSuccessful,
         $commandOutput
     ) {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn($commandSuccessful);
+        $command->getOutput()->willReturn($commandOutput);
+
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $commandDispatcher->fetchOutput(Argument::cetera())->willReturn($commandOutput);
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
         $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
 
