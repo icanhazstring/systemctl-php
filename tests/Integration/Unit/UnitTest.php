@@ -8,8 +8,14 @@ use Prophecy\Prophecy\ObjectProphecy;
 use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\CommandInterface;
 use SystemCtl\Exception\CommandFailedException;
-use SystemCtl\SystemCtl;
+use SystemCtl\Unit\Service;
+use SystemCtl\Unit\Timer;
 
+/**
+ * Class UnitTest
+ *
+ * @package SystemCtl\Test\Integration\Unit
+ */
 class UnitTest extends TestCase
 {
     public function testServiceCommandsIfProcessIsSuccessfulShouldReturnTrue()
@@ -20,8 +26,7 @@ class UnitTest extends TestCase
         $commandDispatcher = $this->createCommandDispatcherStub();
         $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
-        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
-        $service = $systemctl->getService('AwesomeService');
+        $service = new Service('AwesomeService', $commandDispatcher->reveal());
 
         $this->assertTrue($service->start());
         $this->assertTrue($service->stop());
@@ -45,8 +50,7 @@ class UnitTest extends TestCase
         $commandDispatcher = $this->createCommandDispatcherStub();
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
-        $service = $systemctl->getService('AwesomeService');
+        $service = new Service('AwesomeService', $commandDispatcher->reveal());
 
         $this->expectException(CommandFailedException::class);
         $service->start();
@@ -60,8 +64,7 @@ class UnitTest extends TestCase
         $commandDispatcher = $this->createCommandDispatcherStub();
         $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
-        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
-        $timer = $systemctl->getTimer('AwesomeTimer');
+        $timer = new Timer('AwesomeService', $commandDispatcher->reveal());
 
         $this->assertTrue($timer->start());
         $this->assertTrue($timer->stop());
@@ -76,8 +79,7 @@ class UnitTest extends TestCase
         $commandDispatcher = $this->createCommandDispatcherStub();
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcher->reveal());
-        $timer = $systemctl->getTimer('AwesomeTimer');
+        $timer = new Timer('AwesomeTimer', $commandDispatcher->reveal());
 
         $this->expectException(CommandFailedException::class);
         $timer->start();

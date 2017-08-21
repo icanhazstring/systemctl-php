@@ -13,12 +13,10 @@ use SystemCtl\Unit\AbstractUnit;
 class UnitStub extends AbstractUnit
 {
     /**
-     * @param string $command
-     *
-     * @return bool
+     * @inheritdoc
      */
-    public function execute(string $command): bool
+    protected function getUnitSuffix(): string
     {
-        throw new \RuntimeException('Not implemented');
+        return 'stub';
     }
 }

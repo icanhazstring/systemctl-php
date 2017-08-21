@@ -4,13 +4,9 @@ namespace SystemCtl\Tests\Unit\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\CommandInterface;
 use SystemCtl\Exception\CommandFailedException;
-use SystemCtl\Unit\Service;
 
 /**
  * Class AbstractUnitTest
@@ -22,7 +18,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @var string
      */
-    private const SERVICE_NAME = 'testService';
+    private const UNIT_NAME = 'testUnit';
 
     /**
      * @test
@@ -31,7 +27,7 @@ class AbstractUnitTest extends TestCase
     public function itShouldReturnCorrectName(string $name)
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $unit = new Service($name, $commandDispatcher->reveal());
+        $unit = new UnitStub($name, $commandDispatcher->reveal());
 
         $this->assertEquals($name, $unit->getName());
     }
@@ -70,7 +66,7 @@ class AbstractUnitTest extends TestCase
     public function itDetectsMultiInstanceUnitsCorrectly(string $name, bool $isMultiInstance)
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $unit = new Service($name, $commandDispatcher->reveal());
+        $unit = new UnitStub($name, $commandDispatcher->reveal());
 
         $this->assertEquals($isMultiInstance, $unit->isMultiInstance());
     }
@@ -118,7 +114,7 @@ class AbstractUnitTest extends TestCase
     public function itDetectsMultiInstanceInstanceNamesCorrectly(string $name, ?string $instanceName)
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $unit = new Service($name, $commandDispatcher->reveal());
+        $unit = new UnitStub($name, $commandDispatcher->reveal());
 
         $this->assertEquals($instanceName, $unit->getInstanceName());
     }
@@ -166,7 +162,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
-        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
+        $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
         $this->assertTrue($unit->isEnabled());
     }
@@ -179,7 +175,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
+        $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
         $this->expectException(CommandFailedException::class);
 
         $unit->isEnabled();
@@ -203,7 +199,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
-        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
+        $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
         $this->assertFalse($unit->isEnabled());
     }
@@ -240,7 +236,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
-        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
+        $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
         $this->assertTrue($unit->isRunning());
     }
@@ -253,7 +249,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
 
-        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
+        $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
         $this->expectException(CommandFailedException::class);
         $unit->isRunning();
@@ -277,7 +273,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
 
-        $unit = new Service(static::SERVICE_NAME, $commandDispatcher->reveal());
+        $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
         $this->assertFalse($unit->isRunning());
     }
@@ -301,5 +297,23 @@ class AbstractUnitTest extends TestCase
                 'commandOutput' => 'enable',
             ],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function testIfExecuteAppendsTheUnitNameAndSuffix()
+    {
+        $commandStub = $this->prophesize(CommandInterface::class);
+        $commandStub->isSuccessful()->willReturn(true);
+
+        $commandDispatcherStub = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcherStub
+            ->dispatch(...['start', self::UNIT_NAME . '.' . 'stub'])
+            ->willReturn($commandStub)
+            ->shouldBeCalled();
+
+        $unitStub = new UnitStub(self::UNIT_NAME, $commandDispatcherStub->reveal());
+        $unitStub->start();
     }
 }

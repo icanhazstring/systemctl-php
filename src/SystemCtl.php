@@ -4,11 +4,17 @@ namespace SystemCtl;
 
 use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\SymfonyCommandDispatcher;
+use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 use SystemCtl\Unit\UnitInterface;
 
+/**
+ * Class SystemCtl
+ *
+ * @package SystemCtl
+ */
 class SystemCtl
 {
     /** @var string systemctl binary path */
@@ -94,7 +100,7 @@ class SystemCtl
         $commands = ['list-units'];
 
         if ($unitPrefix) {
-            $commands[] = [$unitPrefix . '*'];
+            $commands[] = $unitPrefix . '*';
         }
 
         $output = $this->getCommandDispatcher()->dispatch(...$commands)->getOutput();
@@ -113,7 +119,32 @@ class SystemCtl
      */
     public function getService(string $name): Service
     {
-        return new Service($name, $this->getCommandDispatcher());
+        $units = $this->listUnits($name, [Service::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Service::UNIT, $name);
+        }
+
+        return new Service($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param string $unitName
+     * @param array[] $units
+     *
+     * @return null|string
+     */
+    protected function searchForUnitInUnits(string $unitName, array $units): ?string
+    {
+        foreach ($units as $unit) {
+            if ($unit === $unitName) {
+                return $unit;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -137,7 +168,15 @@ class SystemCtl
      */
     public function getTimer(string $name): Timer
     {
-        return new Timer($name, $this->getCommandDispatcher());
+        $units = $this->listUnits($name, [Timer::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Timer::UNIT, $name);
+        }
+
+        return new Timer($unitName, $this->getCommandDispatcher());
     }
 
     /**

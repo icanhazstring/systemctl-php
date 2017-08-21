@@ -7,14 +7,21 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\CommandInterface;
-use SystemCtl\Command\SymfonyCommandDispatcher;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\SystemCtl;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\UnitInterface;
 
+/**
+ * Class SystemCtlTest
+ *
+ * @package SystemCtl\Test\Integration
+ */
 class SystemCtlTest extends TestCase
 {
+    /**
+     * @return ObjectProphecy
+     */
     public function createCommandDispatcherStub(): ObjectProphecy
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);

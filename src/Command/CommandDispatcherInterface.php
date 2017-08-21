@@ -4,6 +4,11 @@ namespace SystemCtl\Command;
 
 use SystemCtl\Exception\CommandFailedException;
 
+/**
+ * Interface CommandDispatcherInterface
+ *
+ * @package SystemCtl\Command
+ */
 interface CommandDispatcherInterface
 {
     /**
