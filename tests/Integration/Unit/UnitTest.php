@@ -39,8 +39,8 @@ class UnitTest extends TestCase
     public function createCommandDispatcherStub(): ObjectProphecy
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $commandDispatcher->setTimeout(Argument::any())->willReturn($commandDispatcher);
-        $commandDispatcher->setBinary(Argument::any())->willReturn($commandDispatcher);
+        $commandDispatcher->setTimeout(Argument::type('int'))->willReturn($commandDispatcher);
+        $commandDispatcher->setBinary(Argument::type('string'))->willReturn($commandDispatcher);
 
         return $commandDispatcher;
     }

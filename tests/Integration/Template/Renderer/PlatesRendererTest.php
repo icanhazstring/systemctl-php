@@ -43,8 +43,7 @@ class PlatesRendererTest extends TestCase
 
     public function testPlatesRenderer()
     {
-        $engine = new Engine('vfs://assets/', 'tpl');
-        $renderer = new PlatesRenderer($engine);
+        $renderer = new PlatesRenderer('vfs://assets/', 'tpl');
 
         $unitTemplate = new ServiceUnitTemplate('test');
 

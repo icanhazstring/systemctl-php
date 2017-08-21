@@ -7,6 +7,6 @@ namespace SystemCtl\Exception;
  *
  * @package SystemCtl\Exception
  */
-class CommandFailedException extends \Exception
+class CommandFailedException extends \RuntimeException
 {
 }

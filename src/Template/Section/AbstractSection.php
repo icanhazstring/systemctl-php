@@ -31,7 +31,7 @@ abstract class AbstractSection
         preg_match('/(?<type>get|set)(?<property>.*)/', $name, $match);
 
         if (!in_array($match['property'], static::PROPERTIES)) {
-            throw new PropertyNotSupportedException($match['property'], static::class);
+            throw PropertyNotSupportedException::create($match['property'], static::class);
         }
 
         if ($match['type'] === 'set') {

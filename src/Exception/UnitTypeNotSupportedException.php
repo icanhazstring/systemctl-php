@@ -7,6 +7,17 @@ namespace SystemCtl\Exception;
  *
  * @package SystemCtl\Exception
  */
-class UnitTypeNotSupportedException extends \Exception
+class UnitTypeNotSupportedException extends \LogicException
 {
+    /**
+     * @param string $unitSuffix
+     *
+     * @return UnitTypeNotSupportedException
+     */
+    public static function create(string $unitSuffix): self
+    {
+        return new self(
+            sprintf('Given unit type "%s" not supported', $unitSuffix)
+        );
+    }
 }

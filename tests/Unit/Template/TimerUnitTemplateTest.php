@@ -26,7 +26,7 @@ class TimerUnitTemplateTest extends TestCase
 
         $this->assertInstanceOf(TimerUnitTemplate::class, $unitTemplate);
         $this->assertEquals(Timer::UNIT, $unitTemplate->getUnitSuffix());
-        $this->assertEquals('TestTimer', $unitTemplate->getName());
+        $this->assertEquals('TestTimer', $unitTemplate->getUnitName());
     }
 
     /**

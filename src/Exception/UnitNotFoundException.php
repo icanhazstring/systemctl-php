@@ -2,14 +2,12 @@
 
 namespace SystemCtl\Exception;
 
-use RuntimeException;
-
 /**
  * Class UnitNotFoundException
  *
  * @package SystemCtl\Exception
  */
-class UnitNotFoundException extends RuntimeException implements ExceptionInterface
+class UnitNotFoundException extends \RuntimeException
 {
     /**
      * @param string $type

@@ -19,7 +19,7 @@ use SystemCtl\Utils\DefinitionConverter;
 abstract class AbstractUnitTemplate
 {
     /** @var string */
-    protected $name;
+    protected $unitName;
     /** @var string */
     protected $unitSuffix;
 
@@ -36,7 +36,7 @@ abstract class AbstractUnitTemplate
      */
     public function __construct(string $unitName, string $unitSuffix)
     {
-        $this->name = $unitName;
+        $this->unitName = $unitName;
         $this->unitSuffix = $unitSuffix;
 
         $this->unitSection = new UnitSection;
@@ -91,9 +91,9 @@ abstract class AbstractUnitTemplate
     /**
      * @return string
      */
-    public function getName(): string
+    public function getUnitName(): string
     {
-        return $this->name;
+        return $this->unitName;
     }
 
     /**

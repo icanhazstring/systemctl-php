@@ -9,7 +9,11 @@ use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\CommandInterface;
 use SystemCtl\Command\SymfonyCommandDispatcher;
 use SystemCtl\Exception\UnitNotFoundException;
+use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\SystemCtl;
+use SystemCtl\Template\AbstractUnitTemplate;
+use SystemCtl\Template\Installer\UnitInstaller;
+use SystemCtl\Template\Installer\UnitInstallerInterface;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 
@@ -45,22 +49,30 @@ class SystemCtlTest extends TestCase
         return $command;
     }
 
-
-
     /**
      * @test
      */
-    public function itShouldSetBinaryAndTimeoutToDispatcherIsSet()
+    public function itShouldChangeStaticPropertiesIfSet()
     {
-        SystemCtl::setBinary('test');
+        SystemCtl::setBinary('testBinary');
         SystemCtl::setTimeout(5);
+        SystemCtl::setInstallPath('testInstallPath');
+        SystemCtl::setAssetPath('testAssetPath');
 
-        $dispatcher = $this->prophesize(CommandDispatcherInterface::class);
-        $dispatcher->setBinary('test')->shouldBeCalled()->willReturn($dispatcher);
-        $dispatcher->setTimeout(5)->shouldBeCalled()->willReturn($dispatcher);
+        $reflection = new \ReflectionClass(SystemCtl::class);
+        $binaryProperty = $reflection->getProperty('binary');
+        $binaryProperty->setAccessible(true);
+        $timeoutProperty = $reflection->getProperty('timeout');
+        $timeoutProperty->setAccessible(true);
+        $installPathProperty = $reflection->getProperty('installPath');
+        $installPathProperty->setAccessible(true);
+        $assetPathProperty = $reflection->getProperty('assetPath');
+        $assetPathProperty->setAccessible(true);
 
-        $systemCtl = new SystemCtl;
-        $systemCtl->setCommandDispatcher($dispatcher->reveal());
+        $this->assertEquals('testBinary', $binaryProperty->getValue(new SystemCtl));
+        $this->assertEquals(5, $timeoutProperty->getValue(new SystemCtl));
+        $this->assertEquals('testInstallPath', $installPathProperty->getValue(new SystemCtl));
+        $this->assertEquals('testAssetPath', $assetPathProperty->getValue(new SystemCtl));
     }
 
     /**
@@ -214,5 +226,20 @@ class SystemCtlTest extends TestCase
 
         $service = $systemctl->getService($unitName);
         $this->assertEquals('testService', $service->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldRaiseAnExceptionWhenAttemptingToInstallUnsupportedUnit()
+    {
+        $template = $this->prophesize(AbstractUnitTemplate::class);
+        $template->getUnitName()->willReturn('test');
+        $template->getUnitSuffix()->willReturn('fubar');
+
+        $systemCtl = new SystemCtl;
+
+        $this->expectException(UnitTypeNotSupportedException::class);
+        $systemCtl->install($template->reveal());
     }
 }

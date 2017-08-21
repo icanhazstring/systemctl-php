@@ -21,11 +21,13 @@ class PlatesRenderer implements RendererInterface
 
     /**
      * TemplateRenderer constructor.
-     * @param Plates\Engine $engine
+     *
+     * @param string $directory
+     * @param string $extension
      */
-    public function __construct(Plates\Engine $engine)
+    public function __construct(string $directory, string $extension = 'tpl')
     {
-        $this->engine = $engine;
+        $this->engine = new Plates\Engine($directory, $extension);
     }
 
     /**

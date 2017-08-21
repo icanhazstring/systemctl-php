@@ -18,13 +18,16 @@
         <testsuite name="integration-tests">
             <directory>./tests/Integration</directory>
         </testsuite>
+        <testsuite name="functional-tests">
+            <directory>./tests/Functional</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
         <blacklist>
             <directory suffix=".php">./vendor</directory>
         </blacklist>
-        <whitelist processUncoveredFilesFromWhitelist="false">
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>

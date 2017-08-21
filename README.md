@@ -5,13 +5,85 @@
 
 PHP wrapper for systemctl (PHP7.1)
 
-## Current supported units
+# Table of Contents
+
+- [Static Methods](#static-methods)
+    - [::setBinary(string $binary)](#setbinarystring-binary)
+    - [::setTimeout(int $timeout)](#settimeoutint-timeout)
+    - [::setInstallPath(string $installPath)](#setinstallpathstring-installpath)
+    - [::setAssetPath(string $assetPath)](#setassetpathstring-assetpath)
+  - ["I need sudo to run commands"](#i-need-sudo-to-run-commands)
+  - [How do I start/stop/restart a unit?](#how-do-i-startstoprestart-a-unit)
+- [Managing units](#managing-units)
+  - [Supported units](#supported-units)
+  - [Handling unit commands](#handling-unit-commands)
+- [Install new units](#install-new-units)
+  - [UnitSection](#unitsection)
+  - [InstallSection](#installsection)
+  - [TypeSpecificSection](#typespecificsection)
+- [How to Contribute](#how-to-contribute)
+
+# Static Methods
+### ::setBinary(string $binary)
+Change the binary executable of `SystemCtl`
+
+```php
+SystemCtl::setBinary('/bin/systemctl');
+```
+
+### ::setTimeout(int $timeout)
+Change the timeout for each command like `start()` on units and `SystemCtl`
+
+```php
+SystemCtl::setTimeout(3);
+```
+
+### ::setInstallPath(string $installPath)
+Change the install path for new units
+
+```php
+SystemCtl::setInstallPath('/etc/systemd/system');
+```
+
+### ::setAssetPath(string $assetPath)
+Change the asset path to look for unit file templates.
+The `default` path is relative to the `SystemCtl` vendor package
+
+```php
+SystemCtl::setAssetPath('assets');
+```
+
+## "I need sudo to run commands"
+If you need sudo, you should execute the bin executable with sudo.
+The incode support was dropped due to security reason.
+
+## How do I start/stop/restart a unit?
+Simply is that. First we instantiate a `SystemCtl` instance an load a unit from a specific type.
+Here we use a `Service`. You will always get back `true` if the command succeeded. 
+Otherwise the method will throw a `CommandFailedException`.
+
+```php
+$systemCtl = new SystemCtl();
+
+// start/stop/enable/disable/reload/restart
+$systemCtl->getService('nginx')->start();
+$systemCtl->getService('nginx')->stop();
+```
+
+# Managing units
+To manage any unit u want simply use the proper getter to receive an `Unit` object from `SystemCtl`
+
+## Supported units
 - service
 - timer
 
-> If you like to add support for more units, feel free to contribute.
+> If you like to see more units feel free to contribute. Other units will be added in the future.
 
-## Current supported commands
+## Handling unit commands
+Each unit comes with a range of methods you can invoke on them (like `start()`).
+These methods will be dispatched to the `SystemCtl::$binary` you set before hand (or default).
+
+Available unit commands are:
 - start
 - stop
 - enable
@@ -21,35 +93,50 @@ PHP wrapper for systemctl (PHP7.1)
 - isEnabled
 - isActive
 
-> If you like to add support for more commands, feel free to contribute.
+# Install new units
 
-## How to change the binary
+> To see a full documentation on how unit files are structure see [Redhat Systemd Documentation](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/sect-Managing_Services_with_systemd-Unit_Files.html)
+
+To install new units you will first need to create a specific `UnitTemplate` (like `ServiceUnitTemplate`).
+After you have created a template with a `$name`. You need to define needed values inside the
+`Sections` of a unit.
 
 ```php
-SystemCtl::setBinary('/bin/systemctl');
+$unitTemplate = new ServiceTemplate('myService');
 ```
 
-## How to change command timeout
-To change command tmeout simply call the static method `setTimeout`.
+Each unit consists of three sections: The `UnitSection`, `InstallSection` and a `TypeSpecificSection`
+
+## UnitSection
+To change the values needed fore the `UnitSection` simple get the section from the template
+and set needed values.
+
+**Beware that only set values will be rendered into the template**
+
+> For a full documentation on available methods see [UnitSection](src/Template/Section/UnitSection.php)
 ```php
-SystemCtl::setTimeout(10);
+$unitTemplate->getUnitSection()->setDescription('My test service');
 ```
 
-> The default timeout is set to `3` seconds
+## InstallSection
+To change the value needed for the `InstallSection` get the section from the template and set
+the needed values.
 
-## "I need sudo to run commands"
-If you need sudo, you should execute the bin executable with sudo.
-The incode support was dropped due to security reason.
-
-## How do I start/stop/restart a unit?
-Simply is that. First we instantiate a `SystemCtl` instance an load a unit from a specific type. Here we use a `Service`. You will always get back `true` if the command succeeded. Otherwise the method will throw a `CommandFailedException`.
+> For a full documentation on available methods see [InstallSection](src/Template/Section/InstallSection.php)
 
 ```php
-$systemCtl = new SystemCtl();
+$unitTemplate->getInstallSection()->setWantedBy(['multi-user.target']);
+```
 
-// start/stop/enable/disable/reload/restart
-$systemCtl->getService('nginx')->start();
-$systemCtl->getService('nginx')->stop();
+## TypeSpecificSection
+Each unit will have a type specific section. These sections are named after the `Type` of the Unit (e.g. `Service`).
+To change them, you simply to the same thing as for the others. In case of a `Service` you will do
+the following:
+
+> For a full documentation on available methods see [Serviceection](src/Template/Section/ServiceSection.php)
+
+```php
+$unitTemplate->getServiceSection()->setType(ServiceSection::TYPE_SIMPLE);
 ```
 
 # How to Contribute
@@ -64,13 +151,14 @@ Make your changes and make sure you run *test* and *codesniffer*.
 ```bash
 $ composer test
 > vendor/bin/phpunit tests/
-PHPUnit 6.1.4 by Sebastian Bergmann and contributors.
+PHPUnit 6.3.0 by Sebastian Bergmann and contributors.
 
-........                                                            8 / 8 (100%)
+................................................................. 65 / 89 ( 73%)
+........................                                          89 / 89 (100%)
 
-Time: 130 ms, Memory: 2.00MB
+Time: 1.65 seconds, Memory: 8.00MB
 
-OK (8 tests, 13 assertions)
+OK (89 tests, 169 assertions)
 
 $ composer cs
 > vendor/bin/phpcs --standard=PSR2 src/ && vendor/bin/phpcs --standard=PSR2 tests/

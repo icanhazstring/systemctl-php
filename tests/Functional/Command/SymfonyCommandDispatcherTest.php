@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Tests\Integration\Command;
+namespace SystemCtl\Tests\Functional\Command;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Command\SymfonyCommandDispatcher;

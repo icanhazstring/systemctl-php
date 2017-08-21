@@ -26,7 +26,7 @@ class ServiceUnitTemplateTest extends TestCase
 
         $this->assertInstanceOf(ServiceUnitTemplate::class, $unitTemplate);
         $this->assertEquals(Service::UNIT, $unitTemplate->getUnitSuffix());
-        $this->assertEquals('TestService', $unitTemplate->getName());
+        $this->assertEquals('TestService', $unitTemplate->getUnitName());
     }
 
     /**

@@ -6,6 +6,10 @@ use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\SymfonyCommandDispatcher;
 use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
+use SystemCtl\Template\AbstractUnitTemplate;
+use SystemCtl\Template\Installer\UnitInstaller;
+use SystemCtl\Template\Installer\UnitInstallerInterface;
+use SystemCtl\Template\Renderer\PlatesRenderer;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 use SystemCtl\Unit\UnitInterface;
@@ -23,8 +27,17 @@ class SystemCtl
     /** @var int timeout for commands */
     private static $timeout = 3;
 
+    /** @var string install path for new units */
+    private static $installPath = '/etc/systemd/system';
+
+    /** @var string */
+    private static $assetPath = __DIR__ . '/../assets';
+
     /** @var CommandDispatcherInterface */
     private $commandDispatcher;
+
+    /** @var UnitInstallerInterface */
+    private $unitInstaller;
 
     public const AVAILABLE_UNITS = [
         Service::UNIT,
@@ -63,6 +76,26 @@ class SystemCtl
     public static function setTimeout(int $timeout): void
     {
         self::$timeout = $timeout;
+    }
+
+    /**
+     * Change install path for units
+     *
+     * @param string $installPath
+     */
+    public static function setInstallPath(string $installPath): void
+    {
+        self::$installPath = $installPath;
+    }
+
+    /**
+     * Change asset path
+     *
+     * @param string $assetPath
+     */
+    public static function setAssetPath(string $assetPath): void
+    {
+        self::$assetPath = $assetPath;
     }
 
     /**
@@ -109,7 +142,7 @@ class SystemCtl
     }
 
     /**
-     * @param string $unitName
+     * @param string  $unitName
      * @param array[] $units
      *
      * @return null|string
@@ -207,5 +240,56 @@ class SystemCtl
             ->setBinary(self::$binary);
 
         return $this;
+    }
+
+    /**
+     * @return UnitInstallerInterface
+     */
+    public function getUnitInstaller(): UnitInstallerInterface
+    {
+        if ($this->unitInstaller === null) {
+            $this->unitInstaller = (new UnitInstaller)
+                ->setPath(self::$installPath)
+                ->setRenderer(new PlatesRenderer(self::$assetPath));
+        }
+
+        return $this->unitInstaller;
+    }
+
+    /**
+     * Set the unit installer
+     *
+     * @param UnitInstallerInterface $unitInstaller
+     *
+     * @return SystemCtl
+     */
+    public function setUnitInstaller(UnitInstallerInterface $unitInstaller): self
+    {
+        $this->unitInstaller = $unitInstaller;
+
+        return $this;
+    }
+
+    /**
+     * Install a given template, reload the daemon and return the freshly installed unit.
+     *
+     * @param AbstractUnitTemplate $unitTemplate
+     *
+     * @return UnitInterface
+     * @throws UnitTypeNotSupportedException
+     */
+    public function install(AbstractUnitTemplate $unitTemplate): UnitInterface
+    {
+        $unitSuffix = $unitTemplate->getUnitSuffix();
+        $unitName = $unitTemplate->getUnitName();
+
+        if (!in_array($unitSuffix, self::SUPPORTED_UNITS)) {
+            throw UnitTypeNotSupportedException::create($unitSuffix);
+        }
+
+        $this->getUnitInstaller()->install($unitTemplate);
+        $this->daemonReload();
+
+        return $this->{'get' . ucfirst($unitSuffix)}($unitName);
     }
 }
