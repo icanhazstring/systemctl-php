@@ -2,8 +2,11 @@
 
 namespace SystemCtl\Unit;
 
-use Symfony\Component\Process\ProcessBuilder;
-
+/**
+ * Class Timer
+ *
+ * @package SystemCtl\Unit
+ */
 class Timer extends AbstractUnit
 {
     /**
@@ -14,8 +17,8 @@ class Timer extends AbstractUnit
     /**
      * @inheritdoc
      */
-    public function __construct($name, ProcessBuilder $processBuilder)
+    protected function getUnitSuffix(): string
     {
-        parent::__construct($name, self::UNIT, $processBuilder);
+        return static::UNIT;
     }
 }

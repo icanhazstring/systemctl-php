@@ -2,36 +2,37 @@
 
 namespace SystemCtl\Unit;
 
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
-use SystemCtl\Exception\CommandFailedException;
+use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\CommandInterface;
 
+/**
+ * Class AbstractUnit
+ *
+ * @package SystemCtl\Unit
+ */
 abstract class AbstractUnit implements UnitInterface
 {
     /** @var string */
     private $name;
 
-    /** @var string */
-    private $type;
+    /** @var CommandDispatcherInterface */
+    protected $commandDispatcher;
 
-    /** @var ProcessBuilder */
-    private $processBuilder;
-
-    /** @var bool */
-    private $yell = false;
+    /**
+     * @var string
+     */
+    protected $unitSuffix;
 
     /**
      * Create new service with given name
      *
-     * @param string         $name
-     * @param string         $type
-     * @param ProcessBuilder $processBuilder
+     * @param string                     $name
+     * @param CommandDispatcherInterface $commandDispatcher
      */
-    public function __construct(string $name, string $type, ProcessBuilder $processBuilder)
+    public function __construct(string $name, CommandDispatcherInterface $commandDispatcher)
     {
         $this->name = $name;
-        $this->processBuilder = $processBuilder;
-        $this->type = $type;
+        $this->commandDispatcher = $commandDispatcher;
     }
 
     /**
@@ -40,16 +41,6 @@ abstract class AbstractUnit implements UnitInterface
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * Set a flag whether to yell with an exception if an command failes or not
-     *
-     * @param $state
-     */
-    public function yell($state)
-    {
-        $this->yell = $state;
     }
 
     /**
@@ -62,8 +53,7 @@ abstract class AbstractUnit implements UnitInterface
 
     /**
      * @inheritDoc
-     * @todo: Everything in here should happen inside the constructor and stored
-     *      afterwards.
+     * @todo: Everything in here should happen inside the constructor and stored afterwards
      */
     public function getInstanceName(): ?string
     {
@@ -77,41 +67,26 @@ abstract class AbstractUnit implements UnitInterface
     }
 
     /**
-     * Execute a single command
-     *
-     * @param string $command
-     *
-     * @throws CommandFailedException Raised if process was not successful and user wants to raise exception
-     *                                instead of returning the actual process exit code
-     *
-     * @return bool
+     * @return string
      */
-    protected function execute(string $command): bool
-    {
-        $process = $this->runCommandAgainstService($command);
-
-        if (!$process->isSuccessful() && $this->yell) {
-            $exceptionCall = CommandFailedException::class . '::from' . ucfirst($this->type);
-            throw call_user_func_array($exceptionCall, [$this->getName(), $command]);
-        }
-
-        return $process->isSuccessful();
-    }
+    abstract protected function getUnitSuffix(): string;
 
     /**
-     * @param string $command
+     * @param array $commands
      *
-     * @return Process
+     * @return CommandInterface
      */
-    protected function runCommandAgainstService(string $command): Process
+    public function execute(...$commands): CommandInterface
     {
-        $process = $this->processBuilder
-            ->setArguments([$command, $this->getName()])
-            ->getProcess();
+        $commands[] = implode(
+            '.',
+            [
+                $this->name,
+                $this->getUnitSuffix(),
+            ]
+        );
 
-        $process->run();
-
-        return $process;
+        return $this->commandDispatcher->dispatch(...$commands);
     }
 
     /**
@@ -119,7 +94,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function start(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -127,7 +102,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function stop(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -135,7 +110,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function disable(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -143,7 +118,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function reload(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -151,7 +126,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function restart(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -159,7 +134,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function enable(): bool
     {
-        return $this->execute(__FUNCTION__);
+        return $this->execute(__FUNCTION__)->isSuccessful();
     }
 
     /**
@@ -167,9 +142,9 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isEnabled(): bool
     {
-        $process = $this->runCommandAgainstService('is-enabled');
+        $output = $this->execute('is-enabled')->getOutput();
 
-        return $process->isSuccessful() && trim($process->getOutput()) === 'enabled';
+        return trim($output) === 'enabled';
     }
 
     /**
@@ -177,9 +152,9 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isActive(): bool
     {
-        $process = $this->runCommandAgainstService('is-active');
+        $output = $this->execute('is-active')->getOutput();
 
-        return $process->isSuccessful() && trim($process->getOutput()) === 'active';
+        return trim($output) === 'active';
     }
 
     /**

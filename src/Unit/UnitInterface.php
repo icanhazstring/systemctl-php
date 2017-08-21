@@ -2,6 +2,9 @@
 
 namespace SystemCtl\Unit;
 
+use SystemCtl\Command\CommandInterface;
+use SystemCtl\Exception\CommandFailedException;
+
 /**
  * UnitInterface for handling single units
  *
@@ -31,9 +34,19 @@ interface UnitInterface
     public function getInstanceName(): ?string;
 
     /**
+     * Execute certain commands against the CommandDispatcher
+     *
+     * @param array $commands
+     *
+     * @return CommandInterface
+     */
+    public function execute(...$commands): CommandInterface;
+
+    /**
      * Start command
      *
      * @return bool
+     * @throws CommandFailedException
      */
     public function start(): bool;
 
@@ -41,6 +54,7 @@ interface UnitInterface
      * Stop command
      *
      * @return bool
+     * @throws CommandFailedException
      */
     public function stop(): bool;
 
@@ -48,6 +62,7 @@ interface UnitInterface
      * Disable command
      *
      * @return bool
+     * @throws CommandFailedException
      */
     public function disable(): bool;
 
@@ -55,6 +70,7 @@ interface UnitInterface
      * Reload command
      *
      * @return bool
+     * @throws CommandFailedException
      */
     public function reload(): bool;
 
@@ -62,6 +78,7 @@ interface UnitInterface
      * Restart command
      *
      * @return bool
+     * @throws CommandFailedException
      */
     public function restart(): bool;
 
@@ -69,6 +86,7 @@ interface UnitInterface
      * Enable command
      *
      * @return bool
+     * @throws CommandFailedException
      */
     public function enable(): bool;
 

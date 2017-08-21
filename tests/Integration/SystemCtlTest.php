@@ -1,17 +1,36 @@
 <?php
 
-namespace SystemCtl\Test\Integration;
+namespace SystemCtl\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\CommandInterface;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
-use SystemCtl\Unit\Service;
 use SystemCtl\SystemCtl;
+use SystemCtl\Unit\Service;
 use SystemCtl\Unit\UnitInterface;
 
+/**
+ * Class SystemCtlTest
+ *
+ * @package SystemCtl\Test\Integration
+ */
 class SystemCtlTest extends TestCase
 {
+    /**
+     * @return ObjectProphecy
+     */
+    public function createCommandDispatcherStub(): ObjectProphecy
+    {
+        $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcher->setTimeout(Argument::any())->willReturn($commandDispatcher);
+        $commandDispatcher->setBinary(Argument::any())->willReturn($commandDispatcher);
+
+        return $commandDispatcher;
+    }
+
     public function testListUnitsWithAvailableUnits()
     {
         $output = <<<EOT
@@ -27,8 +46,17 @@ class SystemCtlTest extends TestCase
   console-setup.service                              loaded active exited
   cron.service                                       loaded active running
 EOT;
-        $systemctl = $this->buildSystemCtlMock($output);
-        $units = $systemctl->listUnits(SystemCtl::AVAILABLE_UNITS);
+
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
+
+        $units = $systemctl->listUnits(null, SystemCtl::AVAILABLE_UNITS);
         $this->assertCount(11, $units);
     }
 
@@ -47,8 +75,17 @@ EOT;
   console-setup.service                              loaded active exited
   cron.service                                       loaded active running
 EOT;
-        $systemctl = $this->buildSystemCtlMock($output);
-        $units = $systemctl->listUnits(SystemCtl::SUPPORTED_UNITS);
+
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
+
+        $units = $systemctl->listUnits();
         $this->assertCount(5, $units);
     }
 
@@ -66,13 +103,6 @@ EOT;
         SystemCtl::unitFromSuffix('unsupported', 'FailUnit');
     }
 
-    public function testGetUnitFromUnsupportedShouldRaiseException()
-    {
-        $systemctl = $this->buildSystemCtlMock('');
-        $this->expectException(UnitTypeNotSupportedException::class);
-        $systemctl->getFubar('Test');
-    }
-
     public function testGetServices()
     {
         $output = <<<EOT
@@ -84,7 +114,15 @@ PLACEHOLDER STUFF
 
 EOT;
 
-        $systemctl = $this->buildSystemCtlMock($output);
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
+
         $services = $systemctl->getServices();
 
         $this->assertCount(2, $services);
@@ -101,103 +139,33 @@ PLACEHOLDER STUFF
 
 EOT;
 
-        $systemctl = $this->buildSystemCtlMock($output);
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
+        $dispatcherStub = $this->createCommandDispatcherStub();
+        $dispatcherStub->dispatch(Argument::cetera())->willReturn($command);
+
+        $systemctl = new SystemCtl();
+        $systemctl->setCommandDispatcher($dispatcherStub->reveal());
         $timers = $systemctl->getTimers();
 
         $this->assertCount(2, $timers);
     }
 
-    public function testListUnitsWithAvailableUnitsAndPrefix()
-    {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getOutput'])
-            ->getMock();
-
-        $process->method('getOutput')->willReturn('');
-
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->setMethods(['add', 'getProcesS'])
-            ->getMock();
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        $processBuilder
-            ->expects(self::at(0))
-            ->method('add')
-            ->with('list-units')
-            ->willReturn($processBuilder);
-
-        $processBuilder
-            ->expects(self::at(1))
-            ->method('add')
-            ->with('sys*')
-            ->willReturn($processBuilder);
-
-        $systemctl->listUnits(SystemCtl::AVAILABLE_UNITS, 'sys');
-    }
-
-    public function testDaemonReload()
-    {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['isSuccessful'])
-            ->getMock();
-
-        $process->method('isSuccessful')->willReturn(true);
-
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->setMethods(['add', 'getProcess'])
-            ->getMock();
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|SystemCtl $systemctl */
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        $processBuilder
-            ->method('add')
-            ->with('daemon-reload')
-            ->willReturn($processBuilder);
-
-        $this->assertTrue($systemctl->daemonReload());
-    }
-
     /**
-     * @param string $output
-     * @return \PHPUnit_Framework_MockObject_MockObject|SystemCtl
+     * @test
      */
-    private function buildSystemCtlMock($output)
+    public function itShouldReturnTrueOnSuccessfulDaemonReload()
     {
-        $process = $this->getMockBuilder(Process::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getOutput'])
-            ->getMock();
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
 
-        $process->method('getOutput')->willReturn($output);
+        $dispatcher = $this->createCommandDispatcherStub();
+        $dispatcher->dispatch(Argument::exact('daemon-reload'))->willReturn($command);
 
-        $processBuilder = $this->getMockBuilder(ProcessBuilder::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getProcess'])
-            ->getMock();
+        $systemCtl = new SystemCtl();
+        $systemCtl->setCommandDispatcher($dispatcher->reveal());
 
-        $processBuilder->method('getProcess')->willReturn($process);
-
-        $systemctl = $this->getMockBuilder(SystemCtl::class)
-            ->setMethods(['getProcessBuilder'])
-            ->getMock();
-
-        $systemctl->method('getProcessBuilder')->willReturn($processBuilder);
-
-        return $systemctl;
+        $this->assertTrue($systemCtl->daemonReload());
     }
 }

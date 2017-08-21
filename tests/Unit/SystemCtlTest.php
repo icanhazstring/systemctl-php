@@ -1,52 +1,218 @@
 <?php
 
-namespace SystemCtl\Test\Unit;
+namespace SystemCtl\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\CommandInterface;
+use SystemCtl\Command\SymfonyCommandDispatcher;
+use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\SystemCtl;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 
+/**
+ * Class SystemCtlTest
+ *
+ * @package SystemCtl\Test\Unit
+ */
 class SystemCtlTest extends TestCase
 {
-    public function testGetServiceWithName()
+    /**
+     * @return ObjectProphecy
+     */
+    private function buildCommandDispatcherStub(): ObjectProphecy
     {
-        $systemctl = new SystemCtl();
+        $commandDispatcherStub = $this->prophesize(CommandDispatcherInterface::class);
+        $commandDispatcherStub->setTimeout(Argument::type('int'))->willReturn($commandDispatcherStub);
+        $commandDispatcherStub->setBinary(Argument::type('string'))->willReturn($commandDispatcherStub);
 
-        $service = $systemctl->getService('testService');
+        return $commandDispatcherStub;
+    }
+
+    /**
+     * @param string $output
+     *
+     * @return ObjectProphecy
+     */
+    private function buildCommandStub(string $output): ObjectProphecy
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->getOutput()->willReturn($output);
+
+        return $command;
+    }
+
+
+
+    /**
+     * @test
+     */
+    public function itShouldSetBinaryAndTimeoutToDispatcherIsSet()
+    {
+        SystemCtl::setBinary('test');
+        SystemCtl::setTimeout(5);
+
+        $dispatcher = $this->prophesize(CommandDispatcherInterface::class);
+        $dispatcher->setBinary('test')->shouldBeCalled()->willReturn($dispatcher);
+        $dispatcher->setTimeout(5)->shouldBeCalled()->willReturn($dispatcher);
+
+        $systemCtl = new SystemCtl;
+        $systemCtl->setCommandDispatcher($dispatcher->reveal());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldInstantiateDefaultCommandDispatcherIfReceived()
+    {
+        $systemCtl = new SystemCtl;
+        $this->assertInstanceOf(SymfonyCommandDispatcher::class, $systemCtl->getCommandDispatcher());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnServiceGetting()
+    {
+        $unitName = 'testService';
+        $output = ' testService.service     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $service = $systemctl->getService($unitName);
         $this->assertInstanceOf(Service::class, $service);
         $this->assertEquals('testService', $service->getName());
     }
 
-    public function testGetTimerWithName()
+    /**
+     * @test
+     */
+    public function itShouldReturnAServiceOnServiceGetting()
     {
-        $systemctl = new SystemCtl();
+        $unitName = 'testService';
+        $output = ' testService.service     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub($output));
 
-        $timer = $systemctl->getTimer('testTimer');
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $service = $systemctl->getService($unitName);
+        $this->assertInstanceOf(Service::class, $service);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnAServiceWithTheCorrectNameOnServiceGetting()
+    {
+        $unitName = 'testService';
+        $output = ' testService.service     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $service = $systemctl->getService($unitName);
+        $this->assertEquals('testService', $service->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExceptionIfNoServiceCouldBeFound()
+    {
+        $unitName = 'testService';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub(''));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getService($unitName);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnTimerGetting()
+    {
+        $unitName = 'testTimer';
+        $output = ' testTimer.timer     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $timer = $systemctl->getTimer($unitName);
         $this->assertInstanceOf(Timer::class, $timer);
-        $this->assertEquals('testTimer', $timer->getName());
+        $this->assertEquals($unitName, $timer->getName());
     }
 
-    public function testSetTimeoutShouldChangeCommandTimeout()
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound()
     {
-        $systemCtl = new SystemCtl();
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals(3, $processBuilder->getProcess()->getTimeout());
+        $unitName = 'testTimer';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub(''));
 
-        SystemCtl::setTimeout(5);
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals(5, $processBuilder->getProcess()->getTimeout());
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getTimer($unitName);
     }
 
-    public function testSetBinaryShouldChangeCommand()
+    /**
+     * @test
+     */
+    public function itShouldReturnATimerOnTimerGetting()
     {
-        $systemCtl = new SystemCtl();
+        $unitName = 'testService';
+        $output = ' testService.service     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub($output));
 
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals("'/bin/systemctl'", $processBuilder->getProcess()->getCommandLine());
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
-        SystemCtl::setBinary('/usr/sbin/systemctl');
-        $processBuilder = $systemCtl->getProcessBuilder();
-        $this->assertEquals("'/usr/sbin/systemctl'", $processBuilder->getProcess()->getCommandLine());
+        $service = $systemctl->getService($unitName);
+        $this->assertInstanceOf(Service::class, $service);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldReturnATimerWithTheCorrectNameOnTimerGetting()
+    {
+        $unitName = 'testService';
+        $output = ' testService.service     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch('list-units', $unitName . '*')
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $service = $systemctl->getService($unitName);
+        $this->assertEquals('testService', $service->getName());
     }
 }

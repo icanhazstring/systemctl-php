@@ -2,29 +2,23 @@
 
 namespace SystemCtl;
 
-use Symfony\Component\Process\ProcessBuilder;
+use SystemCtl\Command\CommandDispatcherInterface;
+use SystemCtl\Command\SymfonyCommandDispatcher;
+use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
-use SystemCtl\Unit\AbstractUnit;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 use SystemCtl\Unit\UnitInterface;
 
 /**
- * SystemCtl
- *
- * @method Service getService(string $unit)
- * @method Timer getTimer(string $unit)
- *
- * @method array getServices(?string $unitPrefix = null)
- * @method array getTimers(?string $unitPrefix = null)
+ * Class SystemCtl
  *
  * @package SystemCtl
- * @author icanhazstring <blubb0r05+github@gmail.com>
  */
 class SystemCtl
 {
     /** @var string systemctl binary path */
-    private static $binary = '/bin/systemctl';
+    public static $binary = '/bin/systemctl';
 
     /** @var int timeout for commands */
     private static $timeout = 3;
@@ -47,6 +41,8 @@ class SystemCtl
         Service::UNIT,
         Timer::UNIT,
     ];
+
+    private $commandDispatcher;
 
     /**
      * Change systemctl binary
@@ -74,6 +70,7 @@ class SystemCtl
      *
      * @return UnitInterface
      * @throws UnitTypeNotSupportedException
+     * @deprecated This static method is deprecated, please refer to a specifc get method for a unit
      */
     public static function unitFromSuffix(string $unitSuffix, string $unitName): UnitInterface
     {
@@ -83,102 +80,117 @@ class SystemCtl
             throw new UnitTypeNotSupportedException('Unit type ' . $unitSuffix . ' not supported');
         }
 
-        return new $unitClass($unitName, new ProcessBuilder([self::$binary]));
+        $commandDispatcher = (new SymfonyCommandDispatcher)
+            ->setTimeout(self::$timeout)
+            ->setBinary(self::$binary);
+
+        return new $unitClass($unitName, $commandDispatcher);
     }
 
     /**
      * List all supported units
      *
-     * @param string[] $unitTypes
      * @param null|string $unitPrefix
-     * @return array
+     * @param string[]    $unitTypes
+     *
+     * @return array|\string[]
      */
-    public function listUnits(array $unitTypes, ?string $unitPrefix = null): array
+    public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
     {
-        $processBuilder = $this->getProcessBuilder()
-            ->add('list-units');
+        $commands = ['list-units'];
 
         if ($unitPrefix) {
-            $processBuilder->add($unitPrefix . '*');
+            $commands[] = $unitPrefix . '*';
         }
 
-        $process = $processBuilder->getProcess();
-
-        $process->run();
-        $output = $process->getOutput();
+        $output = $this->getCommandDispatcher()->dispatch(...$commands)->getOutput();
 
         return array_reduce($unitTypes, function ($carry, $unitSuffix) use ($output) {
             $result = Utils\OutputFetcher::fetchUnitNames($unitSuffix, $output);
+
             return array_merge($carry, $result);
         }, []);
     }
 
     /**
-     * Invoke getUnit or getUnits depending on the requested method.
-     * The method name needs to contain the unit type u want to call.
+     * @param string $name
      *
-     * @param $name
-     * @param $arguments
-     * @return array|AbstractUnit
-     * @throws UnitTypeNotSupportedException
+     * @return Service
      */
-    public function __call($name, $arguments)
+    public function getService(string $name): Service
     {
-        preg_match('/get(?<unit>[^s]+)(?<plural>s)?/', $name, $match);
+        $units = $this->listUnits($name, [Service::UNIT]);
 
-        $isPlural = isset($match['plural']);
-        $unitName = strtolower($match['unit']);
+        $unitName = $this->searchForUnitInUnits($name, $units);
 
-        if (!in_array($unitName, self::SUPPORTED_UNITS)) {
-            throw new UnitTypeNotSupportedException("Unit '{$unitName}'' not supported");
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Service::UNIT, $name);
         }
 
-        if ($isPlural) {
-            return $this->getUnits(ucfirst($unitName), $arguments);
-        }
-
-        return $this->getUnit(ucfirst($unitName), $arguments);
-    }
-
-    /**
-     * @param string $unitClass
-     * @param $args
-     * @return AbstractUnit
-     */
-    private function getUnit(string $unitClass, $args): AbstractUnit
-    {
-        $args[] = $this->getProcessBuilder();
-        $className = '\SystemCtl\Unit\\' . $unitClass;
-
-        return new $className(...$args);
+        return new Service($unitName, $this->getCommandDispatcher());
     }
 
     /**
      * @param string $unitName
-     * @param $arguments
-     * @return array
+     * @param array[] $units
+     *
+     * @return null|string
      */
-    private function getUnits(string $unitName, $arguments): array
+    protected function searchForUnitInUnits(string $unitName, array $units): ?string
     {
-        $unitPrefix = $arguments[0] ?? null;
-        $units = $this->listUnits([strtolower($unitName)], $unitPrefix);
-        $unitClass = '\SystemCtl\Unit\\' . $unitName;
+        foreach ($units as $unit) {
+            if ($unit === $unitName) {
+                return $unit;
+            }
+        }
 
-        return array_map(function ($unitName) use ($unitClass) {
-            return new $unitClass($unitName, $this->getProcessBuilder());
+        return null;
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Service[]
+     */
+    public function getServices(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Service::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Service($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 
     /**
-     * @return ProcessBuilder
+     * @param string $name
+     *
+     * @return Timer
      */
-    public function getProcessBuilder(): ProcessBuilder
+    public function getTimer(string $name): Timer
     {
-        $builder = ProcessBuilder::create();
-        $builder->setPrefix(self::$binary);
-        $builder->setTimeout(self::$timeout);
+        $units = $this->listUnits($name, [Timer::UNIT]);
 
-        return $builder;
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Timer::UNIT, $name);
+        }
+
+        return new Timer($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Timer[]
+     */
+    public function getTimers(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Timer::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Timer($unitName, $this->getCommandDispatcher());
+        }, $units);
     }
 
     /**
@@ -188,12 +200,34 @@ class SystemCtl
      */
     public function daemonReload(): bool
     {
-        $processBuilder = $this->getProcessBuilder();
-        $processBuilder->add('daemon-reload');
+        return $this->getCommandDispatcher()->dispatch('daemon-reload')->isSuccessful();
+    }
 
-        $process = $processBuilder->getProcess();
-        $process->run();
+    /**
+     * @return CommandDispatcherInterface
+     */
+    public function getCommandDispatcher(): CommandDispatcherInterface
+    {
+        if ($this->commandDispatcher === null) {
+            $this->commandDispatcher = (new SymfonyCommandDispatcher)
+                ->setTimeout(self::$timeout)
+                ->setBinary(self::$binary);
+        }
 
-        return $process->isSuccessful();
+        return $this->commandDispatcher;
+    }
+
+    /**
+     * @param CommandDispatcherInterface $dispatcher
+     *
+     * @return SystemCtl
+     */
+    public function setCommandDispatcher(CommandDispatcherInterface $dispatcher)
+    {
+        $this->commandDispatcher = $dispatcher
+            ->setTimeout(self::$timeout)
+            ->setBinary(self::$binary);
+
+        return $this;
     }
 }
