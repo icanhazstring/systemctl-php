@@ -3,18 +3,29 @@
 namespace SystemCtl\Test\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
-use SystemCtl\Exception\PropertyNotSupportedException;
 use SystemCtl\Template\Section\TimerSection;
 
+/**
+ * TimerSectionTest
+ *
+ * @package SystemCtl\Test\Unit\Template\Section
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class TimerSectionTest extends TestCase
 {
-    public function testCreation()
+    /**
+     * @test
+     */
+    public function itShouldCreateProperInstance()
     {
         $timerSection = new TimerSection;
         $this->assertInstanceOf(TimerSection::class, $timerSection);
     }
 
-    public function testValidProperties()
+    /**
+     * @test
+     */
+    public function itShouldSetPropertiesAndReturnThem()
     {
         $timerSection = (new TimerSection)
             ->setOnCalendar('Wed..Sat *-*-* 1:00')
@@ -26,21 +37,10 @@ class TimerSectionTest extends TestCase
         $this->assertFalse($timerSection->shouldRemainAfterElapse());
     }
 
-    public function testInvalidPropertyShouldRaiseException()
-    {
-        $timerSection = new TimerSection;
-
-        $this->expectException(PropertyNotSupportedException::class);
-        $timerSection->setFubar('should fail');
-    }
-
-    public function testNonSetPropertyShouldReturnNull()
-    {
-        $timerSection = new TimerSection;
-        $this->assertNull($timerSection->getOnCalendar());
-    }
-
-    public function testGetPropetiesShouldReturnOnlySetProperties()
+    /**
+     * @test
+     */
+    public function itShouldReturnOnlyThosePropertiesPreviouslySet()
     {
         $timerSection = new TimerSection;
 

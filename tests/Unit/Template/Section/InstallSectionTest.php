@@ -6,15 +6,27 @@ use PHPUnit\Framework\TestCase;
 use SystemCtl\Exception\PropertyNotSupportedException;
 use SystemCtl\Template\Section\InstallSection;
 
+/**
+ * InstallSectionTest
+ *
+ * @package SystemCtl\Test\Unit\Template\Section
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class InstallSectionTest extends TestCase
 {
-    public function testCreation()
+    /**
+     * @test
+     */
+    public function itShouldCreateProperInstance()
     {
         $installSection = new InstallSection;
         $this->assertInstanceOf(InstallSection::class, $installSection);
     }
 
-    public function testValidProperties()
+    /**
+     * @test
+     */
+    public function itShouldSetPropertiesAndReturnThem()
     {
         $installSection = (new InstallSection)
             ->setAlias(['alias'])
@@ -28,7 +40,10 @@ class InstallSectionTest extends TestCase
         $this->assertEquals(['also'], $installSection->getAlso());
     }
 
-    public function testInvalidPropertyShouldRaiseException()
+    /**
+     * @test
+     */
+    public function itShouldRaiseAnExceptionOnInvalidProperty()
     {
         $installSection = new InstallSection;
 
@@ -36,13 +51,19 @@ class InstallSectionTest extends TestCase
         $installSection->setFubar('should fail');
     }
 
-    public function testNonSetPropertyShouldReturnNull()
+    /**
+     * @test
+     */
+    public function itShouldReturnNullIfAPropertyIsNotSet()
     {
         $installSection = new InstallSection;
         $this->assertNull($installSection->getWantedBy());
     }
 
-    public function testGetPropetiesShouldReturnOnlySetProperties()
+    /**
+     * @test
+     */
+    public function itShouldReturnOnlyThosePropertiesPreviouslySet()
     {
         $installSection = new InstallSection;
 

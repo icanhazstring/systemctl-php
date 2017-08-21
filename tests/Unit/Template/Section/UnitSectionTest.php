@@ -3,18 +3,29 @@
 namespace SystemCtl\Test\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
-use SystemCtl\Exception\PropertyNotSupportedException;
 use SystemCtl\Template\Section\UnitSection;
 
+/**
+ * UnitSectionTest
+ *
+ * @package SystemCtl\Test\Unit\Template\Section
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class UnitSectionTest extends TestCase
 {
-    public function testCreation()
+    /**
+     * @test
+     */
+    public function itShouldCreateProperInstance()
     {
         $unitSection = new UnitSection;
         $this->assertInstanceOf(UnitSection::class, $unitSection);
     }
 
-    public function testValidProperties()
+    /**
+     * @test
+     */
+    public function itShouldSetPropertiesAndReturnThem()
     {
         $unitSection = (new UnitSection)
             ->setDescription('TestDescription')
@@ -32,21 +43,10 @@ class UnitSectionTest extends TestCase
         $this->assertEquals(['g', 'h'], $unitSection->getConflicts());
     }
 
-    public function testInvalidPropertyShouldRaiseException()
-    {
-        $unitSection = new UnitSection;
-
-        $this->expectException(PropertyNotSupportedException::class);
-        $unitSection->setFubar('should fail');
-    }
-
-    public function testNonSetPropertyShouldReturnNull()
-    {
-        $unitSection = new UnitSection;
-        $this->assertNull($unitSection->getDescription());
-    }
-
-    public function testGetPropetiesShouldReturnOnlySetProperties()
+    /**
+     * @test
+     */
+    public function itShouldReturnOnlyThosePropertiesPreviouslySet()
     {
         $unitSection = new UnitSection;
 

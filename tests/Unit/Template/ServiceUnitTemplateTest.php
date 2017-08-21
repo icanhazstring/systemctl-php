@@ -9,9 +9,18 @@ use SystemCtl\Template\Section\UnitSection;
 use SystemCtl\Template\ServiceUnitTemplate;
 use SystemCtl\Unit\Service;
 
+/**
+ * ServiceUnitTemplateTest
+ *
+ * @package SystemCtl\Test\Unit\Template
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class ServiceUnitTemplateTest extends TestCase
 {
-    public function testSimpleUnitCreation()
+    /**
+     * @test
+     */
+    public function itShouldCreateASimpleInstance()
     {
         $unitTemplate = new ServiceUnitTemplate('TestService');
 
@@ -20,7 +29,10 @@ class ServiceUnitTemplateTest extends TestCase
         $this->assertEquals('TestService', $unitTemplate->getName());
     }
 
-    public function testEmptySectionAfterCreation()
+    /**
+     * @test
+     */
+    public function itShouldReturnEmptySectionsAfterInstantiation()
     {
         $unitTemplate = new ServiceUnitTemplate('TestService');
 
@@ -34,7 +46,10 @@ class ServiceUnitTemplateTest extends TestCase
         $this->assertEmpty($unitTemplate->getServiceSection()->getProperties());
     }
 
-    public function testUnitCreationWithSections()
+    /**
+     * @test
+     */
+    public function itShouldReturnProperSectionValuesIfSet()
     {
         $unitTemplate = new ServiceUnitTemplate('TestService');
 

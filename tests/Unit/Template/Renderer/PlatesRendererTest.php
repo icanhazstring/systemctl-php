@@ -11,6 +11,12 @@ use Vfs\FileSystem;
 use Vfs\Node\Directory;
 use Vfs\Node\File;
 
+/**
+ * PlatesRendererTest
+ *
+ * @package SystemCtl\Test\Unit\Template\Renderer
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class PlatesRendererTest extends TestCase
 {
     /** @var FileSystem */

@@ -9,9 +9,18 @@ use SystemCtl\Template\Section\UnitSection;
 use SystemCtl\Template\TimerUnitTemplate;
 use SystemCtl\Unit\Timer;
 
+/**
+ * TimerUnitTemplateTest
+ *
+ * @package SystemCtl\Test\Unit\Template
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class TimerUnitTemplateTest extends TestCase
 {
-    public function testSimpleUnitCreation()
+    /**
+     * @test
+     */
+    public function itShouldCreateASimpleInstance()
     {
         $unitTemplate = new TimerUnitTemplate('TestTimer');
 
@@ -20,7 +29,10 @@ class TimerUnitTemplateTest extends TestCase
         $this->assertEquals('TestTimer', $unitTemplate->getName());
     }
 
-    public function testEmptySectionAfterCreation()
+    /**
+     * @test
+     */
+    public function itShouldReturnEmptySectionsAfterInstantiation()
     {
         $unitTemplate = new TimerUnitTemplate('TestTimer');
 
@@ -34,7 +46,10 @@ class TimerUnitTemplateTest extends TestCase
         $this->assertEmpty($unitTemplate->getTimerSection()->getProperties());
     }
 
-    public function testUnitCreationWithSections()
+    /**
+     * @test
+     */
+    public function itShouldReturnProperSectionValuesIfSet()
     {
         $unitTemplate = new TimerUnitTemplate('TestTimer');
 

@@ -3,18 +3,30 @@
 namespace SystemCtl\Test\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
-use SystemCtl\Exception\PropertyNotSupportedException;
 use SystemCtl\Template\Section\ServiceSection;
 
+/**
+ * ServiceSectionTest
+ *
+ * @package SystemCtl\Test\Unit\Template\Section
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class ServiceSectionTest extends TestCase
 {
-    public function testCreation()
+
+    /**
+     * @test
+     */
+    public function itShouldCreateProperInstance()
     {
         $serviceSection = new ServiceSection;
         $this->assertInstanceOf(ServiceSection::class, $serviceSection);
     }
 
-    public function testValidProperties()
+    /**
+     * @test
+     */
+    public function itShouldSetPropertiesAndReturnThem()
     {
         $serviceSection = (new ServiceSection)
             ->setType(ServiceSection::TYPE_FORKING)
@@ -38,21 +50,10 @@ class ServiceSectionTest extends TestCase
         $this->assertEquals('pid', $serviceSection->getPIDFile());
     }
 
-    public function testInvalidPropertyShouldRaiseException()
-    {
-        $serviceSection = new ServiceSection;
-
-        $this->expectException(PropertyNotSupportedException::class);
-        $serviceSection->setFubar('should fail');
-    }
-
-    public function testNonSetPropertyShouldReturnNull()
-    {
-        $serviceSection = new ServiceSection;
-        $this->assertNull($serviceSection->getEnvironment());
-    }
-
-    public function testGetPropetiesShouldReturnOnlySetProperties()
+    /**
+     * @test
+     */
+    public function itShouldReturnOnlyThosePropertiesPreviouslySet()
     {
         $serviceSection = new ServiceSection;
 
