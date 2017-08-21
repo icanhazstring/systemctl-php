@@ -23,6 +23,8 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      * @dataProvider itShouldReturnCorrectNameDataProvider
+     *
+     * @param string $name
      */
     public function itShouldReturnCorrectName(string $name)
     {

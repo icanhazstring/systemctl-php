@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit;
+namespace SystemCtl\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

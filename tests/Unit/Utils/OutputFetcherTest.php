@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Utils;
+namespace SystemCtl\Tests\Unit\Utils;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Utils\OutputFetcher;
