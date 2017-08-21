@@ -12,8 +12,7 @@ PHP wrapper for systemctl (PHP7.1)
     - [::setTimeout(int $timeout)](#settimeoutint-timeout)
     - [::setInstallPath(string $installPath)](#setinstallpathstring-installpath)
     - [::setAssetPath(string $assetPath)](#setassetpathstring-assetpath)
-  - ["I need sudo to run commands"](#i-need-sudo-to-run-commands)
-  - [How do I start/stop/restart a unit?](#how-do-i-startstoprestart-a-unit)
+- ["I need sudo to run commands"](#i-need-sudo-to-run-commands)
 - [Managing units](#managing-units)
   - [Supported units](#supported-units)
   - [Handling unit commands](#handling-unit-commands)
@@ -53,22 +52,9 @@ The `default` path is relative to the `SystemCtl` vendor package
 SystemCtl::setAssetPath('assets');
 ```
 
-## "I need sudo to run commands"
+# "I need sudo to run commands"
 If you need sudo, you should execute the bin executable with sudo.
 The incode support was dropped due to security reason.
-
-## How do I start/stop/restart a unit?
-Simply is that. First we instantiate a `SystemCtl` instance an load a unit from a specific type.
-Here we use a `Service`. You will always get back `true` if the command succeeded. 
-Otherwise the method will throw a `CommandFailedException`.
-
-```php
-$systemCtl = new SystemCtl();
-
-// start/stop/enable/disable/reload/restart
-$systemCtl->getService('nginx')->start();
-$systemCtl->getService('nginx')->stop();
-```
 
 # Managing units
 To manage any unit u want simply use the proper getter to receive an `Unit` object from `SystemCtl`
@@ -92,6 +78,12 @@ Available unit commands are:
 - restart
 - isEnabled
 - isActive
+
+```php
+$systemCtl = new SystemCtl();
+
+$systemCtl->getService('nginx')->start();
+```
 
 # Install new units
 
