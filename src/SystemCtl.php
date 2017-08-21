@@ -65,29 +65,6 @@ class SystemCtl
     }
 
     /**
-     * @param string $unitSuffix
-     * @param string $unitName
-     *
-     * @return UnitInterface
-     * @throws UnitTypeNotSupportedException
-     * @deprecated This static method is deprecated, please refer to a specifc get method for a unit
-     */
-    public static function unitFromSuffix(string $unitSuffix, string $unitName): UnitInterface
-    {
-        $unitClass = 'SystemCtl\\Unit\\' . ucfirst($unitSuffix);
-
-        if (!class_exists($unitClass)) {
-            throw new UnitTypeNotSupportedException('Unit type ' . $unitSuffix . ' not supported');
-        }
-
-        $commandDispatcher = (new SymfonyCommandDispatcher)
-            ->setTimeout(self::$timeout)
-            ->setBinary(self::$binary);
-
-        return new $unitClass($unitName, $commandDispatcher);
-    }
-
-    /**
      * List all supported units
      *
      * @param null|string $unitPrefix

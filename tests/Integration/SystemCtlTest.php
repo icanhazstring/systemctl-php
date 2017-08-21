@@ -89,20 +89,6 @@ EOT;
         $this->assertCount(5, $units);
     }
 
-    public function testCreateUnitFromSupportedSuffixShouldWord()
-    {
-        $unit = SystemCtl::unitFromSuffix('service', 'SuccessService');
-        $this->assertInstanceOf(UnitInterface::class, $unit);
-        $this->assertInstanceOf(Service::class, $unit);
-        $this->assertEquals('SuccessService', $unit->getName());
-    }
-
-    public function testCreateUnitFromUnsupportedSuffixShouldRaiseException()
-    {
-        $this->expectException(UnitTypeNotSupportedException::class);
-        SystemCtl::unitFromSuffix('unsupported', 'FailUnit');
-    }
-
     public function testGetServices()
     {
         $output = <<<EOT
