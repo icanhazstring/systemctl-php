@@ -11,7 +11,7 @@ namespace SystemCtl\Template\Section;
  *
  * @method string getOnCalendar()
  * @method string getUnit()
- * @method bool shouldRemainAfterElapse()
+ * @method bool getRemainAfterElapse()
  *
  * @package SystemCtl\Template\Section
  * @author  icanhazstring <blubb0r05+github@gmail.com>

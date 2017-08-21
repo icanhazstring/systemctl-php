@@ -15,7 +15,7 @@ use SystemCtl\Unit\UnitInterface;
 /**
  * Class SystemCtlTest
  *
- * @package SystemCtl\Test\Integration
+ * @package SystemCtl\Tests\Integration
  */
 class SystemCtlTest extends TestCase
 {

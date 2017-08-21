@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Template\Section;
+namespace SystemCtl\Tests\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Template\Section\TimerSection;
@@ -8,7 +8,7 @@ use SystemCtl\Template\Section\TimerSection;
 /**
  * TimerSectionTest
  *
- * @package SystemCtl\Test\Unit\Template\Section
+ * @package SystemCtl\Tests\Unit\Template\Section
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class TimerSectionTest extends TestCase
@@ -34,7 +34,7 @@ class TimerSectionTest extends TestCase
 
         $this->assertEquals('Wed..Sat *-*-* 1:00', $timerSection->getOnCalendar());
         $this->assertEquals('testUnit', $timerSection->getUnit());
-        $this->assertFalse($timerSection->shouldRemainAfterElapse());
+        $this->assertFalse($timerSection->getRemainAfterElapse());
     }
 
     /**

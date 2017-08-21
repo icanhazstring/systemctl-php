@@ -14,7 +14,7 @@ use SystemCtl\Unit\Timer;
 /**
  * Class UnitTest
  *
- * @package SystemCtl\Test\Integration\Unit
+ * @package SystemCtl\Tests\Integration\Unit
  */
 class UnitTest extends TestCase
 {

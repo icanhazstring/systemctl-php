@@ -33,15 +33,8 @@ class TimerUnitTemplate extends AbstractUnitTemplate
     /**
      * @inheritDoc
      */
-    public function getDefinitions(): array
+    public function getTypeSpecificSection()
     {
-        $defintiions = parent::getDefinitions();
-        $timerProperties = $this->getTimerSection()->getProperties();
-
-        if (!empty($timerProperties)) {
-            $defintiions[ucfirst(Timer::UNIT)] = $this->convertProperties($timerProperties);
-        }
-
-        return $defintiions;
+        return $this->timerSection;
     }
 }

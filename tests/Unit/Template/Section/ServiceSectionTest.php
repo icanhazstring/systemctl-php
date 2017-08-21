@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Template\Section;
+namespace SystemCtl\Tests\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Template\Section\ServiceSection;
@@ -8,7 +8,7 @@ use SystemCtl\Template\Section\ServiceSection;
 /**
  * ServiceSectionTest
  *
- * @package SystemCtl\Test\Unit\Template\Section
+ * @package SystemCtl\Tests\Unit\Template\Section
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class ServiceSectionTest extends TestCase
@@ -46,7 +46,7 @@ class ServiceSectionTest extends TestCase
         $this->assertEquals('/test/command/stop', $serviceSection->getExecStop());
         $this->assertEquals('/test/command/reload', $serviceSection->getExecReload());
         $this->assertEquals('always', $serviceSection->getRestart());
-        $this->assertTrue($serviceSection->shouldRemainsAfterExit());
+        $this->assertTrue($serviceSection->getRemainsAfterExit());
         $this->assertEquals('pid', $serviceSection->getPIDFile());
     }
 

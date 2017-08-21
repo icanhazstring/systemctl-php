@@ -18,10 +18,13 @@ use SystemCtl\Unit\UnitInterface;
 class SystemCtl
 {
     /** @var string systemctl binary path */
-    public static $binary = '/bin/systemctl';
+    private static $binary = '/bin/systemctl';
 
     /** @var int timeout for commands */
     private static $timeout = 3;
+
+    /** @var CommandDispatcherInterface */
+    private $commandDispatcher;
 
     public const AVAILABLE_UNITS = [
         Service::UNIT,
@@ -41,8 +44,6 @@ class SystemCtl
         Service::UNIT,
         Timer::UNIT,
     ];
-
-    private $commandDispatcher;
 
     /**
      * Change systemctl binary

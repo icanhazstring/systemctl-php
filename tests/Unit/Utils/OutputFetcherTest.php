@@ -8,7 +8,7 @@ use SystemCtl\Utils\OutputFetcher;
 /**
  * Class OutputFetcherTest
  *
- * @package SystemCtl\Test\Unit\Utils
+ * @package SystemCtl\Tests\Unit\Utils
  */
 class OutputFetcherTest extends TestCase
 {

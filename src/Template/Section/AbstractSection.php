@@ -28,7 +28,7 @@ abstract class AbstractSection
      */
     public function __call($name, $arguments)
     {
-        preg_match('/(?<type>get|set|should)(?<property>.*)/', $name, $match);
+        preg_match('/(?<type>get|set)(?<property>.*)/', $name, $match);
 
         if (!in_array($match['property'], static::PROPERTIES)) {
             throw new PropertyNotSupportedException($match['property'], static::class);
@@ -36,6 +36,7 @@ abstract class AbstractSection
 
         if ($match['type'] === 'set') {
             $this->properties[$match['property']] = $arguments[0];
+
             return $this;
         }
 

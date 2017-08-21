@@ -33,15 +33,8 @@ class ServiceUnitTemplate extends AbstractUnitTemplate
     /**
      * @inheritDoc
      */
-    public function getDefinitions(): array
+    public function getTypeSpecificSection()
     {
-        $defintiions = parent::getDefinitions();
-        $serviceProperties = $this->getServiceSection()->getProperties();
-
-        if (!empty($serviceProperties)) {
-            $defintiions[ucfirst(Service::UNIT)] = $this->convertProperties($serviceProperties);
-        }
-
-        return $defintiions;
+        return $this->serviceSection;
     }
 }

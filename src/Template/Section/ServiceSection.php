@@ -22,7 +22,7 @@ namespace SystemCtl\Template\Section;
  * @method string getExecStop()
  * @method string getExecReload()
  * @method string getRestart()
- * @method bool shouldRemainsAfterExit()
+ * @method bool getRemainsAfterExit()
  * @method string getPIDFile()
  *
  * @package SystemCtl\Template\Section

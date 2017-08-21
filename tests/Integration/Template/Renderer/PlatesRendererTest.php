@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Template\Renderer;
+namespace SystemCtl\Tests\Integration\Template\Renderer;
 
 use League\Plates\Engine;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +14,7 @@ use Vfs\Node\File;
 /**
  * PlatesRendererTest
  *
- * @package SystemCtl\Test\Unit\Template\Renderer
+ * @package SystemCtl\Tests\Unit\Template\Renderer
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class PlatesRendererTest extends TestCase
@@ -56,10 +56,10 @@ class PlatesRendererTest extends TestCase
         $this->assertEquals(<<<EOT
 [Unit]
 Description=TestDescription
-[Install]
-WantedBy=multi-user.target
 [Service]
 Type=simple
+[Install]
+WantedBy=multi-user.target
 
 EOT
             , $result);

@@ -33,6 +33,6 @@ class PlatesRenderer implements RendererInterface
      */
     public function render(string $templateFile, AbstractUnitTemplate $unitTemplate): string
     {
-        return $this->engine->render($templateFile, ['sections' => $unitTemplate->getDefinitions()]);
+        return $this->engine->render($templateFile, ['sections' => $unitTemplate->getSections()]);
     }
 }

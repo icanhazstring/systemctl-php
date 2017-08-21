@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Template\Section;
+namespace SystemCtl\Tests\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Exception\PropertyNotSupportedException;
@@ -9,7 +9,7 @@ use SystemCtl\Template\Section\InstallSection;
 /**
  * InstallSectionTest
  *
- * @package SystemCtl\Test\Unit\Template\Section
+ * @package SystemCtl\Tests\Unit\Template\Section
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class InstallSectionTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Template;
+namespace SystemCtl\Tests\Unit\Template;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Template\Section\InstallSection;
@@ -12,7 +12,7 @@ use SystemCtl\Unit\Service;
 /**
  * ServiceUnitTemplateTest
  *
- * @package SystemCtl\Test\Unit\Template
+ * @package SystemCtl\Tests\Unit\Template
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class ServiceUnitTemplateTest extends TestCase
@@ -40,7 +40,7 @@ class ServiceUnitTemplateTest extends TestCase
         $this->assertInstanceOf(InstallSection::class, $unitTemplate->getInstallSection());
         $this->assertInstanceOf(ServiceSection::class, $unitTemplate->getServiceSection());
 
-        $this->assertEmpty($unitTemplate->getDefinitions());
+        $this->assertEmpty($unitTemplate->getSections());
         $this->assertEmpty($unitTemplate->getUnitSection()->getProperties());
         $this->assertEmpty($unitTemplate->getInstallSection()->getProperties());
         $this->assertEmpty($unitTemplate->getServiceSection()->getProperties());
@@ -57,22 +57,22 @@ class ServiceUnitTemplateTest extends TestCase
             ->getUnitSection()
             ->setDescription('TestDescription');
 
-        $this->assertCount(1, $unitTemplate->getDefinitions());
-        $this->assertArrayHasKey('Unit', $unitTemplate->getDefinitions());
+        $this->assertCount(1, $unitTemplate->getSections());
+        $this->assertArrayHasKey('Unit', $unitTemplate->getSections());
 
         $unitTemplate
             ->getServiceSection()
             ->setType(ServiceSection::TYPE_FORKING);
 
-        $this->assertCount(2, $unitTemplate->getDefinitions());
-        $this->assertArrayHasKey('Service', $unitTemplate->getDefinitions());
+        $this->assertCount(2, $unitTemplate->getSections());
+        $this->assertArrayHasKey('Service', $unitTemplate->getSections());
 
         $unitTemplate
             ->getInstallSection()
             ->setWantedBy(['multi-user.target']);
 
-        $this->assertCount(3, $unitTemplate->getDefinitions());
-        $this->assertArrayHasKey('Install', $unitTemplate->getDefinitions());
+        $this->assertCount(3, $unitTemplate->getSections());
+        $this->assertArrayHasKey('Install', $unitTemplate->getSections());
 
         $this->assertNotEmpty($unitTemplate->getUnitSection()->getProperties());
         $this->assertNotEmpty($unitTemplate->getInstallSection()->getProperties());

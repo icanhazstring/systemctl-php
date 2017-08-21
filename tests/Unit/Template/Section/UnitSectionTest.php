@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Template\Section;
+namespace SystemCtl\Tests\Unit\Template\Section;
 
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Template\Section\UnitSection;
@@ -8,7 +8,7 @@ use SystemCtl\Template\Section\UnitSection;
 /**
  * UnitSectionTest
  *
- * @package SystemCtl\Test\Unit\Template\Section
+ * @package SystemCtl\Tests\Unit\Template\Section
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class UnitSectionTest extends TestCase

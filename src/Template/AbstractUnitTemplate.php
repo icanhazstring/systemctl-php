@@ -44,19 +44,29 @@ abstract class AbstractUnitTemplate
     }
 
     /**
+     * @return AbstractSection
+     */
+    abstract public function getTypeSpecificSection();
+
+    /**
      * Get all definitions for this template as array
      *
      * @return array
      */
-    public function getDefinitions(): array
+    public function getSections(): array
     {
         $unitProperties = $this->getUnitSection()->getProperties();
+        $typeSpecificProperties = $this->getTypeSpecificSection()->getProperties();
         $installProperties = $this->getInstallSection()->getProperties();
 
         $definitions = [];
 
         if (!empty($unitProperties)) {
             $definitions['Unit'] = $this->convertProperties($unitProperties);
+        }
+
+        if (!empty($typeSpecificProperties)) {
+            $definitions[ucfirst($this->getUnitSuffix())] = $this->convertProperties($typeSpecificProperties);
         }
 
         if (!empty($installProperties)) {
