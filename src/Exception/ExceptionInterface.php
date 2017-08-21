@@ -9,4 +9,6 @@ use Throwable;
  *
  * @package SystemCtl\Exception
  */
-interface ExceptionInterface extends Throwable {}
+interface ExceptionInterface extends Throwable
+{
+}

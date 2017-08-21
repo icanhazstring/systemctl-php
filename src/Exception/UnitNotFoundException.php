@@ -19,8 +19,8 @@ class UnitNotFoundException extends RuntimeException implements ExceptionInterfa
      */
     public static function create(string $type, string $name): self
     {
-       return new self(
-           sprintf('Could not find %s "%s"', ucfirst($type), $name)
-       );
+        return new self(
+            sprintf('Could not find %s "%s"', ucfirst($type), $name)
+        );
     }
 }
