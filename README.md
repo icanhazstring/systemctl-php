@@ -3,6 +3,11 @@
 
 PHP wrapper for systemctl (PHP7.1)
 
+# How to install
+```php
+$ composer require icanhazstring/systemctl-php
+```
+
 ## Current supported units
 - service
 - timer
