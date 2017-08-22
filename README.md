@@ -76,3 +76,5 @@ $ composer cs
 $ 
 ```
 
+# Credits
+This library is heavily influenced by [@mjanser](https://github.com/mjanser) [php-systemctl](https://github.com/mjanser/php-systemctl).
