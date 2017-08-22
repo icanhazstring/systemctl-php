@@ -1,30 +1,37 @@
 # systemctl-php
 [![Build Status](https://api.travis-ci.org/icanhazstring/systemctl-php.svg?branch=master)](https://travis-ci.org/icanhazstring/systemctl-php) [![Code Climate](https://codeclimate.com/github/icanhazstring/systemctl-php/badges/gpa.svg)](https://codeclimate.com/github/icanhazstring/systemctl-php) [![Test Coverage](https://codeclimate.com/github/icanhazstring/systemctl-php/badges/coverage.svg)](https://codeclimate.com/github/icanhazstring/systemctl-php/coverage)
 
-> WORK IN PROGRESS
-
-PHP wrapper for systemctl (PHP7.1)
+PHP wrapper for systemctl
 
 # Table of Contents
 
+- [How to install](#how-to-install)
 - [Static Methods](#static-methods)
-    - [::setBinary(string $binary)](#setbinarystring-binary)
-    - [::setTimeout(int $timeout)](#settimeoutint-timeout)
-    - [::setInstallPath(string $installPath)](#setinstallpathstring-installpath)
-    - [::setAssetPath(string $assetPath)](#setassetpathstring-assetpath)
+  - [::setBinary](#setbinarystring-binary)
+  - [::setTimeout](#settimeoutint-timeout)
+  - [::setInstallPath](#setinstallpathstring-installpath)
+  - [::setAssetPath](#setassetpathstring-assetpath)
 - ["I need sudo to run commands"](#i-need-sudo-to-run-commands)
 - [Managing units](#managing-units)
   - [Supported units](#supported-units)
-  - [Handling unit commands](#handling-unit-commands)
+  - [Unit commands](#unit-commands)
 - [Install new units](#install-new-units)
   - [UnitSection](#unitsection)
   - [InstallSection](#installsection)
   - [TypeSpecificSection](#typespecificsection)
+  - [UnitInstaller](#unitinstaller)
 - [How to Contribute](#how-to-contribute)
+
+# How to install
+```php
+$ composer require icanhazstring/systemctl-php
+```
 
 # Static Methods
 ### ::setBinary(string $binary)
 Change the binary executable of `SystemCtl`
+
+> Default: /bin/systemctl
 
 ```php
 SystemCtl::setBinary('/bin/systemctl');
@@ -33,12 +40,16 @@ SystemCtl::setBinary('/bin/systemctl');
 ### ::setTimeout(int $timeout)
 Change the timeout for each command like `start()` on units and `SystemCtl`
 
+> Default: 3
+
 ```php
 SystemCtl::setTimeout(3);
 ```
 
 ### ::setInstallPath(string $installPath)
 Change the install path for new units
+
+> Default: /etc/systemd/system
 
 ```php
 SystemCtl::setInstallPath('/etc/systemd/system');
@@ -47,6 +58,8 @@ SystemCtl::setInstallPath('/etc/systemd/system');
 ### ::setAssetPath(string $assetPath)
 Change the asset path to look for unit file templates.
 The `default` path is relative to the `SystemCtl` vendor package
+
+> Default: assets
 
 ```php
 SystemCtl::setAssetPath('assets');
@@ -65,7 +78,7 @@ To manage any unit u want simply use the proper getter to receive an `Unit` obje
 
 > If you like to see more units feel free to contribute. Other units will be added in the future.
 
-## Handling unit commands
+## Unit commands
 Each unit comes with a range of methods you can invoke on them (like `start()`).
 These methods will be dispatched to the `SystemCtl::$binary` you set before hand (or default).
 
@@ -125,10 +138,24 @@ Each unit will have a type specific section. These sections are named after the 
 To change them, you simply to the same thing as for the others. In case of a `Service` you will do
 the following:
 
-> For a full documentation on available methods see [Serviceection](src/Template/Section/ServiceSection.php)
+> For a full documentation on available methods see [ServiceSection](src/Template/Section/ServiceSection.php)
 
 ```php
 $unitTemplate->getServiceSection()->setType(ServiceSection::TYPE_SIMPLE);
+```
+
+## UnitInstaller
+To install an new unit, you need to pass the created `UnitTemplate` into `install()`
+of `SystemCtl`. This will use the internal `UnitInstaller` to create a unit file located at
+`/etc/systemd/system` by default. The `install()` method will also trigger a `daemon-reload` for
+systemd. This is needed to load the newly installed unit. Also you will receive an
+instance of the new unit you created, so you can manage the behavior of it (e.g. start())
+
+```php
+$systemCtl = new SystemCtl;
+$unit = $systeCtl->install($unitTemplate);
+
+$unit->start();
 ```
 
 # How to Contribute
