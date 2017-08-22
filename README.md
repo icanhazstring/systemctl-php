@@ -21,6 +21,7 @@ PHP wrapper for systemctl
   - [TypeSpecificSection](#typespecificsection)
   - [UnitInstaller](#unitinstaller)
 - [How to Contribute](#how-to-contribute)
+- [Credits](#credits)
 
 # How to install
 ```php
@@ -185,3 +186,5 @@ $ composer cs
 $ 
 ```
 
+# Credits
+This library is heavily influenced by [@mjanser](https://github.com/mjanser) [php-systemctl](https://github.com/mjanser/php-systemctl).
