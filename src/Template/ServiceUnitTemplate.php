@@ -1,10 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Template;
 
 use SystemCtl\Template\Section\ServiceSection;
 use SystemCtl\Unit\Service;
 
+/**
+ * ServiceUnitTemplate
+ *
+ * @package SystemCtl\Template
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class ServiceUnitTemplate extends AbstractUnitTemplate
 {
     /** @var ServiceSection */

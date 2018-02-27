@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Integration\Unit;
 
@@ -12,9 +13,10 @@ use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 
 /**
- * Class UnitTest
+ * UnitTest
  *
  * @package SystemCtl\Tests\Integration\Unit
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class UnitTest extends TestCase
 {

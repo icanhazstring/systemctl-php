@@ -1,15 +1,15 @@
 <?php
-
+declare(strict_types=1);
 
 namespace SystemCtl\Command;
 
 use SystemCtl\Exception\CommandFailedException;
 
 /**
- * Interface CommandInterface
+ * CommandInterface
  *
  * @package SystemCtl\Command
- * @author icanhazstring <blubb0r05+github@gmail.com>
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 interface CommandInterface
 {

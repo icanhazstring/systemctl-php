@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Exception;
 
 /**
- * Class UnitNotFoundException
+ * UnitNotFoundException
  *
  * @package SystemCtl\Exception
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class UnitNotFoundException extends \RuntimeException
 {

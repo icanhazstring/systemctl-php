@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Utils;
 
 /**
- * Class OutputFetcher
+ * OutputFetcher
  *
  * @package SystemCtl\Utils
  */

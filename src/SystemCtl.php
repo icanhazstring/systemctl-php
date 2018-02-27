@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl;
 
@@ -15,9 +16,10 @@ use SystemCtl\Unit\Timer;
 use SystemCtl\Unit\UnitInterface;
 
 /**
- * Class SystemCtl
+ * SystemCtl
  *
  * @package SystemCtl
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class SystemCtl
 {

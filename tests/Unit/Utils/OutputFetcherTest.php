@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Unit\Utils;
 
@@ -6,9 +7,10 @@ use PHPUnit\Framework\TestCase;
 use SystemCtl\Utils\OutputFetcher;
 
 /**
- * Class OutputFetcherTest
+ * OutputFetcherTest
  *
  * @package SystemCtl\Tests\Unit\Utils
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class OutputFetcherTest extends TestCase
 {

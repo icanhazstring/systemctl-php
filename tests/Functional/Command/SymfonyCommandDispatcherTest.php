@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Functional\Command;
 
@@ -6,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use SystemCtl\Command\SymfonyCommandDispatcher;
 
 /**
- * Class SymfonyCommandDispatcherTest
+ * SymfonyCommandDispatcherTest
  *
  * @package SystemCtl\Tests\Integration\Command
  * @author icanhazstring <blubb0r05+github@gmail.com>

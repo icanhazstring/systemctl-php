@@ -1,7 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Template;
 
+/**
+ * RendererInterface
+ *
+ * @package SystemCtl\Template
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 interface RendererInterface
 {
     /**

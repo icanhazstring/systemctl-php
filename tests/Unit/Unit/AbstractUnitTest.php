@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Unit\Unit;
 
@@ -9,9 +10,10 @@ use SystemCtl\Command\CommandInterface;
 use SystemCtl\Exception\CommandFailedException;
 
 /**
- * Class AbstractUnitTest
+ * AbstractUnitTest
  *
  * @package SystemCtl\Tests\Unit\Unit
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class AbstractUnitTest extends TestCase
 {

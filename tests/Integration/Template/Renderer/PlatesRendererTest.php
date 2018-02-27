@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Integration\Template\Renderer;
 
-use League\Plates\Engine;
 use PHPUnit\Framework\TestCase;
 use SystemCtl\Template\Renderer\PlatesRenderer;
 use SystemCtl\Template\Section\ServiceSection;

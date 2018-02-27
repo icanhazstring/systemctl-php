@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Integration;
 
@@ -17,9 +18,10 @@ use Vfs\Node\Directory;
 use Vfs\Node\File;
 
 /**
- * Class SystemCtlTest
+ * SystemCtlTest
  *
  * @package SystemCtl\Tests\Integration
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class SystemCtlTest extends TestCase
 {

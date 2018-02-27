@@ -1,13 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Command;
 
 use SystemCtl\Exception\CommandFailedException;
 
 /**
- * Interface CommandDispatcherInterface
+ * CommandDispatcherInterface
  *
  * @package SystemCtl\Command
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 interface CommandDispatcherInterface
 {
@@ -33,7 +35,7 @@ interface CommandDispatcherInterface
      * Dispatch given commands against implementers logic and creating a new command
      * to read results
      *
-     * @param array $commands
+     * @param string[] $commands
      *
      * @return CommandInterface
      * @throws CommandFailedException

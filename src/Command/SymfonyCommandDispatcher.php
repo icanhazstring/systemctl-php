@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Command;
 
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
- * Class SymfonyCommandDispatcher
+ * SymfonyCommandDispatcher
  *
  * @package SystemCtl\Command
  * @author  icanhazstring <blubb0r05+github@gmail.com>

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Command;
 
@@ -6,7 +7,7 @@ use Symfony\Component\Process\Process;
 use SystemCtl\Exception\CommandFailedException;
 
 /**
- * Class SymfonyCommand
+ * SymfonyCommand
  *
  * @package SystemCtl\Command
  * @author icanhazstring <blubb0r05+github@gmail.com>

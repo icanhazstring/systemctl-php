@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Exception;
 
 /**
- * Class UnitTypeNotSupportedException
+ * UnitTypeNotSupportedException
  *
  * @package SystemCtl\Exception
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class UnitTypeNotSupportedException extends \LogicException
 {

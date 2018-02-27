@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Unit;
 
@@ -6,7 +7,7 @@ use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\CommandInterface;
 
 /**
- * Class AbstractUnit
+ * AbstractUnit
  *
  * @package SystemCtl\Unit
  */

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Unit;
 
@@ -12,15 +13,14 @@ use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\SystemCtl;
 use SystemCtl\Template\AbstractUnitTemplate;
-use SystemCtl\Template\Installer\UnitInstaller;
-use SystemCtl\Template\Installer\UnitInstallerInterface;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 
 /**
- * Class SystemCtlTest
+ * SystemCtlTest
  *
  * @package SystemCtl\Tests\Unit
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class SystemCtlTest extends TestCase
 {

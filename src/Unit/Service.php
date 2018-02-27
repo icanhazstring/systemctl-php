@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Unit;
 
 /**
- * Class Service
+ * Service
  *
  * @package SystemCtl\Unit
  */

@@ -3,7 +3,7 @@
     "description": "PHP wrapper for systemctl",
     "type": "library",
     "require": {
-        "php": "^7.1",
+        "php": ">=7.1.0",
         "symfony/process": "^3.2",
         "league/plates": "^3.3"
     },

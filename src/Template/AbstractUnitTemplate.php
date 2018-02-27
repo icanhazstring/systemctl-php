@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Template;
 
-use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 use SystemCtl\Template\Section\AbstractSection;
 use SystemCtl\Template\Section\InstallSection;
 use SystemCtl\Template\Section\UnitSection;

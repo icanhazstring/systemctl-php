@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Tests\Unit\Command;
 
@@ -8,7 +9,7 @@ use SystemCtl\Command\SymfonyCommand;
 use SystemCtl\Exception\CommandFailedException;
 
 /**
- * Class SymfonyCommandTest
+ * SymfonyCommandTest
  *
  * @package SystemCtl\Tests\Unit\Command
  * @author icanhazstring <blubb0r05+github@gmail.com>

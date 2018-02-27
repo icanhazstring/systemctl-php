@@ -1,9 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Template\Section;
 
 use SystemCtl\Exception\PropertyNotSupportedException;
 
+/**
+ * AbstractSection
+ *
+ * @package SystemCtl\Template\Section
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 abstract class AbstractSection
 {
     /** @var array */

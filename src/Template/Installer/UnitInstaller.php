@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SystemCtl\Template\Installer;
 
@@ -6,6 +7,12 @@ use SystemCtl\Exception\UnitFileExistsException;
 use SystemCtl\Template\AbstractUnitTemplate;
 use SystemCtl\Template\RendererInterface;
 
+/**
+ * UnitInstaller
+ *
+ * @package SystemCtl\Template\Installer
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
+ */
 class UnitInstaller implements UnitInstallerInterface
 {
     /** @var string */
