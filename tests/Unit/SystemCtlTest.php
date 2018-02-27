@@ -93,7 +93,7 @@ class SystemCtlTest extends TestCase
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -112,7 +112,7 @@ class SystemCtlTest extends TestCase
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -130,7 +130,7 @@ class SystemCtlTest extends TestCase
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -147,7 +147,7 @@ class SystemCtlTest extends TestCase
         $unitName = 'testService';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub(''));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -165,7 +165,7 @@ class SystemCtlTest extends TestCase
         $output = ' testTimer.timer     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -183,7 +183,7 @@ class SystemCtlTest extends TestCase
         $unitName = 'testTimer';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub(''));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -201,7 +201,7 @@ class SystemCtlTest extends TestCase
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -219,7 +219,7 @@ class SystemCtlTest extends TestCase
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());

@@ -101,7 +101,14 @@ class SystemCtl
     }
 
     /**
-     * List all supported units
+     * List all supported units by using a given unit prefix.
+     *
+     * This prefix can be used with any wildcard combination.
+     * E.G.:
+     *  - *name*
+     *  - name*
+     *  - *name
+     *  - *n*e*
      *
      * @param null|string $unitPrefix
      * @param string[]    $unitTypes
@@ -113,7 +120,7 @@ class SystemCtl
         $commands = ['list-units'];
 
         if ($unitPrefix) {
-            $commands[] = $unitPrefix . '*';
+            $commands[] = $unitPrefix;
         }
 
         $output = $this->getCommandDispatcher()->dispatch(...$commands)->getOutput();
@@ -132,32 +139,13 @@ class SystemCtl
      */
     public function getService(string $name): Service
     {
-        $units = $this->listUnits($name, [Service::UNIT]);
+        $unitNames = $this->listUnits($name, [Service::UNIT]);
 
-        $unitName = $this->searchForUnitInUnits($name, $units);
-
-        if (is_null($unitName)) {
+        if (empty($unitNames)) {
             throw UnitNotFoundException::create(Service::UNIT, $name);
         }
 
-        return new Service($unitName, $this->getCommandDispatcher());
-    }
-
-    /**
-     * @param string   $unitName
-     * @param string[] $units
-     *
-     * @return null|string
-     */
-    protected function searchForUnitInUnits(string $unitName, array $units): ?string
-    {
-        foreach ($units as $unit) {
-            if ($unit === $unitName) {
-                return $unit;
-            }
-        }
-
-        return null;
+        return new Service($unitNames[0], $this->getCommandDispatcher());
     }
 
     /**
@@ -181,15 +169,13 @@ class SystemCtl
      */
     public function getTimer(string $name): Timer
     {
-        $units = $this->listUnits($name, [Timer::UNIT]);
+        $unitNames = $this->listUnits($name, [Timer::UNIT]);
 
-        $unitName = $this->searchForUnitInUnits($name, $units);
-
-        if (is_null($unitName)) {
+        if (empty($unitNames)) {
             throw UnitNotFoundException::create(Timer::UNIT, $name);
         }
 
-        return new Timer($unitName, $this->getCommandDispatcher());
+        return new Timer($unitNames[0], $this->getCommandDispatcher());
     }
 
     /**

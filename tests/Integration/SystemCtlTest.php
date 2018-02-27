@@ -212,7 +212,7 @@ EOT;
 
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName . '*')
+            ->dispatch('list-units', $unitName)
             ->willReturn($this->buildCommandStub('testService.service Active Running'))
             ->shouldBeCalled();
 
