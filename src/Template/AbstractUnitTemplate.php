@@ -79,11 +79,11 @@ abstract class AbstractUnitTemplate
     /**
      * Convert properties to proper definitions in templates
      *
-     * @param $properties
+     * @param string[] $properties
      *
-     * @return array
+     * @return string[]
      */
-    protected function convertProperties($properties)
+    protected function convertProperties(array $properties): array
     {
         return array_map([DefinitionConverter::class, 'convert'], $properties);
     }

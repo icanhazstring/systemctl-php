@@ -16,6 +16,6 @@ before_script:
   - mkdir -p build/logs
 
 script:
-  - composer cs
+  - composer check
   - composer test -- --coverage-clover=build/logs/clover.xml --coverage-text
   - 'if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./vendor/bin/test-reporter; fi'

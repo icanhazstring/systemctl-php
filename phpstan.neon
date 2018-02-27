@@ -1,0 +1,6 @@
+includes:
+	- vendor/jangregor/phpstan-prophecy/src/extension.neon
+
+parameters:
+    ignoreErrors:
+        - '#Call to an undefined method SystemCtl\\Template\\Section\\InstallSection::setFubar\(\)#'

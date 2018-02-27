@@ -37,11 +37,11 @@ interface UnitInterface
     /**
      * Execute certain commands against the CommandDispatcher
      *
-     * @param array $commands
+     * @param string ...$commands
      *
      * @return CommandInterface
      */
-    public function execute(...$commands): CommandInterface;
+    public function execute(string ...$commands): CommandInterface;
 
     /**
      * Start command

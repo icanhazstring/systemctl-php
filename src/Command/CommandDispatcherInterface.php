@@ -35,10 +35,10 @@ interface CommandDispatcherInterface
      * Dispatch given commands against implementers logic and creating a new command
      * to read results
      *
-     * @param string[] $commands
+     * @param string ...$commands
      *
      * @return CommandInterface
      * @throws CommandFailedException
      */
-    public function dispatch(...$commands): CommandInterface;
+    public function dispatch(string ...$commands): CommandInterface;
 }

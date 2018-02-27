@@ -39,7 +39,7 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
     /**
      * @inheritDoc
      */
-    public function dispatch(...$commands): CommandInterface
+    public function dispatch(string ...$commands): CommandInterface
     {
         $processBuilder = new ProcessBuilder();
         $processBuilder->setPrefix($this->binary);

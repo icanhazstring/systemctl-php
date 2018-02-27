@@ -11,7 +11,9 @@
         "phpunit/phpunit": "^6.1",
         "squizlabs/php_codesniffer": "^3.0",
         "codeclimate/php-test-reporter": "dev-master",
-        "adlawson/vfs": "^0.12.1"
+        "adlawson/vfs": "^0.12.1",
+        "phpstan/phpstan": "^0.9.2",
+        "jangregor/phpstan-prophecy": "^0.1.1"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +37,18 @@
         }
     ],
     "scripts": {
+        "check": [
+          "@php-cs-src",
+          "@php-cs-test",
+          "@phpstan-src",
+          "@phpstan-test"
+        ],
+
         "test": "vendor/bin/phpunit tests/",
-        "cs": "vendor/bin/phpcs --standard=PSR2 src/ && vendor/bin/phpcs --standard=PSR2 tests/"
+
+        "php-cs-src": "vendor/bin/phpcs --standard=PSR2 src/",
+        "php-cs-test": "vendor/bin/phpcs --standard=PSR2 tests/",
+        "phpstan-src": "vendor/bin/phpstan analyze --level=max src/",
+        "phpstan-test": "vendor/bin/phpstan analyze tests/ --level=4 -c phpstan.neon"
     }
 }

@@ -49,7 +49,7 @@ class InstallSectionTest extends TestCase
         $installSection = new InstallSection;
 
         $this->expectException(PropertyNotSupportedException::class);
-        $installSection->setFubar('should fail');
+        $installSection->setFubar(['should fail']);
     }
 
     /**

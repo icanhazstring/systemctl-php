@@ -13,13 +13,13 @@ use SystemCtl\Exception\PropertyNotSupportedException;
  */
 abstract class AbstractSection
 {
-    /** @var array */
+    /** @var string[] */
     protected $properties = [];
 
     protected const PROPERTIES = [];
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getProperties(): array
     {
@@ -27,13 +27,13 @@ abstract class AbstractSection
     }
 
     /**
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param array $arguments
      *
      * @throws PropertyNotSupportedException
      * @return UnitSection|mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array  $arguments)
     {
         preg_match('/(?<type>get|set)(?<property>.*)/', $name, $match);
 

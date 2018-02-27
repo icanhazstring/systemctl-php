@@ -106,7 +106,7 @@ class SystemCtl
      * @param null|string $unitPrefix
      * @param string[]    $unitTypes
      *
-     * @return array|\string[]
+     * @return array|string[]
      */
     public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
     {
@@ -144,8 +144,8 @@ class SystemCtl
     }
 
     /**
-     * @param string  $unitName
-     * @param array[] $units
+     * @param string   $unitName
+     * @param string[] $units
      *
      * @return null|string
      */
