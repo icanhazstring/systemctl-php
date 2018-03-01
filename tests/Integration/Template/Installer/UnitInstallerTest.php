@@ -81,6 +81,14 @@ class UnitInstallerTest extends TestCase
 
         /** @var File $file */
         $file = self::$fileSystem->get('/units/awesomeService.service');
-        $this->assertEquals("[Service]\nType=simple\n", $file->getContent());
+
+        $expected = <<<EOF
+[Service]
+Type=simple
+
+EOF;
+
+
+        $this->assertEquals($expected, $file->getContent());
     }
 }

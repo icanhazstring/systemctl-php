@@ -160,31 +160,7 @@ $unit->start();
 ```
 
 # How to Contribute
-Simply clone the repo and install using `composer`
-
-```bash
-$ composer install
-```
-
-Make your changes and make sure you run *test* and *codesniffer*.
-
-```bash
-$ composer test
-> vendor/bin/phpunit tests/
-PHPUnit 6.3.0 by Sebastian Bergmann and contributors.
-
-................................................................. 65 / 89 ( 73%)
-........................                                          89 / 89 (100%)
-
-Time: 1.65 seconds, Memory: 8.00MB
-
-OK (89 tests, 169 assertions)
-
-$ composer cs
-> vendor/bin/phpcs --standard=PSR2 src/ && vendor/bin/phpcs --standard=PSR2 tests/
-
-$ 
-```
+See [CONTIRBUTING.md](CONTRIBUTING.md).
 
 # Credits
 This library is heavily influenced by [@mjanser](https://github.com/mjanser) [php-systemctl](https://github.com/mjanser/php-systemctl).
