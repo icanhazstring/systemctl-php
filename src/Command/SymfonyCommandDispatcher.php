@@ -51,30 +51,6 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
     }
 
     /**
-     * @return string
-     */
-    public function getBinary(): string
-    {
-        return $this->binary;
-    }
-
-    /**
-     * @return float
-     */
-    public function getTimeout(): float
-    {
-        return $this->timeout;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getArguments(): array
-    {
-        return $this->arguments;
-    }
-
-    /**
      * @inheritDoc
      */
     public function dispatch(string ...$commands): CommandInterface
