@@ -13,8 +13,12 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class SymfonyCommandDispatcher implements CommandDispatcherInterface
 {
+    /** @var string */
     private $binary;
-    private $timetout;
+    /** @var float */
+    private $timeout;
+    /** @var string[] */
+    private $arguments = [];
 
     /**
      * @inheritdoc
@@ -31,9 +35,43 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
      */
     public function setTimeout(int $timeout): CommandDispatcherInterface
     {
-        $this->timetout = $timeout;
+        $this->timeout = $timeout;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setArguments(array $arguments): CommandDispatcherInterface
+    {
+        $this->arguments = $arguments;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBinary(): string
+    {
+        return $this->binary;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTimeout(): float
+    {
+        return $this->timeout;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
     }
 
     /**
@@ -43,8 +81,8 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
     {
         $processBuilder = new ProcessBuilder();
         $processBuilder->setPrefix($this->binary);
-        $processBuilder->setTimeout($this->timetout);
-        $processBuilder->setArguments($commands);
+        $processBuilder->setTimeout($this->timeout);
+        $processBuilder->setArguments(array_merge($this->arguments, $commands));
 
         $process = new SymfonyCommand($processBuilder->getProcess());
 

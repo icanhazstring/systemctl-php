@@ -33,7 +33,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
 
-        $this->assertEquals($name, $unit->getName());
+        self::assertEquals($name, $unit->getName());
     }
 
     /**
@@ -72,7 +72,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
 
-        $this->assertEquals($isMultiInstance, $unit->isMultiInstance());
+        self::assertEquals($isMultiInstance, $unit->isMultiInstance());
     }
 
     /**
@@ -120,7 +120,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
 
-        $this->assertEquals($instanceName, $unit->getInstanceName());
+        self::assertEquals($instanceName, $unit->getInstanceName());
     }
 
     /**
@@ -168,7 +168,7 @@ class AbstractUnitTest extends TestCase
 
         $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
-        $this->assertTrue($unit->isEnabled());
+        self::assertTrue($unit->isEnabled());
     }
 
     /**
@@ -205,7 +205,7 @@ class AbstractUnitTest extends TestCase
 
         $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
-        $this->assertFalse($unit->isEnabled());
+        self::assertFalse($unit->isEnabled());
     }
 
     /**
@@ -242,7 +242,7 @@ class AbstractUnitTest extends TestCase
 
         $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
-        $this->assertTrue($unit->isRunning());
+        self::assertTrue($unit->isRunning());
     }
 
     /**
@@ -279,7 +279,7 @@ class AbstractUnitTest extends TestCase
 
         $unit = new UnitStub(static::UNIT_NAME, $commandDispatcher->reveal());
 
-        $this->assertFalse($unit->isRunning());
+        self::assertFalse($unit->isRunning());
     }
 
     /**

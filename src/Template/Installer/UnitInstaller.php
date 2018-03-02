@@ -27,6 +27,7 @@ class UnitInstaller implements UnitInstallerInterface
     public function setPath(string $path): UnitInstallerInterface
     {
         $this->path = rtrim($path, '/');
+
         return $this;
     }
 

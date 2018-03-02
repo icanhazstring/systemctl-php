@@ -32,6 +32,15 @@ interface CommandDispatcherInterface
     public function setBinary(string $binary): CommandDispatcherInterface;
 
     /**
+     * Set additional arguments to be passed to dispatch
+     *
+     * @param string[] $arguments
+     *
+     * @return CommandDispatcherInterface
+     */
+    public function setArguments(array $arguments): CommandDispatcherInterface;
+
+    /**
      * Dispatch given commands against implementers logic and creating a new command
      * to read results
      *

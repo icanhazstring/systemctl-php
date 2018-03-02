@@ -7,6 +7,9 @@ use SystemCtl\Command\CommandDispatcherInterface;
 use SystemCtl\Command\SymfonyCommandDispatcher;
 use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
+use SystemCtl\Scope\ScopeInterface;
+use SystemCtl\Scope\SystemScope;
+use SystemCtl\Scope\UserScope;
 use SystemCtl\Template\AbstractUnitTemplate;
 use SystemCtl\Template\Installer\UnitInstaller;
 use SystemCtl\Template\Installer\UnitInstallerInterface;
@@ -40,6 +43,9 @@ class SystemCtl
 
     /** @var UnitInstallerInterface */
     private $unitInstaller;
+
+    /** @var ScopeInterface */
+    private $scope;
 
     public const AVAILABLE_UNITS = [
         Service::UNIT,
@@ -133,6 +139,42 @@ class SystemCtl
     }
 
     /**
+     * Current scope this system ctl instance is running
+     *
+     * @return ScopeInterface
+     */
+    public function getScope(): ScopeInterface
+    {
+        if ($this->scope === null) {
+            $this->scope = new SystemScope;
+        }
+
+        return $this->scope;
+    }
+
+    /**
+     * Switch to user scope
+     *
+     * @return SystemCtl
+     */
+    public function user(): self
+    {
+        $this->scope = new UserScope;
+
+        return $this;
+    }
+
+    /**
+     * Switch to system scope
+     */
+    public function system(): self
+    {
+        $this->scope = new SystemScope;
+
+        return $this;
+    }
+
+    /**
      * @param string $name
      *
      * @return Service
@@ -212,6 +254,8 @@ class SystemCtl
                 ->setTimeout(self::$timeout)
                 ->setBinary(self::$binary);
         }
+
+        $this->commandDispatcher->setArguments([(string)$this->getScope()]);
 
         return $this->commandDispatcher;
     }

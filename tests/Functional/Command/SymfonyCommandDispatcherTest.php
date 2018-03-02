@@ -23,6 +23,6 @@ class SymfonyCommandDispatcherTest extends TestCase
         $dispatcher->setBinary('echo');
 
         $output = $dispatcher->dispatch('a')->getOutput();
-        $this->assertEquals('a', trim($output));
+        self::assertEquals('a', trim($output));
     }
 }

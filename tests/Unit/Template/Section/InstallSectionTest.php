@@ -21,7 +21,7 @@ class InstallSectionTest extends TestCase
     public function itShouldCreateProperInstance()
     {
         $installSection = new InstallSection;
-        $this->assertInstanceOf(InstallSection::class, $installSection);
+        self::assertInstanceOf(InstallSection::class, $installSection);
     }
 
     /**
@@ -35,10 +35,10 @@ class InstallSectionTest extends TestCase
             ->setWantedBy(['wanted'])
             ->setAlso(['also']);
 
-        $this->assertEquals(['alias'], $installSection->getAlias());
-        $this->assertEquals(['required'], $installSection->getRequiredBy());
-        $this->assertEquals(['wanted'], $installSection->getWantedBy());
-        $this->assertEquals(['also'], $installSection->getAlso());
+        self::assertEquals(['alias'], $installSection->getAlias());
+        self::assertEquals(['required'], $installSection->getRequiredBy());
+        self::assertEquals(['wanted'], $installSection->getWantedBy());
+        self::assertEquals(['also'], $installSection->getAlso());
     }
 
     /**
@@ -58,7 +58,7 @@ class InstallSectionTest extends TestCase
     public function itShouldReturnNullIfAPropertyIsNotSet()
     {
         $installSection = new InstallSection;
-        $this->assertNull($installSection->getWantedBy());
+        self::assertNull($installSection->getWantedBy());
     }
 
     /**
@@ -71,8 +71,8 @@ class InstallSectionTest extends TestCase
         $installSection->setWantedBy(['wanted']);
         $installSection->setRequiredBy(['required']);
 
-        $this->assertCount(2, $installSection->getProperties());
-        $this->assertArrayHasKey('WantedBy', $installSection->getProperties());
-        $this->assertArrayHasKey('RequiredBy', $installSection->getProperties());
+        self::assertCount(2, $installSection->getProperties());
+        self::assertArrayHasKey('WantedBy', $installSection->getProperties());
+        self::assertArrayHasKey('RequiredBy', $installSection->getProperties());
     }
 }

@@ -21,7 +21,7 @@ class ServiceSectionTest extends TestCase
     public function itShouldCreateProperInstance()
     {
         $serviceSection = new ServiceSection;
-        $this->assertInstanceOf(ServiceSection::class, $serviceSection);
+        self::assertInstanceOf(ServiceSection::class, $serviceSection);
     }
 
     /**
@@ -40,15 +40,15 @@ class ServiceSectionTest extends TestCase
             ->setRemainsAfterExit(true)
             ->setPIDFile('pid');
 
-        $this->assertEquals(ServiceSection::TYPE_FORKING, $serviceSection->getType());
-        $this->assertEquals(['env' => 'test'], $serviceSection->getEnvironment());
-        $this->assertEquals('/etc/environment', $serviceSection->getEnvironmentFile());
-        $this->assertEquals('/test/command/start', $serviceSection->getExecStart());
-        $this->assertEquals('/test/command/stop', $serviceSection->getExecStop());
-        $this->assertEquals('/test/command/reload', $serviceSection->getExecReload());
-        $this->assertEquals('always', $serviceSection->getRestart());
-        $this->assertTrue($serviceSection->getRemainsAfterExit());
-        $this->assertEquals('pid', $serviceSection->getPIDFile());
+        self::assertEquals(ServiceSection::TYPE_FORKING, $serviceSection->getType());
+        self::assertEquals(['env' => 'test'], $serviceSection->getEnvironment());
+        self::assertEquals('/etc/environment', $serviceSection->getEnvironmentFile());
+        self::assertEquals('/test/command/start', $serviceSection->getExecStart());
+        self::assertEquals('/test/command/stop', $serviceSection->getExecStop());
+        self::assertEquals('/test/command/reload', $serviceSection->getExecReload());
+        self::assertEquals('always', $serviceSection->getRestart());
+        self::assertTrue($serviceSection->getRemainsAfterExit());
+        self::assertEquals('pid', $serviceSection->getPIDFile());
     }
 
     /**
@@ -61,8 +61,8 @@ class ServiceSectionTest extends TestCase
         $serviceSection->setType(ServiceSection::TYPE_SIMPLE);
         $serviceSection->setExecStart('/test/command/start');
 
-        $this->assertCount(2, $serviceSection->getProperties());
-        $this->assertArrayHasKey('Type', $serviceSection->getProperties());
-        $this->assertArrayHasKey('ExecStart', $serviceSection->getProperties());
+        self::assertCount(2, $serviceSection->getProperties());
+        self::assertArrayHasKey('Type', $serviceSection->getProperties());
+        self::assertArrayHasKey('ExecStart', $serviceSection->getProperties());
     }
 }

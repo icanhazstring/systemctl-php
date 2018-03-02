@@ -32,6 +32,7 @@ class SystemCtlTest extends TestCase
         $commandDispatcherStub = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcherStub->setTimeout(Argument::type('int'))->willReturn($commandDispatcherStub);
         $commandDispatcherStub->setBinary(Argument::type('string'))->willReturn($commandDispatcherStub);
+        $commandDispatcherStub->setArguments(Argument::type('array'))->willReturn($commandDispatcherStub);
 
         return $commandDispatcherStub;
     }
@@ -69,10 +70,10 @@ class SystemCtlTest extends TestCase
         $assetPathProperty = $reflection->getProperty('assetPath');
         $assetPathProperty->setAccessible(true);
 
-        $this->assertEquals('testBinary', $binaryProperty->getValue(new SystemCtl));
-        $this->assertEquals(5, $timeoutProperty->getValue(new SystemCtl));
-        $this->assertEquals('testInstallPath', $installPathProperty->getValue(new SystemCtl));
-        $this->assertEquals('testAssetPath', $assetPathProperty->getValue(new SystemCtl));
+        self::assertEquals('testBinary', $binaryProperty->getValue(new SystemCtl));
+        self::assertEquals(5, $timeoutProperty->getValue(new SystemCtl));
+        self::assertEquals('testInstallPath', $installPathProperty->getValue(new SystemCtl));
+        self::assertEquals('testAssetPath', $assetPathProperty->getValue(new SystemCtl));
     }
 
     /**
@@ -81,7 +82,7 @@ class SystemCtlTest extends TestCase
     public function itShouldInstantiateDefaultCommandDispatcherIfReceived()
     {
         $systemCtl = new SystemCtl;
-        $this->assertInstanceOf(SymfonyCommandDispatcher::class, $systemCtl->getCommandDispatcher());
+        self::assertInstanceOf(SymfonyCommandDispatcher::class, $systemCtl->getCommandDispatcher());
     }
 
     /**
@@ -99,8 +100,8 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertInstanceOf(Service::class, $service);
-        $this->assertEquals('testService', $service->getName());
+        self::assertInstanceOf(Service::class, $service);
+        self::assertEquals('testService', $service->getName());
     }
 
     /**
@@ -118,7 +119,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertInstanceOf(Service::class, $service);
+        self::assertInstanceOf(Service::class, $service);
     }
 
     /**
@@ -136,7 +137,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertEquals('testService', $service->getName());
+        self::assertEquals('testService', $service->getName());
     }
 
     /**
@@ -171,8 +172,8 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $timer = $systemctl->getTimer($unitName);
-        $this->assertInstanceOf(Timer::class, $timer);
-        $this->assertEquals($unitName, $timer->getName());
+        self::assertInstanceOf(Timer::class, $timer);
+        self::assertEquals($unitName, $timer->getName());
     }
 
     /**
@@ -207,7 +208,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertInstanceOf(Service::class, $service);
+        self::assertInstanceOf(Service::class, $service);
     }
 
     /**
@@ -225,7 +226,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertEquals('testService', $service->getName());
+        self::assertEquals('testService', $service->getName());
     }
 
     /**

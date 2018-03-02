@@ -25,9 +25,9 @@ class ServiceUnitTemplateTest extends TestCase
     {
         $unitTemplate = new ServiceUnitTemplate('TestService');
 
-        $this->assertInstanceOf(ServiceUnitTemplate::class, $unitTemplate);
-        $this->assertEquals(Service::UNIT, $unitTemplate->getUnitSuffix());
-        $this->assertEquals('TestService', $unitTemplate->getUnitName());
+        self::assertInstanceOf(ServiceUnitTemplate::class, $unitTemplate);
+        self::assertEquals(Service::UNIT, $unitTemplate->getUnitSuffix());
+        self::assertEquals('TestService', $unitTemplate->getUnitName());
     }
 
     /**
@@ -37,14 +37,14 @@ class ServiceUnitTemplateTest extends TestCase
     {
         $unitTemplate = new ServiceUnitTemplate('TestService');
 
-        $this->assertInstanceOf(UnitSection::class, $unitTemplate->getUnitSection());
-        $this->assertInstanceOf(InstallSection::class, $unitTemplate->getInstallSection());
-        $this->assertInstanceOf(ServiceSection::class, $unitTemplate->getServiceSection());
+        self::assertInstanceOf(UnitSection::class, $unitTemplate->getUnitSection());
+        self::assertInstanceOf(InstallSection::class, $unitTemplate->getInstallSection());
+        self::assertInstanceOf(ServiceSection::class, $unitTemplate->getServiceSection());
 
-        $this->assertEmpty($unitTemplate->getSections());
-        $this->assertEmpty($unitTemplate->getUnitSection()->getProperties());
-        $this->assertEmpty($unitTemplate->getInstallSection()->getProperties());
-        $this->assertEmpty($unitTemplate->getServiceSection()->getProperties());
+        self::assertEmpty($unitTemplate->getSections());
+        self::assertEmpty($unitTemplate->getUnitSection()->getProperties());
+        self::assertEmpty($unitTemplate->getInstallSection()->getProperties());
+        self::assertEmpty($unitTemplate->getServiceSection()->getProperties());
     }
 
     /**
@@ -58,25 +58,25 @@ class ServiceUnitTemplateTest extends TestCase
             ->getUnitSection()
             ->setDescription('TestDescription');
 
-        $this->assertCount(1, $unitTemplate->getSections());
-        $this->assertArrayHasKey('Unit', $unitTemplate->getSections());
+        self::assertCount(1, $unitTemplate->getSections());
+        self::assertArrayHasKey('Unit', $unitTemplate->getSections());
 
         $unitTemplate
             ->getServiceSection()
             ->setType(ServiceSection::TYPE_FORKING);
 
-        $this->assertCount(2, $unitTemplate->getSections());
-        $this->assertArrayHasKey('Service', $unitTemplate->getSections());
+        self::assertCount(2, $unitTemplate->getSections());
+        self::assertArrayHasKey('Service', $unitTemplate->getSections());
 
         $unitTemplate
             ->getInstallSection()
             ->setWantedBy(['multi-user.target']);
 
-        $this->assertCount(3, $unitTemplate->getSections());
-        $this->assertArrayHasKey('Install', $unitTemplate->getSections());
+        self::assertCount(3, $unitTemplate->getSections());
+        self::assertArrayHasKey('Install', $unitTemplate->getSections());
 
-        $this->assertNotEmpty($unitTemplate->getUnitSection()->getProperties());
-        $this->assertNotEmpty($unitTemplate->getInstallSection()->getProperties());
-        $this->assertNotEmpty($unitTemplate->getServiceSection()->getProperties());
+        self::assertNotEmpty($unitTemplate->getUnitSection()->getProperties());
+        self::assertNotEmpty($unitTemplate->getInstallSection()->getProperties());
+        self::assertNotEmpty($unitTemplate->getServiceSection()->getProperties());
     }
 }

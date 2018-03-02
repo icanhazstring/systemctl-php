@@ -16,17 +16,17 @@ class DefinitionRendererTest extends TestCase
 {
     public function testRendererShouldReturnString()
     {
-        $this->assertTrue(\is_string(DefinitionConverter::convert(['test'])));
-        $this->assertTrue(\is_string(DefinitionConverter::convert('test')));
+        self::assertTrue(\is_string(DefinitionConverter::convert(['test'])));
+        self::assertTrue(\is_string(DefinitionConverter::convert('test')));
     }
 
     public function testConverterShouldReturnStringIfGiven()
     {
-        $this->assertEquals('test', DefinitionConverter::convert('test'));
+        self::assertEquals('test', DefinitionConverter::convert('test'));
     }
 
     public function testConvertShouldConvertArrayToSpaceSeperatedString()
     {
-        $this->assertEquals('test1 test2', DefinitionConverter::convert(['test1', 'test2']));
+        self::assertEquals('test1 test2', DefinitionConverter::convert(['test1', 'test2']));
     }
 }

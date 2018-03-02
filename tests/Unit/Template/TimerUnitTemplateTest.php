@@ -25,9 +25,9 @@ class TimerUnitTemplateTest extends TestCase
     {
         $unitTemplate = new TimerUnitTemplate('TestTimer');
 
-        $this->assertInstanceOf(TimerUnitTemplate::class, $unitTemplate);
-        $this->assertEquals(Timer::UNIT, $unitTemplate->getUnitSuffix());
-        $this->assertEquals('TestTimer', $unitTemplate->getUnitName());
+        self::assertInstanceOf(TimerUnitTemplate::class, $unitTemplate);
+        self::assertEquals(Timer::UNIT, $unitTemplate->getUnitSuffix());
+        self::assertEquals('TestTimer', $unitTemplate->getUnitName());
     }
 
     /**
@@ -37,14 +37,14 @@ class TimerUnitTemplateTest extends TestCase
     {
         $unitTemplate = new TimerUnitTemplate('TestTimer');
 
-        $this->assertInstanceOf(UnitSection::class, $unitTemplate->getUnitSection());
-        $this->assertInstanceOf(InstallSection::class, $unitTemplate->getInstallSection());
-        $this->assertInstanceOf(TimerSection::class, $unitTemplate->getTimerSection());
+        self::assertInstanceOf(UnitSection::class, $unitTemplate->getUnitSection());
+        self::assertInstanceOf(InstallSection::class, $unitTemplate->getInstallSection());
+        self::assertInstanceOf(TimerSection::class, $unitTemplate->getTimerSection());
 
-        $this->assertEmpty($unitTemplate->getSections());
-        $this->assertEmpty($unitTemplate->getUnitSection()->getProperties());
-        $this->assertEmpty($unitTemplate->getInstallSection()->getProperties());
-        $this->assertEmpty($unitTemplate->getTimerSection()->getProperties());
+        self::assertEmpty($unitTemplate->getSections());
+        self::assertEmpty($unitTemplate->getUnitSection()->getProperties());
+        self::assertEmpty($unitTemplate->getInstallSection()->getProperties());
+        self::assertEmpty($unitTemplate->getTimerSection()->getProperties());
     }
 
     /**
@@ -58,25 +58,25 @@ class TimerUnitTemplateTest extends TestCase
             ->getUnitSection()
             ->setDescription('TestDescription');
 
-        $this->assertCount(1, $unitTemplate->getSections());
-        $this->assertArrayHasKey('Unit', $unitTemplate->getSections());
+        self::assertCount(1, $unitTemplate->getSections());
+        self::assertArrayHasKey('Unit', $unitTemplate->getSections());
 
         $unitTemplate
             ->getTimerSection()
             ->setUnit('superservice');
 
-        $this->assertCount(2, $unitTemplate->getSections());
-        $this->assertArrayHasKey('Timer', $unitTemplate->getSections());
+        self::assertCount(2, $unitTemplate->getSections());
+        self::assertArrayHasKey('Timer', $unitTemplate->getSections());
 
         $unitTemplate
             ->getInstallSection()
             ->setWantedBy(['multi-user.target']);
 
-        $this->assertCount(3, $unitTemplate->getSections());
-        $this->assertArrayHasKey('Install', $unitTemplate->getSections());
+        self::assertCount(3, $unitTemplate->getSections());
+        self::assertArrayHasKey('Install', $unitTemplate->getSections());
 
-        $this->assertNotEmpty($unitTemplate->getUnitSection()->getProperties());
-        $this->assertNotEmpty($unitTemplate->getInstallSection()->getProperties());
-        $this->assertNotEmpty($unitTemplate->getTimerSection()->getProperties());
+        self::assertNotEmpty($unitTemplate->getUnitSection()->getProperties());
+        self::assertNotEmpty($unitTemplate->getInstallSection()->getProperties());
+        self::assertNotEmpty($unitTemplate->getTimerSection()->getProperties());
     }
 }

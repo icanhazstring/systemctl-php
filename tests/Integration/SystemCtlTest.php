@@ -61,6 +61,7 @@ class SystemCtlTest extends TestCase
         $commandDispatcherStub = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcherStub->setTimeout(Argument::type('int'))->willReturn($commandDispatcherStub);
         $commandDispatcherStub->setBinary(Argument::type('string'))->willReturn($commandDispatcherStub);
+        $commandDispatcherStub->setArguments(Argument::type('array'))->willReturn($commandDispatcherStub);
 
         return $commandDispatcherStub;
     }
@@ -105,7 +106,7 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
 
         $units = $systemctl->listUnits(null, SystemCtl::AVAILABLE_UNITS);
-        $this->assertCount(11, $units);
+        self::assertCount(11, $units);
     }
 
     public function testListUnitsWithSupportedUnits()
@@ -134,7 +135,7 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
 
         $units = $systemctl->listUnits();
-        $this->assertCount(5, $units);
+        self::assertCount(5, $units);
     }
 
     public function testGetServices()
@@ -159,7 +160,7 @@ EOT;
 
         $services = $systemctl->getServices();
 
-        $this->assertCount(2, $services);
+        self::assertCount(2, $services);
     }
 
     public function testGetTimers()
@@ -183,7 +184,7 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
         $timers = $systemctl->getTimers();
 
-        $this->assertCount(2, $timers);
+        self::assertCount(2, $timers);
     }
 
     /**
@@ -195,12 +196,12 @@ EOT;
         $command->isSuccessful()->willReturn(true);
 
         $dispatcher = $this->buildCommandDispatcherStub();
-        $dispatcher->dispatch(Argument::exact('daemon-reload'))->willReturn($command);
+        $dispatcher->dispatch('daemon-reload')->willReturn($command);
 
         $systemCtl = new SystemCtl();
         $systemCtl->setCommandDispatcher($dispatcher->reveal());
 
-        $this->assertTrue($systemCtl->daemonReload());
+        self::assertTrue($systemCtl->daemonReload());
     }
 
     /**
@@ -239,7 +240,7 @@ EOT;
 
         $unit = $systemctl->install($unitTemplate);
 
-        $this->assertEquals($unitName, $unit->getName());
+        self::assertEquals($unitName, $unit->getName());
     }
 
     /**
@@ -250,6 +251,28 @@ EOT;
         SystemCtl::setAssetPath('vfs://');
 
         $systemCtl = new SystemCtl;
-        $this->assertInstanceOf(UnitInstaller::class, $systemCtl->getUnitInstaller());
+        self::assertInstanceOf(UnitInstaller::class, $systemCtl->getUnitInstaller());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldAddScopeArgumentToDispatcher()
+    {
+        $output = 'testService.service Active';
+
+        $dispatcher = $this->buildCommandDispatcherStub();
+        $dispatcher->setArguments(['--system'])->shouldBeCalled()->willReturn($dispatcher->reveal());
+        $dispatcher->dispatch('list-units', 'testService')
+            ->shouldBeCalled()
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemCtl = new SystemCtl;
+        $systemCtl->setCommandDispatcher($dispatcher->reveal());
+
+        $systemCtl->getService('testService');
+
+        $dispatcher->setArguments(['--user'])->shouldBeCalled()->willReturn($dispatcher->reveal());
+        $systemCtl->user()->getService('testService');
     }
 }

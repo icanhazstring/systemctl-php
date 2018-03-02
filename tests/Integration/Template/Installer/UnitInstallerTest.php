@@ -77,7 +77,7 @@ class UnitInstallerTest extends TestCase
 
         $installer = (new UnitInstaller)->setPath('vfs://units/')->setRenderer($renderer);
 
-        $this->assertTrue($installer->install($template));
+        self::assertTrue($installer->install($template));
 
         /** @var File $file */
         $file = self::$fileSystem->get('/units/awesomeService.service');
@@ -89,6 +89,6 @@ Type=simple
 EOF;
 
 
-        $this->assertEquals($expected, $file->getContent());
+        self::assertEquals($expected, $file->getContent());
     }
 }

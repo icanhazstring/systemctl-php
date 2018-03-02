@@ -20,7 +20,7 @@ class UnitSectionTest extends TestCase
     public function itShouldCreateProperInstance()
     {
         $unitSection = new UnitSection;
-        $this->assertInstanceOf(UnitSection::class, $unitSection);
+        self::assertInstanceOf(UnitSection::class, $unitSection);
     }
 
     /**
@@ -36,12 +36,12 @@ class UnitSectionTest extends TestCase
             ->setWants(['e', 'f'])
             ->setConflicts(['g', 'h']);
 
-        $this->assertEquals('TestDescription', $unitSection->getDescription());
-        $this->assertEquals('TestDocumentation', $unitSection->getDocumentation());
-        $this->assertEquals(['a', 'b'], $unitSection->getAfter());
-        $this->assertEquals(['c', 'd'], $unitSection->getRequires());
-        $this->assertEquals(['e', 'f'], $unitSection->getWants());
-        $this->assertEquals(['g', 'h'], $unitSection->getConflicts());
+        self::assertEquals('TestDescription', $unitSection->getDescription());
+        self::assertEquals('TestDocumentation', $unitSection->getDocumentation());
+        self::assertEquals(['a', 'b'], $unitSection->getAfter());
+        self::assertEquals(['c', 'd'], $unitSection->getRequires());
+        self::assertEquals(['e', 'f'], $unitSection->getWants());
+        self::assertEquals(['g', 'h'], $unitSection->getConflicts());
     }
 
     /**
@@ -54,8 +54,8 @@ class UnitSectionTest extends TestCase
         $unitSection->setDescription('TestDescription');
         $unitSection->setDocumentation('TestDocumentation');
 
-        $this->assertCount(2, $unitSection->getProperties());
-        $this->assertArrayHasKey('Description', $unitSection->getProperties());
-        $this->assertArrayHasKey('Documentation', $unitSection->getProperties());
+        self::assertCount(2, $unitSection->getProperties());
+        self::assertArrayHasKey('Description', $unitSection->getProperties());
+        self::assertArrayHasKey('Documentation', $unitSection->getProperties());
     }
 }

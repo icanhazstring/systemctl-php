@@ -30,12 +30,12 @@ class UnitTest extends TestCase
 
         $service = new Service('AwesomeService', $commandDispatcher->reveal());
 
-        $this->assertTrue($service->start());
-        $this->assertTrue($service->stop());
-        $this->assertTrue($service->enable());
-        $this->assertTrue($service->disable());
-        $this->assertTrue($service->reload());
-        $this->assertTrue($service->restart());
+        self::assertTrue($service->start());
+        self::assertTrue($service->stop());
+        self::assertTrue($service->enable());
+        self::assertTrue($service->disable());
+        self::assertTrue($service->reload());
+        self::assertTrue($service->restart());
     }
 
     public function createCommandDispatcherStub(): ObjectProphecy
@@ -68,12 +68,12 @@ class UnitTest extends TestCase
 
         $timer = new Timer('AwesomeService', $commandDispatcher->reveal());
 
-        $this->assertTrue($timer->start());
-        $this->assertTrue($timer->stop());
-        $this->assertTrue($timer->enable());
-        $this->assertTrue($timer->disable());
-        $this->assertTrue($timer->reload());
-        $this->assertTrue($timer->restart());
+        self::assertTrue($timer->start());
+        self::assertTrue($timer->stop());
+        self::assertTrue($timer->enable());
+        self::assertTrue($timer->disable());
+        self::assertTrue($timer->reload());
+        self::assertTrue($timer->restart());
     }
 
     public function testTimerCommandsIfProcessIsUnsuccessFulShouldRaiseException()

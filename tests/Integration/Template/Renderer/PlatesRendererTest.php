@@ -52,7 +52,7 @@ class PlatesRendererTest extends TestCase
         $unitTemplate->getInstallSection()->setWantedBy(['multi-user.target']);
 
         $result = $renderer->render('unit-template', $unitTemplate);
-        $this->assertEquals(<<<EOT
+        self::assertEquals(<<<EOT
 [Unit]
 Description=TestDescription
 [Service]

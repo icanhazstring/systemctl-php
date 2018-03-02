@@ -20,7 +20,7 @@ class TimerSectionTest extends TestCase
     public function itShouldCreateProperInstance()
     {
         $timerSection = new TimerSection;
-        $this->assertInstanceOf(TimerSection::class, $timerSection);
+        self::assertInstanceOf(TimerSection::class, $timerSection);
     }
 
     /**
@@ -33,9 +33,9 @@ class TimerSectionTest extends TestCase
             ->setUnit('testUnit')
             ->setRemainAfterElapse(false);
 
-        $this->assertEquals('Wed..Sat *-*-* 1:00', $timerSection->getOnCalendar());
-        $this->assertEquals('testUnit', $timerSection->getUnit());
-        $this->assertFalse($timerSection->getRemainAfterElapse());
+        self::assertEquals('Wed..Sat *-*-* 1:00', $timerSection->getOnCalendar());
+        self::assertEquals('testUnit', $timerSection->getUnit());
+        self::assertFalse($timerSection->getRemainAfterElapse());
     }
 
     /**
@@ -48,8 +48,8 @@ class TimerSectionTest extends TestCase
         $timerSection->setOnCalendar('Wed..Sat *-*-* 1:00');
         $timerSection->setUnit('testUnit');
 
-        $this->assertCount(2, $timerSection->getProperties());
-        $this->assertArrayHasKey('OnCalendar', $timerSection->getProperties());
-        $this->assertArrayHasKey('Unit', $timerSection->getProperties());
+        self::assertCount(2, $timerSection->getProperties());
+        self::assertArrayHasKey('OnCalendar', $timerSection->getProperties());
+        self::assertArrayHasKey('Unit', $timerSection->getProperties());
     }
 }
