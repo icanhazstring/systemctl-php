@@ -1,5 +1,5 @@
 # systemctl-php
-[![Build Status](https://api.travis-ci.org/icanhazstring/systemctl-php.svg?branch=master)](https://travis-ci.org/icanhazstring/systemctl-php) [![Code Climate](https://codeclimate.com/github/icanhazstring/systemctl-php/badges/gpa.svg)](https://codeclimate.com/github/icanhazstring/systemctl-php) [![Test Coverage](https://codeclimate.com/github/icanhazstring/systemctl-php/badges/coverage.svg)](https://codeclimate.com/github/icanhazstring/systemctl-php/coverage)
+[![Build Status](https://api.travis-ci.org/icanhazstring/systemctl-php.svg?branch=master)](https://travis-ci.org/icanhazstring/systemctl-php) [![Code Climate](https://codeclimate.com/github/icanhazstring/systemctl-php/badges/gpa.svg)](https://codeclimate.com/github/icanhazstring/systemctl-php) [![Test Coverage](https://codeclimate.com/github/icanhazstring/systemctl-php/badges/coverage.svg)](https://codeclimate.com/github/icanhazstring/systemctl-php/coverage) [![Join the chat at https://gitter.im/icanhazstring/systemctl-php](https://badges.gitter.im/icanhazstring/systemctl-php.svg)](https://gitter.im/icanhazstring/systemctl-php?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 PHP wrapper for systemctl (PHP7.1)
 
