@@ -14,9 +14,18 @@ use SystemCtl\Exception\CommandFailedException;
  */
 class SymfonyCommand implements CommandInterface
 {
+    /**
+     * List of valid exit codes of systemctl commands.
+     * When systemctl is-active is checked on a non active unit, we receive exit code 3
+     */
+    private const VALID_EXITCODES = [0, 3];
+
     /** @var Process */
     private $process;
 
+    /**
+     * @param Process $process
+     */
     public function __construct(Process $process)
     {
         $this->process = $process;
@@ -45,7 +54,9 @@ class SymfonyCommand implements CommandInterface
     {
         $this->process->run();
 
-        if (!$this->process->isSuccessful()) {
+        $exitCode = $this->process->getExitCode();
+
+        if (!\in_array((int)$exitCode, self::VALID_EXITCODES, true)) {
             throw new CommandFailedException($this->process->getErrorOutput());
         }
 

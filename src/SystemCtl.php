@@ -123,7 +123,7 @@ class SystemCtl
      */
     public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
     {
-        $commands = ['list-units'];
+        $commands = ['--all', 'list-units'];
 
         if ($unitPrefix) {
             $commands[] = $unitPrefix;
