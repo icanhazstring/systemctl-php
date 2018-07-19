@@ -9,6 +9,5 @@ class PathResolver implements PathResolverInterface
 {
     public function __invoke(ScopeInterface $scope): string
     {
-
     }
 }

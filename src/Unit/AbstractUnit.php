@@ -42,8 +42,7 @@ abstract class AbstractUnit implements UnitInterface
         string $type,
         string $name,
         CommandDispatcherInterface $commandDispatcher
-    ): AbstractUnit
-    {
+    ): AbstractUnit {
         $class = __NAMESPACE__ . '\\' . ucfirst($type);
         return new $class($name, $commandDispatcher);
     }

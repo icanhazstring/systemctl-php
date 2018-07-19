@@ -48,7 +48,7 @@
 
         "php-cs-src": "vendor/bin/phpcs --standard=PSR2 src/",
         "php-cs-test": "vendor/bin/phpcs --standard=PSR2 tests/",
-        "phpstan-src": "vendor/bin/phpstan analyze --level=max src/",
-        "phpstan-test": "vendor/bin/phpstan analyze tests/ --level=4 -c phpstan.neon"
+        "phpstan-src": "vendor/bin/phpstan analyze --no-progress --level=max src/",
+        "phpstan-test": "vendor/bin/phpstan analyze tests/ --no-progress --level=4 -c phpstan.neon"
     }
 }
