@@ -52,12 +52,12 @@ class SystemCtlTest extends TestCase
 
     /**
      * @test
+     * @throws \ReflectionException
      */
-    public function itShouldChangeStaticPropertiesIfSet()
+    public function itShouldChangeStaticPropertiesIfSet(): void
     {
         SystemCtl::setBinary('testBinary');
         SystemCtl::setTimeout(5);
-        SystemCtl::setInstallPath('testInstallPath');
         SystemCtl::setAssetPath('testAssetPath');
 
         $reflection = new \ReflectionClass(SystemCtl::class);
@@ -65,21 +65,18 @@ class SystemCtlTest extends TestCase
         $binaryProperty->setAccessible(true);
         $timeoutProperty = $reflection->getProperty('timeout');
         $timeoutProperty->setAccessible(true);
-        $installPathProperty = $reflection->getProperty('installPath');
-        $installPathProperty->setAccessible(true);
         $assetPathProperty = $reflection->getProperty('assetPath');
         $assetPathProperty->setAccessible(true);
 
         self::assertEquals('testBinary', $binaryProperty->getValue(new SystemCtl));
         self::assertEquals(5, $timeoutProperty->getValue(new SystemCtl));
-        self::assertEquals('testInstallPath', $installPathProperty->getValue(new SystemCtl));
         self::assertEquals('testAssetPath', $assetPathProperty->getValue(new SystemCtl));
     }
 
     /**
      * @test
      */
-    public function itShouldInstantiateDefaultCommandDispatcherIfReceived()
+    public function itShouldInstantiateDefaultCommandDispatcherIfReceived(): void
     {
         $systemCtl = new SystemCtl;
         self::assertInstanceOf(SymfonyCommandDispatcher::class, $systemCtl->getCommandDispatcher());
@@ -88,18 +85,19 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnServiceGetting()
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnServiceGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
+
         self::assertInstanceOf(Service::class, $service);
         self::assertEquals('testService', $service->getName());
     }
@@ -113,7 +111,7 @@ class SystemCtlTest extends TestCase
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -125,13 +123,13 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnAServiceWithTheCorrectNameOnServiceGetting()
+    public function itShouldReturnAServiceWithTheCorrectNameOnServiceGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -143,12 +141,12 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowAnExceptionIfNoServiceCouldBeFound()
+    public function itShouldThrowAnExceptionIfNoServiceCouldBeFound(): void
     {
         $unitName = 'testService';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub(''));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -160,13 +158,13 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnTimerGetting()
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnTimerGetting(): void
     {
         $unitName = 'testTimer';
         $output = ' testTimer.timer     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -179,12 +177,12 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound()
+    public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound(): void
     {
         $unitName = 'testTimer';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub(''));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -196,13 +194,13 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnATimerOnTimerGetting()
+    public function itShouldReturnATimerOnTimerGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -214,13 +212,13 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnATimerWithTheCorrectNameOnTimerGetting()
+    public function itShouldReturnATimerWithTheCorrectNameOnTimerGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
+            ->dispatch('--all', 'list-units', $unitName)
             ->willReturn($this->buildCommandStub($output));
 
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
@@ -232,7 +230,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldRaiseAnExceptionWhenAttemptingToInstallUnsupportedUnit()
+    public function itShouldRaiseAnExceptionWhenAttemptingToInstallUnsupportedUnit(): void
     {
         $template = $this->prophesize(AbstractUnitTemplate::class);
         $template->getUnitName()->willReturn('test');

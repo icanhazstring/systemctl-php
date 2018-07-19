@@ -20,11 +20,6 @@ abstract class AbstractUnit implements UnitInterface
     protected $commandDispatcher;
 
     /**
-     * @var string
-     */
-    protected $unitSuffix;
-
-    /**
      * Create new service with given name
      *
      * @param string                     $name
@@ -34,6 +29,23 @@ abstract class AbstractUnit implements UnitInterface
     {
         $this->name = $name;
         $this->commandDispatcher = $commandDispatcher;
+    }
+
+
+    /**
+     * @param string                     $type
+     * @param string                     $name
+     * @param CommandDispatcherInterface $commandDispatcher
+     * @return AbstractUnit
+     */
+    public static function byType(
+        string $type,
+        string $name,
+        CommandDispatcherInterface $commandDispatcher
+    ): AbstractUnit
+    {
+        $class = __NAMESPACE__ . '\\' . ucfirst($type);
+        return new $class($name, $commandDispatcher);
     }
 
     /**
@@ -60,7 +72,7 @@ abstract class AbstractUnit implements UnitInterface
     {
         $instanceName = explode('@', $this->name, 2)[1] ?? null;
 
-        if (is_string($instanceName) && strpos($instanceName, '.') !== false) {
+        if (\is_string($instanceName) && strpos($instanceName, '.') !== false) {
             $instanceName = explode('.', $instanceName, 2)[0];
         }
 

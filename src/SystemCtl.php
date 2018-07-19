@@ -13,7 +13,9 @@ use SystemCtl\Scope\UserScope;
 use SystemCtl\Template\AbstractUnitTemplate;
 use SystemCtl\Template\Installer\UnitInstaller;
 use SystemCtl\Template\Installer\UnitInstallerInterface;
+use SystemCtl\Template\PathResolverInterface;
 use SystemCtl\Template\Renderer\PlatesRenderer;
+use SystemCtl\Unit\AbstractUnit;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 use SystemCtl\Unit\UnitInterface;
@@ -32,11 +34,16 @@ class SystemCtl
     /** @var int timeout for commands */
     private static $timeout = 3;
 
-    /** @var string install path for new units */
-    private static $installPath = '/etc/systemd/system';
-
     /** @var string */
     private static $assetPath = __DIR__ . '/../assets';
+
+    private const INSTALL_PATHS = [
+        'system' => '/etc/systemd/system/',
+        'user' => '~/.config/systemd/user/'
+    ];
+
+    /** @var PathResolverInterface */
+    private $pathResolver;
 
     /** @var CommandDispatcherInterface */
     private $commandDispatcher;
@@ -63,7 +70,7 @@ class SystemCtl
 
     public const SUPPORTED_UNITS = [
         Service::UNIT,
-        Timer::UNIT,
+        Timer::UNIT
     ];
 
     /**
@@ -84,16 +91,6 @@ class SystemCtl
     public static function setTimeout(int $timeout): void
     {
         self::$timeout = $timeout;
-    }
-
-    /**
-     * Change install path for units
-     *
-     * @param string $installPath
-     */
-    public static function setInstallPath(string $installPath): void
-    {
-        self::$installPath = $installPath;
     }
 
     /**
@@ -255,9 +252,27 @@ class SystemCtl
                 ->setBinary(self::$binary);
         }
 
-        $this->commandDispatcher->setArguments([(string)$this->getScope()]);
+        $this->commandDispatcher->setArguments([$this->getScope()->getArgument()]);
 
         return $this->commandDispatcher;
+    }
+
+    /**
+     * @return PathResolverInterface
+     */
+    public function getPathResolver(): PathResolverInterface
+    {
+        return $this->pathResolver;
+    }
+
+    /**
+     * @param PathResolverInterface $pathResolver
+     * @return SystemCtl
+     */
+    public function setPathResolver(PathResolverInterface $pathResolver): SystemCtl
+    {
+        $this->pathResolver = $pathResolver;
+        return $this;
     }
 
     /**
@@ -265,7 +280,7 @@ class SystemCtl
      *
      * @return SystemCtl
      */
-    public function setCommandDispatcher(CommandDispatcherInterface $dispatcher)
+    public function setCommandDispatcher(CommandDispatcherInterface $dispatcher): SystemCtl
     {
         $this->commandDispatcher = $dispatcher
             ->setTimeout(self::$timeout)
@@ -281,7 +296,7 @@ class SystemCtl
     {
         if ($this->unitInstaller === null) {
             $this->unitInstaller = (new UnitInstaller)
-                ->setPath(self::$installPath)
+                ->setPath(self::INSTALL_PATHS[$this->getScope()->getName()])
                 ->setRenderer(new PlatesRenderer(self::$assetPath));
         }
 
@@ -306,22 +321,26 @@ class SystemCtl
      * Install a given template, reload the daemon and return the freshly installed unit.
      *
      * @param AbstractUnitTemplate $unitTemplate
+     * @param bool                 $overwrite
      *
      * @return UnitInterface
-     * @throws UnitTypeNotSupportedException
      */
-    public function install(AbstractUnitTemplate $unitTemplate): UnitInterface
+    public function install(AbstractUnitTemplate $unitTemplate, bool $overwrite = false): UnitInterface
     {
         $unitSuffix = $unitTemplate->getUnitSuffix();
         $unitName = $unitTemplate->getUnitName();
 
-        if (!in_array($unitSuffix, self::SUPPORTED_UNITS)) {
+        if (!\in_array($unitSuffix, self::SUPPORTED_UNITS, true)) {
             throw UnitTypeNotSupportedException::create($unitSuffix);
         }
 
-        $this->getUnitInstaller()->install($unitTemplate);
+        $this->getUnitInstaller()->install($unitTemplate, $overwrite);
+
+        $unit = AbstractUnit::byType($unitSuffix, $unitName, $this->getCommandDispatcher());
+        $unit->enable();
+
         $this->daemonReload();
 
-        return $this->{'get' . ucfirst($unitSuffix)}($unitName);
+        return $unit;
     }
 }

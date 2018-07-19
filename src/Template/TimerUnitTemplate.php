@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SystemCtl\Template;
 
+use SystemCtl\Template\Section\AbstractSection;
 use SystemCtl\Template\Section\TimerSection;
 use SystemCtl\Unit\Timer;
 
@@ -40,7 +41,7 @@ class TimerUnitTemplate extends AbstractUnitTemplate
     /**
      * @inheritDoc
      */
-    public function getTypeSpecificSection()
+    public function getTypeSpecificSection(): AbstractSection
     {
         return $this->timerSection;
     }

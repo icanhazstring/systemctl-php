@@ -14,8 +14,16 @@ class UserScope implements ScopeInterface
     /**
      * @inheritdoc
      */
-    public function __toString(): string
+    public function getArgument(): string
     {
-        return '--user';
+        return '--' . $this->getName();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName(): string
+    {
+        return 'user';
     }
 }

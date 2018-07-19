@@ -55,10 +55,13 @@ class PlatesRendererTest extends TestCase
         self::assertEquals(<<<EOT
 [Unit]
 Description=TestDescription
+
 [Service]
 Type=simple
+
 [Install]
 WantedBy=multi-user.target
+
 
 EOT
             , $result);

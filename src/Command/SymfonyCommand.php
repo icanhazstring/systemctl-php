@@ -44,7 +44,7 @@ class SymfonyCommand implements CommandInterface
      */
     public function isSuccessful(): bool
     {
-        return $this->process->isSuccessful();
+        return \in_array($this->process->getExitCode(), self::VALID_EXITCODES, true);
     }
 
     /**
@@ -54,9 +54,7 @@ class SymfonyCommand implements CommandInterface
     {
         $this->process->run();
 
-        $exitCode = $this->process->getExitCode();
-
-        if (!\in_array((int)$exitCode, self::VALID_EXITCODES, true)) {
+        if (!$this->isSuccessful()) {
             throw new CommandFailedException($this->process->getErrorOutput());
         }
 

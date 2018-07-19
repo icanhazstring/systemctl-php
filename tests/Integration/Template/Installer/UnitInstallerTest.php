@@ -86,6 +86,7 @@ class UnitInstallerTest extends TestCase
 [Service]
 Type=simple
 
+
 EOF;
 
 

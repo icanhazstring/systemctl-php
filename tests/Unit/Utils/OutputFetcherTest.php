@@ -26,7 +26,7 @@ class OutputFetcherTest extends TestCase
         string $output,
         string $suffix,
         int $expectedAmount
-    ) {
+    ): void {
         $units = OutputFetcher::fetchUnitNames($suffix, $output);
         self::assertCount($expectedAmount, $units);
     }
@@ -79,7 +79,7 @@ OUTPUT;
      * @test
      * @dataProvider itOnlyExtractsTheUnitNamesDataProvider
      */
-    public function itOnlyExtractsTheUnitNames(string $output, string $suffix, array $expectedUnitNames)
+    public function itOnlyExtractsTheUnitNames(string $output, string $suffix, array $expectedUnitNames): void
     {
         $units = OutputFetcher::fetchUnitNames($suffix, $output);
         self::assertEquals($expectedUnitNames, $units);

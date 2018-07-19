@@ -80,7 +80,7 @@ class SystemCtlTest extends TestCase
         return $command;
     }
 
-    public function testListUnitsWithAvailableUnits()
+    public function testListUnitsWithAvailableUnits(): void
     {
         $output = <<<EOT
   proc-sys-fs-binfmt_misc.timer                      loaded active mounted
@@ -94,6 +94,7 @@ class SystemCtlTest extends TestCase
   beanstalkd.service                                 loaded active running
   console-setup.service                              loaded active exited
   cron.service                                       loaded active running
+  test.service                                       loaded inactive dead
 EOT;
 
         $command = $this->prophesize(CommandInterface::class);
@@ -106,10 +107,10 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
 
         $units = $systemctl->listUnits(null, SystemCtl::AVAILABLE_UNITS);
-        self::assertCount(11, $units);
+        self::assertCount(12, $units);
     }
 
-    public function testListUnitsWithSupportedUnits()
+    public function testListUnitsWithSupportedUnits(): void
     {
         $output = <<<EOT
   proc-sys-fs-binfmt_misc.timer                      loaded active mounted
@@ -123,6 +124,7 @@ EOT;
   beanstalkd.service                                 loaded active running
   console-setup.service                              loaded active exited
   cron.service                                       loaded active running
+  test.service                                       loaded inactive dead
 EOT;
 
         $command = $this->prophesize(CommandInterface::class);
@@ -135,10 +137,10 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
 
         $units = $systemctl->listUnits();
-        self::assertCount(5, $units);
+        self::assertCount(6, $units);
     }
 
-    public function testGetServices()
+    public function testGetServices(): void
     {
         $output = <<<EOT
 PLACEHOLDER STUFF
@@ -163,7 +165,7 @@ EOT;
         self::assertCount(2, $services);
     }
 
-    public function testGetTimers()
+    public function testGetTimers(): void
     {
         $output = <<<EOT
 PLACEHOLDER STUFF
@@ -190,7 +192,7 @@ EOT;
     /**
      * @test
      */
-    public function itShouldReturnTrueOnSuccessfulDaemonReload()
+    public function itShouldReturnTrueOnSuccessfulDaemonReload(): void
     {
         $command = $this->prophesize(CommandInterface::class);
         $command->isSuccessful()->willReturn(true);
@@ -207,18 +209,18 @@ EOT;
     /**
      * @test
      */
-    public function itShouldReturnUnitAfterInstall()
+    public function itShouldReturnUnitAfterInstall(): void
     {
         $unitName = 'testService';
 
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
         $commandDispatcherStub
-            ->dispatch('list-units', $unitName)
-            ->willReturn($this->buildCommandStub('testService.service Active Running'))
+            ->dispatch('daemon-reload')
+            ->willReturn($this->buildCommandStub(''))
             ->shouldBeCalled();
 
         $commandDispatcherStub
-            ->dispatch('daemon-reload')
+            ->dispatch('enable', 'testService.service')
             ->willReturn($this->buildCommandStub(''))
             ->shouldBeCalled();
 
@@ -246,7 +248,7 @@ EOT;
     /**
      * @test
      */
-    public function itShouldReturnDefaultInstallerIfReceived()
+    public function itShouldReturnDefaultInstallerIfReceived(): void
     {
         SystemCtl::setAssetPath('vfs://');
 
@@ -257,13 +259,13 @@ EOT;
     /**
      * @test
      */
-    public function itShouldAddScopeArgumentToDispatcher()
+    public function itShouldAddScopeArgumentToDispatcher(): void
     {
         $output = 'testService.service Active';
 
         $dispatcher = $this->buildCommandDispatcherStub();
         $dispatcher->setArguments(['--system'])->shouldBeCalled()->willReturn($dispatcher->reveal());
-        $dispatcher->dispatch('list-units', 'testService')
+        $dispatcher->dispatch('--all', 'list-units', 'testService')
             ->shouldBeCalled()
             ->willReturn($this->buildCommandStub($output));
 

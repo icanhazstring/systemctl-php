@@ -52,14 +52,14 @@ class UnitInstaller implements UnitInstallerInterface
     /**
      * @inheritDoc
      */
-    public function install(AbstractUnitTemplate $unitTemplate): bool
+    public function install(AbstractUnitTemplate $unitTemplate, bool $overwrite = false): bool
     {
         $unitSuffix = $unitTemplate->getUnitSuffix();
         $unitName = $unitTemplate->getUnitName();
 
         $targetFile = $this->path . DIRECTORY_SEPARATOR . $unitName . '.' . $unitSuffix;
 
-        if (\file_exists($targetFile)) {
+        if (!$overwrite && \file_exists($targetFile)) {
             throw UnitFileExistsException::create($unitName, $unitSuffix);
         }
 

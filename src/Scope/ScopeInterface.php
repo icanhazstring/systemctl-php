@@ -16,5 +16,10 @@ interface ScopeInterface
      *
      * @return string
      */
-    public function __toString(): string;
+    public function getArgument(): string;
+
+    /**
+     * @return string
+     */
+    public function getName(): string;
 }

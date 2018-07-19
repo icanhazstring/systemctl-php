@@ -14,18 +14,18 @@ use SystemCtl\Utils\DefinitionConverter;
  */
 class DefinitionRendererTest extends TestCase
 {
-    public function testRendererShouldReturnString()
+    public function testRendererShouldReturnString(): void
     {
-        self::assertTrue(\is_string(DefinitionConverter::convert(['test'])));
-        self::assertTrue(\is_string(DefinitionConverter::convert('test')));
+        self::assertInternalType('string', DefinitionConverter::convert(['test']));
+        self::assertInternalType('string', DefinitionConverter::convert('test'));
     }
 
-    public function testConverterShouldReturnStringIfGiven()
+    public function testConverterShouldReturnStringIfGiven(): void
     {
         self::assertEquals('test', DefinitionConverter::convert('test'));
     }
 
-    public function testConvertShouldConvertArrayToSpaceSeperatedString()
+    public function testConvertShouldConvertArrayToSpaceSeperatedString(): void
     {
         self::assertEquals('test1 test2', DefinitionConverter::convert(['test1', 'test2']));
     }

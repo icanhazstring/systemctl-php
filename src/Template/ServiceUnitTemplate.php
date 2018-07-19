@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SystemCtl\Template;
 
+use SystemCtl\Template\Section\AbstractSection;
 use SystemCtl\Template\Section\ServiceSection;
 use SystemCtl\Unit\Service;
 
@@ -40,7 +41,7 @@ class ServiceUnitTemplate extends AbstractUnitTemplate
     /**
      * @inheritDoc
      */
-    public function getTypeSpecificSection()
+    public function getTypeSpecificSection(): AbstractSection
     {
         return $this->serviceSection;
     }

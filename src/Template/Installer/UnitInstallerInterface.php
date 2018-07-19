@@ -39,9 +39,9 @@ interface UnitInstallerInterface
      * Install a unit by template
      *
      * @param AbstractUnitTemplate $unitTemplate
-     *
+     * @param bool                 $overwrite
      * @return bool
      * @throw UnitNotInstalledException
      */
-    public function install(AbstractUnitTemplate $unitTemplate): bool;
+    public function install(AbstractUnitTemplate $unitTemplate, bool $overwrite = false): bool;
 }

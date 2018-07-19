@@ -37,7 +37,7 @@ abstract class AbstractSection
     {
         preg_match('/(?<type>get|set)(?<property>.*)/', $name, $match);
 
-        if (!in_array($match['property'], static::PROPERTIES)) {
+        if (!\in_array($match['property'], static::PROPERTIES, true)) {
             throw PropertyNotSupportedException::create($match['property'], static::class);
         }
 

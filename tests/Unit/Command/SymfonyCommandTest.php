@@ -45,7 +45,7 @@ class SymfonyCommandTest extends TestCase
     public function itShouldReturnSuccessfulFromProcess()
     {
         $process = $this->prophesize(Process::class);
-        $process->isSuccessful()->willReturn(true);
+        $process->getExitCode()->willReturn(0);
 
         $command = new SymfonyCommand($process->reveal());
         self::assertTrue($command->isSuccessful());
@@ -54,12 +54,12 @@ class SymfonyCommandTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnTheCommandIfCommandRanSuccessFul()
+    public function itShouldReturnTheCommandIfCommandRanSuccessfull(): void
     {
         $process = $this->prophesize(Process::class);
         $process->run()->shouldBeCalled();
         $process->getErrorOutput()->willReturn('testError');
-        $process->isSuccessful()->willReturn(true);
+        $process->getExitCode()->willReturn(0);
 
         $command = new SymfonyCommand($process->reveal());
         self::assertEquals($command, $command->run());
@@ -68,12 +68,12 @@ class SymfonyCommandTest extends TestCase
     /**
      * @test
      */
-    public function itShouldRaiseAnExceptionIfProcessWasNotSuccessfull()
+    public function itShouldRaiseAnExceptionIfProcessWasNotSuccessfull(): void
     {
         $process = $this->prophesize(Process::class);
         $process->run()->shouldBeCalled();
         $process->getErrorOutput()->willReturn('testError');
-        $process->isSuccessful()->willReturn(false);
+        $process->getExitCode()->willReturn(1);
 
         $command = new SymfonyCommand($process->reveal());
         $this->expectException(CommandFailedException::class);

@@ -14,8 +14,16 @@ class SystemScope implements ScopeInterface
     /**
      * @inheritdoc
      */
-    public function __toString(): string
+    public function getArgument(): string
     {
-        return '--system';
+        return '--' . $this->getName();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName(): string
+    {
+        return 'system';
     }
 }

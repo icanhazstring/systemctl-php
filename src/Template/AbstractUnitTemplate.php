@@ -46,7 +46,7 @@ abstract class AbstractUnitTemplate
     /**
      * @return AbstractSection
      */
-    abstract public function getTypeSpecificSection();
+    abstract public function getTypeSpecificSection(): AbstractSection;
 
     /**
      * Get all definitions for this template as array
