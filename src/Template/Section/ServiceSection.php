@@ -82,4 +82,47 @@ class ServiceSection extends AbstractSection
         self::TYPE_NOTIFY,
         self::TYPE_IDLE
     ];
+
+    /**
+     * on-success: it will be restarted only when the service process exits cleanly.
+     * In this context, a clean exit means an exit code of 0, or one of the signals SIGHUP, SIGINT, SIGTERM or SIGPIPE,
+     * and additionally, exit statuses and signals specified in SuccessExitStatus=
+     */
+    public const RESTART_ON_SUCCESS = 'on-success';
+    /**
+     * on-failure: the service will be restarted when the process exits with a non-zero exit code, is terminated by a
+     * signal (including on core dump, but excluding the aforementioned four signals), when an operation
+     * (such as service reload) times out, and when the configured watchdog timeout is triggered.
+     */
+    public const RESTART_ON_FAILURE = 'on-failure';
+    /**
+     * on-abnormal: the service will be restarted when the process is terminated by a signal (including on
+     * core dump, excluding the aforementioned four signals), when an operation times out, or when the watchdog
+     * timeout is triggered.
+     */
+    public const RESTART_ON_ABNORMAL = 'on-abnormal';
+    /**
+     * on-abort: the service will be restarted only if the service process exits due to an uncaught signal
+     * not specified as a clean exit status
+     */
+    public const RESTART_ON_ABORT = 'on-abort';
+    /**
+     * If set to on-watchdog, the service will be restarted only if the watchdog timeout for the service expires
+     */
+    public const RESTART_ON_WATCHDOG = 'on-watchdog';
+    /**
+     * always: the service will be restarted regardless of whether it exited cleanly or not, got terminated
+     * abnormally by a signal, or hit a timeout.
+     */
+    public const RESTART_ALWAYS = 'always';
+
+    public const RESTART = [
+        self::RESTART_ON_SUCCESS,
+        self::RESTART_ON_FAILURE,
+        self::RESTART_ON_ABNORMAL,
+        self::RESTART_ON_ABORT,
+        self::RESTART_ON_WATCHDOG,
+        self::RESTART_ALWAYS
+    ];
+
 }

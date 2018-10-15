@@ -4,7 +4,7 @@
     "type": "library",
     "require": {
         "php": ">=7.1.0",
-        "symfony/process": "^3.2",
+        "symfony/process": ">=4.0",
         "league/plates": "^3.3"
     },
     "require-dev": {
