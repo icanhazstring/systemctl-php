@@ -1,5 +1,5 @@
 {
-    "name": "icanhazstring/systemctl-php",
+    "name": "cyber56ar86/systemctl-php",
     "description": "PHP wrapper for systemctl",
     "type": "library",
     "require": {
