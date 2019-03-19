@@ -13,6 +13,7 @@ use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\SystemCtl;
 use SystemCtl\Template\AbstractUnitTemplate;
+use SystemCtl\Template\UnitTemplateInterface;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
 
@@ -232,7 +233,7 @@ class SystemCtlTest extends TestCase
      */
     public function itShouldRaiseAnExceptionWhenAttemptingToInstallUnsupportedUnit(): void
     {
-        $template = $this->prophesize(AbstractUnitTemplate::class);
+        $template = $this->prophesize(UnitTemplateInterface::class);
         $template->getUnitName()->willReturn('test');
         $template->getUnitSuffix()->willReturn('fubar');
 

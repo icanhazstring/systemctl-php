@@ -13,7 +13,7 @@ use SystemCtl\Unit\Timer;
  * @package SystemCtl\Template
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
-class TimerUnitTemplate extends AbstractUnitTemplate
+class TimerUnitTemplate extends AbstractUnitTemplate implements UnitTemplateInterface
 {
     /** @var TimerSection */
     protected $timerSection;

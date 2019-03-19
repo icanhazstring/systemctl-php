@@ -37,21 +37,22 @@ class OutputFetcherTest extends TestCase
     public function itDeterminesTheCorrectAmountOfUnitsDataProvider(): array
     {
         $output = <<<OUTPUT
-  superservice.service      Active running
-  awesomeservice.service    Active running
-  nonservice.timer          Active running
-  superservice.mount        Active running
-  awesomeservice.mount      Active running
-  nonservice.timer          Active running
-  superservice.service      Active running
-  awesomeservice.service    Active running
+  superservice.service         active running
+  awesomeservice.service       active running
+  nonservice.timer             active running
+  superservice.mount           active running
+  awesomeservice.mount         active running
+  nonservice.timer             active running
+  superservice.service         active running
+  awesomeservice.service       active running
+● failed-service@foo.service   loaded failed failed  
 OUTPUT;
 
         return [
             [
                 'output' => $output,
                 'suffix' => 'service',
-                'amount' => 4,
+                'amount' => 5,
             ],
             [
                 'output' => $output,
@@ -99,6 +100,7 @@ OUTPUT;
   nonservice.timer          Active running
   instance-service@1.service      Active running
   instance-service@foo.service    Active running
+● failed-service@foo.service loaded failed failed  
 OUTPUT;
 
         return [
@@ -110,6 +112,7 @@ OUTPUT;
                     'foo-bar',
                     'instance-service@1',
                     'instance-service@foo',
+                    'failed-service@foo'
                 ],
             ],
             [

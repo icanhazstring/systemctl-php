@@ -155,7 +155,7 @@ class SystemCtl
     public function getScope(): ScopeInterface
     {
         if ($this->scope === null) {
-            $this->scope = $this->system();
+            $this->scope = $this->systemScope = new SystemScope;
         }
 
         return $this->scope;

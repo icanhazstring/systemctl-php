@@ -13,7 +13,7 @@ use SystemCtl\Unit\Service;
  * @package SystemCtl\Template
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
-class ServiceUnitTemplate extends AbstractUnitTemplate
+class ServiceUnitTemplate extends AbstractUnitTemplate implements UnitTemplateInterface
 {
     /** @var ServiceSection */
     protected $serviceSection;
