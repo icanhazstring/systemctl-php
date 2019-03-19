@@ -45,6 +45,7 @@ class SystemCtlTest extends TestCase
   beanstalkd.service                                 loaded active running
   console-setup.service                              loaded active exited
   cron.service                                       loaded active running
+● failed-server@foo.service                       loaded failed failed
 EOT;
 
         $command = $this->prophesize(CommandInterface::class);
@@ -57,7 +58,7 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
 
         $units = $systemctl->listUnits(null, SystemCtl::AVAILABLE_UNITS);
-        $this->assertCount(11, $units);
+        $this->assertCount(12, $units);
     }
 
     public function testListUnitsWithSupportedUnits()
