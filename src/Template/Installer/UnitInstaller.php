@@ -6,6 +6,7 @@ namespace SystemCtl\Template\Installer;
 use SystemCtl\Exception\UnitFileExistsException;
 use SystemCtl\Template\AbstractUnitTemplate;
 use SystemCtl\Template\RendererInterface;
+use SystemCtl\Template\UnitTemplateInterface;
 
 /**
  * UnitInstaller
@@ -52,7 +53,7 @@ class UnitInstaller implements UnitInstallerInterface
     /**
      * @inheritDoc
      */
-    public function install(AbstractUnitTemplate $unitTemplate, bool $overwrite = false): bool
+    public function install(UnitTemplateInterface $unitTemplate, bool $overwrite = false): bool
     {
         $unitSuffix = $unitTemplate->getUnitSuffix();
         $unitName = $unitTemplate->getUnitName();

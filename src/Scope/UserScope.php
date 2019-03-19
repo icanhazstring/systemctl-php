@@ -9,16 +9,8 @@ namespace SystemCtl\Scope;
  * @package SystemCtl\Scope
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
-class UserScope implements ScopeInterface
+class UserScope extends AbstractScope
 {
-    /**
-     * @inheritdoc
-     */
-    public function getArgument(): string
-    {
-        return '--' . $this->getName();
-    }
-
     /**
      * @inheritdoc
      */

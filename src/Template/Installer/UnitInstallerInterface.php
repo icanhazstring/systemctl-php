@@ -5,6 +5,7 @@ namespace SystemCtl\Template\Installer;
 
 use SystemCtl\Template\AbstractUnitTemplate;
 use SystemCtl\Template\RendererInterface;
+use SystemCtl\Template\UnitTemplateInterface;
 
 /**
  * UnitInstallerInterface
@@ -38,10 +39,10 @@ interface UnitInstallerInterface
     /**
      * Install a unit by template
      *
-     * @param AbstractUnitTemplate $unitTemplate
-     * @param bool                 $overwrite
+     * @param UnitTemplateInterface $unitTemplate
+     * @param bool                  $overwrite
      * @return bool
      * @throw UnitNotInstalledException
      */
-    public function install(AbstractUnitTemplate $unitTemplate, bool $overwrite = false): bool;
+    public function install(UnitTemplateInterface $unitTemplate, bool $overwrite = false): bool;
 }

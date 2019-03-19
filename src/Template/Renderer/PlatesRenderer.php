@@ -5,7 +5,7 @@ namespace SystemCtl\Template\Renderer;
 
 use League\Plates;
 use SystemCtl\Template\RendererInterface;
-use SystemCtl\Template\AbstractUnitTemplate;
+use SystemCtl\Template\UnitTemplateInterface;
 
 /**
  * PlatesRenderer
@@ -13,7 +13,7 @@ use SystemCtl\Template\AbstractUnitTemplate;
  * Wrapper for plates to be used with RendererInterface
  *
  * @package SystemCtl\Template
- * @author icanhazstring <blubb0r05+github@gmail.com>
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class PlatesRenderer implements RendererInterface
 {
@@ -34,7 +34,7 @@ class PlatesRenderer implements RendererInterface
     /**
      * @inheritdoc
      */
-    public function render(string $templateFile, AbstractUnitTemplate $unitTemplate): string
+    public function render(string $templateFile, UnitTemplateInterface $unitTemplate): string
     {
         return $this->engine->render($templateFile, ['sections' => $unitTemplate->getSections()]);
     }

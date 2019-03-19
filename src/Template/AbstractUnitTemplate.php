@@ -14,7 +14,7 @@ use SystemCtl\Utils\DefinitionConverter;
  * Defines basic properties for a unit
  *
  * @package SystemCtl\Template
- * @author icanhazstring <blubb0r05+github@gmail.com>
+ * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 abstract class AbstractUnitTemplate
 {
@@ -46,7 +46,7 @@ abstract class AbstractUnitTemplate
     /**
      * @return AbstractSection
      */
-    abstract public function getTypeSpecificSection(): AbstractSection;
+    abstract protected function getTypeSpecificSection(): AbstractSection;
 
     /**
      * Get all definitions for this template as array

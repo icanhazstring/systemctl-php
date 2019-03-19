@@ -10,11 +10,11 @@ use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\Scope\ScopeInterface;
 use SystemCtl\Scope\SystemScope;
 use SystemCtl\Scope\UserScope;
-use SystemCtl\Template\AbstractUnitTemplate;
 use SystemCtl\Template\Installer\UnitInstaller;
 use SystemCtl\Template\Installer\UnitInstallerInterface;
 use SystemCtl\Template\PathResolverInterface;
 use SystemCtl\Template\Renderer\PlatesRenderer;
+use SystemCtl\Template\UnitTemplateInterface;
 use SystemCtl\Unit\AbstractUnit;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
@@ -39,7 +39,7 @@ class SystemCtl
 
     private const INSTALL_PATHS = [
         'system' => '/etc/systemd/system/',
-        'user' => '~/.config/systemd/user/'
+        'user'   => '~/.config/systemd/user/'
     ];
 
     /** @var PathResolverInterface */
@@ -53,6 +53,18 @@ class SystemCtl
 
     /** @var ScopeInterface */
     private $scope;
+
+    /**
+     * Hold scope instace with configured values
+     * @var ScopeInterface
+     */
+    private $userScope;
+
+    /**
+     * Hold scope instance with configured values
+     * @var ScopeInterface
+     */
+    private $systemScope;
 
     public const AVAILABLE_UNITS = [
         Service::UNIT,
@@ -143,7 +155,7 @@ class SystemCtl
     public function getScope(): ScopeInterface
     {
         if ($this->scope === null) {
-            $this->scope = new SystemScope;
+            $this->scope = $this->system();
         }
 
         return $this->scope;
@@ -156,7 +168,11 @@ class SystemCtl
      */
     public function user(): self
     {
-        $this->scope = new UserScope;
+        if ($this->userScope === null) {
+            $this->userScope = new UserScope;
+        }
+
+        $this->scope = $this->userScope;
 
         return $this;
     }
@@ -166,7 +182,11 @@ class SystemCtl
      */
     public function system(): self
     {
-        $this->scope = new SystemScope;
+        if ($this->systemScope === null) {
+            $this->systemScope = new SystemScope;
+        }
+
+        $this->scope = $this->systemScope;
 
         return $this;
     }
@@ -272,6 +292,7 @@ class SystemCtl
     public function setPathResolver(PathResolverInterface $pathResolver): SystemCtl
     {
         $this->pathResolver = $pathResolver;
+
         return $this;
     }
 
@@ -320,12 +341,12 @@ class SystemCtl
     /**
      * Install a given template, reload the daemon and return the freshly installed unit.
      *
-     * @param AbstractUnitTemplate $unitTemplate
-     * @param bool                 $overwrite
+     * @param UnitTemplateInterface $unitTemplate
+     * @param bool                  $overwrite
      *
      * @return UnitInterface
      */
-    public function install(AbstractUnitTemplate $unitTemplate, bool $overwrite = false): UnitInterface
+    public function install(UnitTemplateInterface $unitTemplate, bool $overwrite = false): UnitInterface
     {
         $unitSuffix = $unitTemplate->getUnitSuffix();
         $unitName = $unitTemplate->getUnitName();
@@ -334,6 +355,7 @@ class SystemCtl
             throw UnitTypeNotSupportedException::create($unitSuffix);
         }
 
+        // TODO: set path to unit installer with current scope
         $this->getUnitInstaller()->install($unitTemplate, $overwrite);
 
         $unit = AbstractUnit::byType($unitSuffix, $unitName, $this->getCommandDispatcher());

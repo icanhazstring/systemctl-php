@@ -41,7 +41,7 @@ class ServiceUnitTemplate extends AbstractUnitTemplate
     /**
      * @inheritDoc
      */
-    public function getTypeSpecificSection(): AbstractSection
+    protected function getTypeSpecificSection(): AbstractSection
     {
         return $this->serviceSection;
     }

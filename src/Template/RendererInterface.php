@@ -14,10 +14,10 @@ interface RendererInterface
     /**
      * Render a named template with given data
      *
-     * @param string               $templateFile
-     * @param AbstractUnitTemplate $unitTemplate
+     * @param string                $templateFile
+     * @param UnitTemplateInterface $unitTemplate
      *
      * @return string
      */
-    public function render(string $templateFile, AbstractUnitTemplate $unitTemplate): string;
+    public function render(string $templateFile, UnitTemplateInterface $unitTemplate): string;
 }
