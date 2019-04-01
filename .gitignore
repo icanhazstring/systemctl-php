@@ -1,6 +1,7 @@
 # Composer files
 composer.phar
 vendor/
+composer.lock
 
 # PHPUnit
 build/
