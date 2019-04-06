@@ -31,7 +31,6 @@ abstract class AbstractUnit implements UnitInterface
         $this->commandDispatcher = $commandDispatcher;
     }
 
-
     /**
      * @param string                     $type
      * @param string                     $name
@@ -158,6 +157,19 @@ abstract class AbstractUnit implements UnitInterface
 
         return trim($output) === 'enabled';
     }
+    
+    /**
+     * Get the raw (text) output of the `is-enabled` command.
+     *
+     * @return string
+     */
+    public function isEnabledRaw(): string
+    {
+        // We have to trim() the output, as it may end in a newline character that we don't want.   
+        $output	= \trim($this->execute('is-enabled')->getOutput());
+
+        return $output;
+    }
 
     /**
      * @return bool
@@ -167,6 +179,19 @@ abstract class AbstractUnit implements UnitInterface
         $output = $this->execute('is-active')->getOutput();
 
         return trim($output) === 'active';
+    }
+    
+    /**
+     * Get the raw (text) output of the `is-active` command.
+     *
+     * @return string
+     */
+    public function isActiveRaw(): string
+    {
+        // We have to trim() the output, as it may end in a newline character that we don't want.   
+        $output	= \trim($this->execute('is-active')->getOutput());
+
+        return $output;
     }
 
     /**

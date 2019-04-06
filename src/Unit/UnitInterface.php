@@ -99,9 +99,23 @@ interface UnitInterface
     public function isActive(): bool;
 
     /**
+     * Get the raw (text) output of the `is-active` command.
+     *
+     * @return string
+     */
+    public function isActiveRaw(): string;
+
+    /**
      * Check whether unit is enabled
      *
      * @return bool
      */
     public function isEnabled(): bool;
+
+    /**
+     * Get the raw (text) output of the `is-enabled` command.
+     *
+     * @return string
+     */
+    public function isEnabledRaw(): string;
 }
