@@ -118,4 +118,18 @@ interface UnitInterface
      * @return string
      */
     public function isEnabledRaw(): string;
+
+    /**
+     * Get an array of debugging unit information from the output of the systemctl `show` command.
+     *
+     * The output uses the service information as the returned array key, e.g.
+     * [
+     *      'Type' => 'service',
+     *      'Restart' => 'no',
+     *      ...
+     * ]
+     *
+     * @return array
+     */
+    public function show(): array;
 }

@@ -201,4 +201,43 @@ abstract class AbstractUnit implements UnitInterface
     {
         return $this->isActive();
     }
+
+    /**
+     * Get an array of debugging unit information from the output of the systemctl `show` command.
+     *
+     * The output uses the service information as the returned array key, e.g.
+     * [
+     *      'Type' => 'service',
+     *      'Restart' => 'no',
+     *       ...
+     * ]
+     *
+     * @return array
+     */
+    public function show(): array
+    {
+        // Turn the output string into an array, using a newline to separate entries.
+        $output = \explode(
+            "\n",
+            $this->execute('show')->getOutput()
+        );
+
+        // Walk the array to re-key it based on the systemd service information kay/value.
+        $outputArray = [];
+        \array_walk(
+            $output,
+            function($line) use(&$outputArray) {
+                // Skip any empty lines/lines that do not contain '=', as the raw systemd output always
+                // contains =, e.g. 'Restart=no'. If we do not have this value, then we cannot split it as below.
+                if (empty($line) || false === \strpos($line, "=")) {
+                    return;
+                }
+                $lineSplit = \explode("=", $line, 2);
+
+                $outputArray[$lineSplit[0]] = $lineSplit[1];
+            }
+        );
+
+        return $outputArray;
+    }
 }
