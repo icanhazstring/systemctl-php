@@ -165,8 +165,8 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isEnabledRaw(): string
     {
-        // We have to trim() the output, as it may end in a newline character that we don't want.   
-        $output	= \trim($this->execute('is-enabled')->getOutput());
+        // We have to trim() the output, as it may end in a newline character that we don't want.
+        $output = \trim($this->execute('is-enabled')->getOutput());
 
         return $output;
     }
@@ -188,8 +188,8 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isActiveRaw(): string
     {
-        // We have to trim() the output, as it may end in a newline character that we don't want.   
-        $output	= \trim($this->execute('is-active')->getOutput());
+        // We have to trim() the output, as it may end in a newline character that we don't want.
+        $output = \trim($this->execute('is-active')->getOutput());
 
         return $output;
     }
@@ -226,7 +226,7 @@ abstract class AbstractUnit implements UnitInterface
         $outputArray = [];
         \array_walk(
             $output,
-            function($line) use(&$outputArray) {
+            function ($line) use (&$outputArray) {
                 // Skip any empty lines/lines that do not contain '=', as the raw systemd output always
                 // contains =, e.g. 'Restart=no'. If we do not have this value, then we cannot split it as below.
                 if (empty($line) || false === \strpos($line, "=")) {

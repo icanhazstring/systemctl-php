@@ -92,6 +92,7 @@ Available unit commands are:
 - restart
 - isEnabled
 - isActive
+- show
 
 ```php
 $systemCtl = new SystemCtl();
