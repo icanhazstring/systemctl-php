@@ -99,9 +99,37 @@ interface UnitInterface
     public function isActive(): bool;
 
     /**
+     * Get the raw (text) output of the `is-active` command.
+     *
+     * @return string
+     */
+    public function isActiveRaw(): string;
+
+    /**
      * Check whether unit is enabled
      *
      * @return bool
      */
     public function isEnabled(): bool;
+
+    /**
+     * Get the raw (text) output of the `is-enabled` command.
+     *
+     * @return string
+     */
+    public function isEnabledRaw(): string;
+
+    /**
+     * Get an array of debugging unit information from the output of the systemctl `show` command.
+     *
+     * The output uses the service information as the returned array key, e.g.
+     * [
+     *      'Type' => 'service',
+     *      'Restart' => 'no',
+     *      ...
+     * ]
+     *
+     * @return array
+     */
+    public function show(): array;
 }

@@ -31,7 +31,6 @@ abstract class AbstractUnit implements UnitInterface
         $this->commandDispatcher = $commandDispatcher;
     }
 
-
     /**
      * @param string                     $type
      * @param string                     $name
@@ -154,9 +153,20 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isEnabled(): bool
     {
-        $output = $this->execute('is-enabled')->getOutput();
+        return $this->isEnabledRaw() === 'enabled';
+    }
+    
+    /**
+     * Get the raw (text) output of the `is-enabled` command.
+     *
+     * @return string
+     */
+    public function isEnabledRaw(): string
+    {
+        // We have to trim() the output, as it may end in a newline character that we don't want.
+        $output = \trim($this->execute('is-enabled')->getOutput());
 
-        return trim($output) === 'enabled';
+        return $output;
     }
 
     /**
@@ -164,9 +174,20 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isActive(): bool
     {
-        $output = $this->execute('is-active')->getOutput();
+        return $this->isActiveRaw() === 'active';
+    }
+    
+    /**
+     * Get the raw (text) output of the `is-active` command.
+     *
+     * @return string
+     */
+    public function isActiveRaw(): string
+    {
+        // We have to trim() the output, as it may end in a newline character that we don't want.
+        $output = \trim($this->execute('is-active')->getOutput());
 
-        return trim($output) === 'active';
+        return $output;
     }
 
     /**
@@ -175,5 +196,44 @@ abstract class AbstractUnit implements UnitInterface
     public function isRunning(): bool
     {
         return $this->isActive();
+    }
+
+    /**
+     * Get an array of debugging unit information from the output of the systemctl `show` command.
+     *
+     * The output uses the service information as the returned array key, e.g.
+     * [
+     *      'Type' => 'service',
+     *      'Restart' => 'no',
+     *       ...
+     * ]
+     *
+     * @return array
+     */
+    public function show(): array
+    {
+        // Turn the output string into an array, using a newline to separate entries.
+        $output = \explode(
+            "\n",
+            $this->execute('show')->getOutput()
+        );
+
+        // Walk the array to re-key it based on the systemd service information kay/value.
+        $outputArray = [];
+        \array_walk(
+            $output,
+            function ($line) use (&$outputArray) {
+                // Skip any empty lines/lines that do not contain '=', as the raw systemd output always
+                // contains =, e.g. 'Restart=no'. If we do not have this value, then we cannot split it as below.
+                if (empty($line) || false === \strpos($line, "=")) {
+                    return;
+                }
+                $lineSplit = \explode("=", $line, 2);
+
+                $outputArray[$lineSplit[0]] = $lineSplit[1];
+            }
+        );
+
+        return $outputArray;
     }
 }
