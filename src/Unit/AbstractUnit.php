@@ -153,9 +153,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isEnabled(): bool
     {
-        $output = $this->execute('is-enabled')->getOutput();
-
-        return trim($output) === 'enabled';
+        return $this->isEnabledRaw() === 'enabled';
     }
     
     /**
@@ -176,9 +174,7 @@ abstract class AbstractUnit implements UnitInterface
      */
     public function isActive(): bool
     {
-        $output = $this->execute('is-active')->getOutput();
-
-        return trim($output) === 'active';
+        return $this->isActiveRaw() === 'active';
     }
     
     /**
