@@ -8,6 +8,7 @@ use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\Exception\UnitTypeNotSupportedException;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
+use SystemCtl\Unit\Socket;
 use SystemCtl\Unit\UnitInterface;
 
 /**
@@ -190,6 +191,38 @@ class SystemCtl
 
         return array_map(function ($unitName) {
             return new Timer($unitName, $this->getCommandDispatcher());
+        }, $units);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Socket
+     */
+    public function getSocket(string $name): Socket
+    {
+        $units = $this->listUnits($name, [Socket::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Socket::UNIT, $name);
+        }
+
+        return new Socket($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Socket[]
+     */
+    public function getSockets(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Socket::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Socket($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 

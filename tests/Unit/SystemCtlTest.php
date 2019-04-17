@@ -11,6 +11,7 @@ use SystemCtl\Exception\UnitNotFoundException;
 use SystemCtl\SystemCtl;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
+use SystemCtl\Unit\Socket;
 
 /**
  * Class SystemCtlTest
@@ -138,6 +139,25 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnSocketGetting()
+    {
+        $unitName = 'testSocket';
+        $output = ' testSocket.socket     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $socket = $systemctl->getSocket($unitName);
+        $this->assertInstanceOf(Socket::class, $socket);
+        $this->assertEquals($unitName, $socket->getName());
+    }
+
+    /**
+     * @test
+     */
     public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound()
     {
         $unitName = 'testTimer';
@@ -150,6 +170,23 @@ class SystemCtlTest extends TestCase
 
         $this->expectException(UnitNotFoundException::class);
         $systemctl->getTimer($unitName);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExceptionIfNoSocketCouldBeFound()
+    {
+        $unitName = 'testSocket';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub(''));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getSocket($unitName);
     }
 
     /**

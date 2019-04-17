@@ -10,6 +10,7 @@ use SystemCtl\Command\CommandInterface;
 use SystemCtl\Exception\CommandFailedException;
 use SystemCtl\Unit\Service;
 use SystemCtl\Unit\Timer;
+use SystemCtl\Unit\Socket;
 
 /**
  * Class UnitTest
@@ -83,5 +84,34 @@ class UnitTest extends TestCase
 
         $this->expectException(CommandFailedException::class);
         $timer->start();
+    }
+
+    public function testSocketCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
+
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
+
+        $socket = new Socket('AwesomeSocket', $commandDispatcher->reveal());
+
+        $this->assertTrue($socket->start());
+        $this->assertTrue($socket->stop());
+        $this->assertTrue($socket->enable());
+        $this->assertTrue($socket->disable());
+        $this->assertTrue($socket->reload());
+        $this->assertTrue($socket->restart());
+    }
+
+    public function testSocketCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    {
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
+
+        $socket = new Socket('AwesomeSocket', $commandDispatcher->reveal());
+
+        $this->expectException(CommandFailedException::class);
+        $socket->start();
     }
 }
