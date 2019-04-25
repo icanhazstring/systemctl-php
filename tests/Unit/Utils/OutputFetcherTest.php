@@ -38,12 +38,14 @@ class OutputFetcherTest extends TestCase
   superservice.service         active running
   awesomeservice.service       active running
   nonservice.timer             active running
+  nonservice.socket            active running
   superservice.mount           active running
   awesomeservice.mount         active running
   nonservice.timer             active running
+  nonservice.socket            active running
   superservice.service         active running
   awesomeservice.service       active running
-● failed-service@foo.service   loaded failed failed  
+● failed-service@foo.service   loaded failed failed
 OUTPUT;
 
         return [
@@ -55,6 +57,11 @@ OUTPUT;
             [
                 'output' => $output,
                 'suffix' => 'timer',
+                'amount' => 2,
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'socket',
                 'amount' => 2,
             ],
             [
@@ -93,12 +100,14 @@ OUTPUT;
   foo.service      Active running
   foo-bar.service    Active running
   a-timer.timer          Active running
+  a-socket.socket          Active running
   super.mount        Active running
   awesome.mount      Active running
   nonservice.timer          Active running
+  nonservice.socket          Active running
   instance-service@1.service      Active running
   instance-service@foo.service    Active running
-● failed-service@foo.service loaded failed failed  
+● failed-service@foo.service loaded failed failed
 OUTPUT;
 
         return [
@@ -118,6 +127,14 @@ OUTPUT;
                 'suffix' => 'timer',
                 'units'  => [
                     'a-timer',
+                    'nonservice',
+                ],
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'socket',
+                'units'  => [
+                    'a-socket',
                     'nonservice',
                 ],
             ],

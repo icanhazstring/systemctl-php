@@ -50,6 +50,9 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.timer',
             ],
             [
+                'name' => 'test1.socket',
+            ],
+            [
                 'name' => 'test1.mount',
             ],
             [
@@ -103,6 +106,10 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.timer',
                 'isMultiInstance' => false,
             ],
+            [
+                'name' => 'test1.socket',
+                'isMultiInstance' => false,
+            ],
         ];
     }
 
@@ -149,6 +156,10 @@ class AbstractUnitTest extends TestCase
             ],
             [
                 'name' => 'test1.timer',
+                'instanceName' => null,
+            ],
+            [
+                'name' => 'test1.socket',
                 'instanceName' => null,
             ],
         ];
