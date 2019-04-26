@@ -11,8 +11,9 @@ $ composer require icanhazstring/systemctl-php
 ## Current supported units
 - service
 - timer
+- socket
 
-> If you like to add support for more units, feel free to contribute.
+> If you like to add support for more units, feel free to grab an issue and contribute.
 
 ## Current supported commands
 - start
