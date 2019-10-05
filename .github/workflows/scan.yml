@@ -1,0 +1,10 @@
+on: [push, pull_request]
+name: Scan
+jobs:
+  composer-unused:
+    name: ComposerUnused
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: ComposerUnused
+        uses: docker://icanhazstring/composer-unused-ga
