@@ -107,13 +107,13 @@ EOT;
     public function testGetServices(): void
     {
         $output = <<<EOT
-        PLACEHOLDER STUFF
-          superservice.service      Active running
-          awesomeservice.service    Active running
-          nonservice.timer          Active running
-        PLACEHOLDER STUFF
-        
-        EOT;
+PLACEHOLDER STUFF
+  superservice.service      Active running
+  awesomeservice.service    Active running
+  nonservice.timer          Active running
+PLACEHOLDER STUFF
+
+EOT;
 
         $command = $this->prophesize(CommandInterface::class);
         $command->getOutput()->willReturn($output);
@@ -132,13 +132,13 @@ EOT;
     public function testGetTimers(): void
     {
         $output = <<<EOT
-        PLACEHOLDER STUFF
-          superservice.service      Active running
-          awesomeservice.timer      Active running
-          nonservice.timer          Active running
-        PLACEHOLDER STUFF
-        
-        EOT;
+PLACEHOLDER STUFF
+  superservice.service      Active running
+  awesomeservice.timer      Active running
+  nonservice.timer          Active running
+PLACEHOLDER STUFF
+
+EOT;
 
         $command = $this->prophesize(CommandInterface::class);
         $command->getOutput()->willReturn($output);
