@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ruleset>
+    <!-- Add slevomat/coding-standard to installed_paths so we can use a single sniff -->
+    <config name="installed_paths" value="../../slevomat/coding-standard"/>
+
+    <!-- display progress -->
+    <arg value="p"/>
+    <arg name="colors"/>
+
+    <!-- inherit rules from: -->
+    <rule ref="PSR12"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+
+    <!-- Paths to check -->
+    <file>src</file>
+    <file>test</file>
+</ruleset>
