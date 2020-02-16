@@ -1,17 +1,17 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Unit;
+namespace icanhazstring\SystemCtl\Test\Unit\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use SystemCtl\Command\CommandDispatcherInterface;
-use SystemCtl\Command\CommandInterface;
-use SystemCtl\Exception\CommandFailedException;
+use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
+use icanhazstring\SystemCtl\Command\CommandInterface;
+use icanhazstring\SystemCtl\Exception\CommandFailedException;
 
 /**
  * Class AbstractUnitTest
  *
- * @package SystemCtl\Test\Unit\Unit
+ * @package icanhazstring\SystemCtl\Test\Unit\Unit
  */
 class AbstractUnitTest extends TestCase
 {

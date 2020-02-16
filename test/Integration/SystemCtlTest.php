@@ -1,21 +1,21 @@
 <?php
 
-namespace SystemCtl\Test\Integration;
+namespace icanhazstring\SystemCtl\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use SystemCtl\Command\CommandDispatcherInterface;
-use SystemCtl\Command\CommandInterface;
-use SystemCtl\Exception\UnitTypeNotSupportedException;
-use SystemCtl\SystemCtl;
-use SystemCtl\Unit\Service;
-use SystemCtl\Unit\UnitInterface;
+use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
+use icanhazstring\SystemCtl\Command\CommandInterface;
+use icanhazstring\SystemCtl\Exception\UnitTypeNotSupportedException;
+use icanhazstring\SystemCtl\SystemCtl;
+use icanhazstring\SystemCtl\Unit\Service;
+use icanhazstring\SystemCtl\Unit\UnitInterface;
 
 /**
  * Class SystemCtlTest
  *
- * @package SystemCtl\Test\Integration
+ * @package icanhazstring\SystemCtl\Test\Integration
  */
 class SystemCtlTest extends TestCase
 {

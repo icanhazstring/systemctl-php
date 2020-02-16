@@ -1,11 +1,11 @@
 <?php
 
-namespace SystemCtl\Exception;
+namespace icanhazstring\SystemCtl\Exception;
 
 /**
  * Class UnitTypeNotSupportedException
  *
- * @package SystemCtl\Exception
+ * @package icanhazstring\SystemCtl\Exception
  */
 class UnitTypeNotSupportedException extends \Exception
 {

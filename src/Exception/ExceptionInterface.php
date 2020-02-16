@@ -1,13 +1,13 @@
 <?php
 
-namespace SystemCtl\Exception;
+namespace icanhazstring\SystemCtl\Exception;
 
 use Throwable;
 
 /**
  * Interface ExceptionInterface
  *
- * @package SystemCtl\Exception
+ * @package icanhazstring\SystemCtl\Exception
  */
 interface ExceptionInterface extends Throwable
 {

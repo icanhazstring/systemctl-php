@@ -1,15 +1,15 @@
 <?php
 
-namespace SystemCtl;
+namespace icanhazstring\SystemCtl;
 
-use SystemCtl\Command\CommandDispatcherInterface;
-use SystemCtl\Command\SymfonyCommandDispatcher;
-use SystemCtl\Exception\UnitNotFoundException;
-use SystemCtl\Exception\UnitTypeNotSupportedException;
-use SystemCtl\Unit\Service;
-use SystemCtl\Unit\Timer;
-use SystemCtl\Unit\Socket;
-use SystemCtl\Unit\UnitInterface;
+use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
+use icanhazstring\SystemCtl\Command\SymfonyCommandDispatcher;
+use icanhazstring\SystemCtl\Exception\UnitNotFoundException;
+use icanhazstring\SystemCtl\Exception\UnitTypeNotSupportedException;
+use icanhazstring\SystemCtl\Unit\Service;
+use icanhazstring\SystemCtl\Unit\Timer;
+use icanhazstring\SystemCtl\Unit\Socket;
+use icanhazstring\SystemCtl\Unit\UnitInterface;
 
 /**
  * Class SystemCtl
@@ -43,6 +43,7 @@ class SystemCtl
         Timer::UNIT,
     ];
 
+    /** @var CommandDispatcherInterface */
     private $commandDispatcher;
 
     /**
@@ -75,7 +76,7 @@ class SystemCtl
      */
     public static function unitFromSuffix(string $unitSuffix, string $unitName): UnitInterface
     {
-        $unitClass = 'SystemCtl\\Unit\\' . ucfirst($unitSuffix);
+        $unitClass = 'icanhazstring\SystemCtl\\Unit\\' . ucfirst($unitSuffix);
 
         if (!class_exists($unitClass)) {
             throw new UnitTypeNotSupportedException('Unit type ' . $unitSuffix . ' not supported');
@@ -92,9 +93,10 @@ class SystemCtl
      * List all supported units
      *
      * @param null|string $unitPrefix
-     * @param string[]    $unitTypes
+     * @param string[] $unitTypes
      *
-     * @return array|\string[]
+     * @return array|string[]
+     * @throws Exception\CommandFailedException
      */
     public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
     {
@@ -117,6 +119,7 @@ class SystemCtl
      * @param string $name
      *
      * @return Service
+     * @throws Exception\CommandFailedException
      */
     public function getService(string $name): Service
     {
@@ -124,7 +127,7 @@ class SystemCtl
 
         $unitName = $this->searchForUnitInUnits($name, $units);
 
-        if (is_null($unitName)) {
+        if ($unitName === null) {
             throw UnitNotFoundException::create(Service::UNIT, $name);
         }
 
@@ -133,7 +136,7 @@ class SystemCtl
 
     /**
      * @param string $unitName
-     * @param array[] $units
+     * @param array<string>|string[] $units
      *
      * @return null|string
      */
