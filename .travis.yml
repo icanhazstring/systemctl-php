@@ -1,6 +1,8 @@
 language: php
 php:
-  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
 
 sudo: false
 
@@ -16,6 +18,7 @@ before_script:
   - mkdir -p build/logs
 
 script:
+  - composer analyse
   - composer cs
   - composer test -- --coverage-clover=build/logs/clover.xml --coverage-text
   - 'if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./vendor/bin/test-reporter; fi'
