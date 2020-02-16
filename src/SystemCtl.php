@@ -81,7 +81,7 @@ class SystemCtl
             throw new UnitTypeNotSupportedException('Unit type ' . $unitSuffix . ' not supported');
         }
 
-        $commandDispatcher = (new SymfonyCommandDispatcher)
+        $commandDispatcher = (new SymfonyCommandDispatcher())
             ->setTimeout(self::$timeout)
             ->setBinary(self::$binary);
 
@@ -242,7 +242,7 @@ class SystemCtl
     public function getCommandDispatcher(): CommandDispatcherInterface
     {
         if ($this->commandDispatcher === null) {
-            $this->commandDispatcher = (new SymfonyCommandDispatcher)
+            $this->commandDispatcher = (new SymfonyCommandDispatcher())
                 ->setTimeout(self::$timeout)
                 ->setBinary(self::$binary);
         }

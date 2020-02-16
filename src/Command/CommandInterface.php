@@ -1,6 +1,5 @@
 <?php
 
-
 namespace SystemCtl\Command;
 
 use SystemCtl\Exception\CommandFailedException;
