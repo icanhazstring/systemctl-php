@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Tests\Unit;
+namespace SystemCtl\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -48,7 +48,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnServiceGetting()
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnServiceGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
@@ -67,7 +67,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnAServiceOnServiceGetting()
+    public function itShouldReturnAServiceOnServiceGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
@@ -85,7 +85,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnAServiceWithTheCorrectNameOnServiceGetting()
+    public function itShouldReturnAServiceWithTheCorrectNameOnServiceGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
@@ -103,7 +103,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowAnExceptionIfNotServicesCouldBeFound()
+    public function itShouldThrowAnExceptionIfNotServicesCouldBeFound(): void
     {
         $unitName = 'testService';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
@@ -120,7 +120,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnTimerGetting()
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnTimerGetting(): void
     {
         $unitName = 'testTimer';
         $output = ' testTimer.timer     Active running';
@@ -139,7 +139,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnSocketGetting()
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnSocketGetting(): void
     {
         $unitName = 'testSocket';
         $output = ' testSocket.socket     Active running';
@@ -158,7 +158,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound()
+    public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound(): void
     {
         $unitName = 'testTimer';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
@@ -175,7 +175,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldThrowAnExceptionIfNoSocketCouldBeFound()
+    public function itShouldThrowAnExceptionIfNoSocketCouldBeFound(): void
     {
         $unitName = 'testSocket';
         $commandDispatcherStub = $this->buildCommandDispatcherStub();
@@ -192,7 +192,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnATimerOnTimerGetting()
+    public function itShouldReturnATimerOnTimerGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';
@@ -210,7 +210,7 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnATimerWithTheCorrectNameOnTimerGetting()
+    public function itShouldReturnATimerWithTheCorrectNameOnTimerGetting(): void
     {
         $unitName = 'testService';
         $output = ' testService.service     Active running';

@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Tests\Unit\Command;
+namespace SystemCtl\Test\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -10,7 +10,7 @@ use SystemCtl\Exception\CommandFailedException;
 /**
  * Class SymfonyCommandTest
  *
- * @package SystemCtl\Tests\Unit\Command
+ * @package SystemCtl\Test\Unit\Command
  * @author icanhazstring <blubb0r05+github@gmail.com>
  */
 class SymfonyCommandTest extends TestCase
@@ -18,7 +18,7 @@ class SymfonyCommandTest extends TestCase
     /**
      * @test
      */
-    public function itShouldCreateValidInstance()
+    public function itShouldCreateValidInstance(): void
     {
         $process = $this->prophesize(Process::class);
         $command = new SymfonyCommand($process->reveal());
@@ -29,7 +29,7 @@ class SymfonyCommandTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnOutputFromProcess()
+    public function itShouldReturnOutputFromProcess(): void
     {
         $process = $this->prophesize(Process::class);
         $process->getOutput()->willReturn('test');
@@ -41,7 +41,7 @@ class SymfonyCommandTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnSuccessfulFromProcess()
+    public function itShouldReturnSuccessfulFromProcess(): void
     {
         $process = $this->prophesize(Process::class);
         $process->isSuccessful()->willReturn(true);
@@ -53,7 +53,7 @@ class SymfonyCommandTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnTheCommandIfCommandRanSuccessFul()
+    public function itShouldReturnTheCommandIfCommandRanSuccessFul(): void
     {
         $process = $this->prophesize(Process::class);
         $process->run()->shouldBeCalled();
@@ -67,7 +67,7 @@ class SymfonyCommandTest extends TestCase
     /**
      * @test
      */
-    public function itShouldRaiseAnExceptionIfProcessWasNotSuccessfull()
+    public function itShouldRaiseAnExceptionIfProcessWasNotSuccessfull(): void
     {
         $process = $this->prophesize(Process::class);
         $process->run()->shouldBeCalled();
