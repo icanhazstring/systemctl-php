@@ -31,7 +31,7 @@
         }
     ],
     "scripts": {
-        "analyse": "vendor/bin/phpstan --no-progress",
+        "analyse": "vendor/bin/phpstan analyse --no-progress",
         "test": "vendor/bin/phpunit",
         "cs": "vendor/bin/phpcs"
     }
