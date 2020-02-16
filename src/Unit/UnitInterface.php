@@ -1,9 +1,9 @@
 <?php
 
-namespace SystemCtl\Unit;
+namespace icanhazstring\SystemCtl\Unit;
 
-use SystemCtl\Command\CommandInterface;
-use SystemCtl\Exception\CommandFailedException;
+use icanhazstring\SystemCtl\Command\CommandInterface;
+use icanhazstring\SystemCtl\Exception\CommandFailedException;
 
 /**
  * UnitInterface for handling single units

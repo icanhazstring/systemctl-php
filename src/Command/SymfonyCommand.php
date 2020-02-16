@@ -1,21 +1,24 @@
 <?php
 
-namespace SystemCtl\Command;
+namespace icanhazstring\SystemCtl\Command;
 
 use Symfony\Component\Process\Process;
-use SystemCtl\Exception\CommandFailedException;
+use icanhazstring\SystemCtl\Exception\CommandFailedException;
 
 /**
  * Class SymfonyCommand
  *
- * @package SystemCtl\Command
+ * @package icanhazstring\SystemCtl\Command
  * @author icanhazstring <blubb0r05+github@gmail.com>
  */
 class SymfonyCommand implements CommandInterface
 {
-    /** @var Process */
+    /** @var Process<mixed> */
     private $process;
 
+    /**
+     * @param Process<mixed> $process
+     */
     public function __construct(Process $process)
     {
         $this->process = $process;

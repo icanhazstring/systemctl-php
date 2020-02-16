@@ -1,11 +1,11 @@
 <?php
 
-namespace SystemCtl\Utils;
+namespace icanhazstring\SystemCtl\Utils;
 
 /**
  * Class OutputFetcher
  *
- * @package SystemCtl\Utils
+ * @package icanhazstring\SystemCtl\Utils
  */
 class OutputFetcher
 {
@@ -19,7 +19,7 @@ class OutputFetcher
      */
     public static function fetchUnitNames(string $suffix, string $output): array
     {
-        preg_match_all('/^[^[:alnum:]-_.@]*(?<unit>.*)\.' . $suffix . '\s.*$/m', $output, $matches);
+        preg_match_all('/^[^[:alnum:]\-_.@]*(?<unit>.*)\.' . $suffix . '\s.*$/m', $output, $matches);
         return $matches['unit'] ?? [];
     }
 }

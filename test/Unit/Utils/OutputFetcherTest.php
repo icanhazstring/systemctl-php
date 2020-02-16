@@ -1,14 +1,14 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Utils;
+namespace icanhazstring\SystemCtl\Test\Unit\Utils;
 
 use PHPUnit\Framework\TestCase;
-use SystemCtl\Utils\OutputFetcher;
+use icanhazstring\SystemCtl\Utils\OutputFetcher;
 
 /**
  * Class OutputFetcherTest
  *
- * @package SystemCtl\Test\Unit\Utils
+ * @package icanhazstring\SystemCtl\Test\Unit\Utils
  */
 class OutputFetcherTest extends TestCase
 {

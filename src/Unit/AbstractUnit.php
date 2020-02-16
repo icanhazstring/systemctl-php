@@ -1,14 +1,15 @@
 <?php
 
-namespace SystemCtl\Unit;
+namespace icanhazstring\SystemCtl\Unit;
 
-use SystemCtl\Command\CommandDispatcherInterface;
-use SystemCtl\Command\CommandInterface;
+use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
+use icanhazstring\SystemCtl\Command\CommandInterface;
+use icanhazstring\SystemCtl\Exception\CommandFailedException;
 
 /**
  * Class AbstractUnit
  *
- * @package SystemCtl\Unit
+ * @package icanhazstring\SystemCtl\Unit
  */
 abstract class AbstractUnit implements UnitInterface
 {
@@ -73,9 +74,10 @@ abstract class AbstractUnit implements UnitInterface
     abstract protected function getUnitSuffix(): string;
 
     /**
-     * @param array $commands
+     * @param array<int, string> $commands
      *
      * @return CommandInterface
+     * @throws CommandFailedException
      */
     public function execute(...$commands): CommandInterface
     {

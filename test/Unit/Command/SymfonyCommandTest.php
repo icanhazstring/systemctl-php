@@ -1,16 +1,16 @@
 <?php
 
-namespace SystemCtl\Test\Unit\Command;
+namespace icanhazstring\SystemCtl\Test\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
-use SystemCtl\Command\SymfonyCommand;
-use SystemCtl\Exception\CommandFailedException;
+use icanhazstring\SystemCtl\Command\SymfonyCommand;
+use icanhazstring\SystemCtl\Exception\CommandFailedException;
 
 /**
  * Class SymfonyCommandTest
  *
- * @package SystemCtl\Test\Unit\Command
+ * @package icanhazstring\SystemCtl\Test\Unit\Command
  * @author icanhazstring <blubb0r05+github@gmail.com>
  */
 class SymfonyCommandTest extends TestCase

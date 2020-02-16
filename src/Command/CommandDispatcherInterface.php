@@ -1,18 +1,18 @@
 <?php
 
-namespace SystemCtl\Command;
+namespace icanhazstring\SystemCtl\Command;
 
-use SystemCtl\Exception\CommandFailedException;
+use icanhazstring\SystemCtl\Exception\CommandFailedException;
 
 /**
  * Interface CommandDispatcherInterface
  *
- * @package SystemCtl\Command
+ * @package icanhazstring\SystemCtl\Command
  */
 interface CommandDispatcherInterface
 {
     /**
-     * Timeout after which the dispatcher failes the execution
+     * Timeout after which the dispatcher fails the execution
      *
      * @param int $timeout
      *
@@ -33,7 +33,7 @@ interface CommandDispatcherInterface
      * Dispatch given commands against implementers logic and creating a new command
      * to read results
      *
-     * @param array $commands
+     * @param array<int, string> $commands
      *
      * @return CommandInterface
      * @throws CommandFailedException

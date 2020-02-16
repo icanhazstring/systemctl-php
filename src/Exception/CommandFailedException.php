@@ -1,11 +1,11 @@
 <?php
 
-namespace SystemCtl\Exception;
+namespace icanhazstring\SystemCtl\Exception;
 
 /**
  * Class CommandFailedException
  *
- * @package SystemCtl\Exception
+ * @package icanhazstring\SystemCtl\Exception
  */
 class CommandFailedException extends \Exception
 {

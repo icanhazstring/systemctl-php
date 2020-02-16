@@ -1,13 +1,13 @@
 <?php
 
-namespace SystemCtl\Exception;
+namespace icanhazstring\SystemCtl\Exception;
 
 use RuntimeException;
 
 /**
  * Class UnitNotFoundException
  *
- * @package SystemCtl\Exception
+ * @package icanhazstring\SystemCtl\Exception
  */
 class UnitNotFoundException extends RuntimeException implements ExceptionInterface
 {

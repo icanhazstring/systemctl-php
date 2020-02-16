@@ -1,11 +1,11 @@
 <?php
 
-namespace SystemCtl\Unit;
+namespace icanhazstring\SystemCtl\Unit;
 
 /**
  * Class Timer
  *
- * @package SystemCtl\Unit
+ * @package icanhazstring\SystemCtl\Unit
  */
 class Timer extends AbstractUnit
 {

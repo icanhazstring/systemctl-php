@@ -1,19 +1,22 @@
 <?php
 
-namespace SystemCtl\Command;
+namespace icanhazstring\SystemCtl\Command;
 
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class SymfonyCommandDispatcher
  *
- * @package SystemCtl\Command
+ * @package icanhazstring\SystemCtl\Command
  * @author  icanhazstring <blubb0r05+github@gmail.com>
  */
 class SymfonyCommandDispatcher implements CommandDispatcherInterface
 {
+    /** @var string */
     private $binary;
-    private $timetout;
+    /** @var int */
+    private $timeout;
 
     /**
      * @inheritdoc
@@ -30,7 +33,7 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
      */
     public function setTimeout(int $timeout): CommandDispatcherInterface
     {
-        $this->timetout = $timeout;
+        $this->timeout = $timeout;
 
         return $this;
     }
@@ -40,12 +43,10 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
      */
     public function dispatch(...$commands): CommandInterface
     {
-        $processBuilder = new ProcessBuilder();
-        $processBuilder->setPrefix($this->binary);
-        $processBuilder->setTimeout($this->timetout);
-        $processBuilder->setArguments($commands);
+        $process = new Process(array_merge([$this->binary], $commands));
+        $process->setTimeout($this->timeout);
 
-        $process = new SymfonyCommand($processBuilder->getProcess());
+        $process = new SymfonyCommand($process);
 
         return $process->run();
     }

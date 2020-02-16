@@ -1,11 +1,11 @@
 <?php
 
-namespace SystemCtl\Unit;
+namespace icanhazstring\SystemCtl\Unit;
 
 /**
  * Class Service
  *
- * @package SystemCtl\Unit
+ * @package icanhazstring\SystemCtl\Unit
  */
 class Service extends AbstractUnit
 {

@@ -1,22 +1,22 @@
 <?php
 
-namespace SystemCtl\Test\Unit;
+namespace icanhazstring\SystemCtl\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use SystemCtl\Command\CommandDispatcherInterface;
-use SystemCtl\Command\CommandInterface;
-use SystemCtl\Exception\UnitNotFoundException;
-use SystemCtl\SystemCtl;
-use SystemCtl\Unit\Service;
-use SystemCtl\Unit\Timer;
-use SystemCtl\Unit\Socket;
+use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
+use icanhazstring\SystemCtl\Command\CommandInterface;
+use icanhazstring\SystemCtl\Exception\UnitNotFoundException;
+use icanhazstring\SystemCtl\SystemCtl;
+use icanhazstring\SystemCtl\Unit\Service;
+use icanhazstring\SystemCtl\Unit\Timer;
+use icanhazstring\SystemCtl\Unit\Socket;
 
 /**
  * Class SystemCtlTest
  *
- * @package SystemCtl\Test\Unit
+ * @package icanhazstring\SystemCtl\Test\Unit
  */
 class SystemCtlTest extends TestCase
 {
