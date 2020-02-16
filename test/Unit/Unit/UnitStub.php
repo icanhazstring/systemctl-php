@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Tests\Unit\Unit;
+namespace SystemCtl\Test\Unit\Unit;
 
 use SystemCtl\Unit\AbstractUnit;
 
@@ -8,7 +8,7 @@ use SystemCtl\Unit\AbstractUnit;
  * This stub's one and only purpose it to make the abstract implementation of
  * the abstract class 'AbstractUnit' unit testable.
  *
- * @package SystemCtl\Tests\Unit\Unit
+ * @package SystemCtl\Test\Unit\Unit
  */
 class UnitStub extends AbstractUnit
 {

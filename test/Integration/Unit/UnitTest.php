@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Tests\Integration\Unit;
+namespace SystemCtl\Test\Integration\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -19,7 +19,7 @@ use SystemCtl\Unit\Socket;
  */
 class UnitTest extends TestCase
 {
-    public function testServiceCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    public function testServiceCommandsIfProcessIsSuccessfulShouldReturnTrue(): void
     {
         $command = $this->prophesize(CommandInterface::class);
         $command->isSuccessful()->willReturn(true);
@@ -46,7 +46,7 @@ class UnitTest extends TestCase
         return $commandDispatcher;
     }
 
-    public function testServiceCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    public function testServiceCommandsIfProcessIsUnsuccessFulShouldRaiseException(): void
     {
         $commandDispatcher = $this->createCommandDispatcherStub();
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
@@ -57,7 +57,7 @@ class UnitTest extends TestCase
         $service->start();
     }
 
-    public function testTimerCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    public function testTimerCommandsIfProcessIsSuccessfulShouldReturnTrue(): void
     {
         $command = $this->prophesize(CommandInterface::class);
         $command->isSuccessful()->willReturn(true);
@@ -75,7 +75,7 @@ class UnitTest extends TestCase
         $this->assertTrue($timer->restart());
     }
 
-    public function testTimerCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    public function testTimerCommandsIfProcessIsUnsuccessFulShouldRaiseException(): void
     {
         $commandDispatcher = $this->createCommandDispatcherStub();
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
@@ -86,7 +86,7 @@ class UnitTest extends TestCase
         $timer->start();
     }
 
-    public function testSocketCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    public function testSocketCommandsIfProcessIsSuccessfulShouldReturnTrue(): void
     {
         $command = $this->prophesize(CommandInterface::class);
         $command->isSuccessful()->willReturn(true);
@@ -104,7 +104,7 @@ class UnitTest extends TestCase
         $this->assertTrue($socket->restart());
     }
 
-    public function testSocketCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    public function testSocketCommandsIfProcessIsUnsuccessFulShouldRaiseException(): void
     {
         $commandDispatcher = $this->createCommandDispatcherStub();
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);

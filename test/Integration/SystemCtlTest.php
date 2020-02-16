@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Tests\Integration;
+namespace SystemCtl\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -31,7 +31,7 @@ class SystemCtlTest extends TestCase
         return $commandDispatcher;
     }
 
-    public function testListUnitsWithAvailableUnits()
+    public function testListUnitsWithAvailableUnits(): void
     {
         $output = <<<EOT
   proc-sys-fs-binfmt_misc.timer                      loaded active mounted
@@ -61,7 +61,7 @@ EOT;
         $this->assertCount(12, $units);
     }
 
-    public function testListUnitsWithSupportedUnits()
+    public function testListUnitsWithSupportedUnits(): void
     {
         $output = <<<EOT
   proc-sys-fs-binfmt_misc.timer                      loaded active mounted
@@ -90,7 +90,7 @@ EOT;
         $this->assertCount(5, $units);
     }
 
-    public function testCreateUnitFromSupportedSuffixShouldWord()
+    public function testCreateUnitFromSupportedSuffixShouldWord(): void
     {
         $unit = SystemCtl::unitFromSuffix('service', 'SuccessService');
         $this->assertInstanceOf(UnitInterface::class, $unit);
@@ -98,22 +98,22 @@ EOT;
         $this->assertEquals('SuccessService', $unit->getName());
     }
 
-    public function testCreateUnitFromUnsupportedSuffixShouldRaiseException()
+    public function testCreateUnitFromUnsupportedSuffixShouldRaiseException(): void
     {
         $this->expectException(UnitTypeNotSupportedException::class);
         SystemCtl::unitFromSuffix('unsupported', 'FailUnit');
     }
 
-    public function testGetServices()
+    public function testGetServices(): void
     {
         $output = <<<EOT
-PLACEHOLDER STUFF
-  superservice.service      Active running
-  awesomeservice.service    Active running
-  nonservice.timer          Active running
-PLACEHOLDER STUFF
-
-EOT;
+        PLACEHOLDER STUFF
+          superservice.service      Active running
+          awesomeservice.service    Active running
+          nonservice.timer          Active running
+        PLACEHOLDER STUFF
+        
+        EOT;
 
         $command = $this->prophesize(CommandInterface::class);
         $command->getOutput()->willReturn($output);
@@ -129,16 +129,16 @@ EOT;
         $this->assertCount(2, $services);
     }
 
-    public function testGetTimers()
+    public function testGetTimers(): void
     {
         $output = <<<EOT
-PLACEHOLDER STUFF
-  superservice.service      Active running
-  awesomeservice.timer      Active running
-  nonservice.timer          Active running
-PLACEHOLDER STUFF
-
-EOT;
+        PLACEHOLDER STUFF
+          superservice.service      Active running
+          awesomeservice.timer      Active running
+          nonservice.timer          Active running
+        PLACEHOLDER STUFF
+        
+        EOT;
 
         $command = $this->prophesize(CommandInterface::class);
         $command->getOutput()->willReturn($output);
@@ -156,7 +156,7 @@ EOT;
     /**
      * @test
      */
-    public function itShouldReturnTrueOnSuccessfulDaemonReload()
+    public function itShouldReturnTrueOnSuccessfulDaemonReload(): void
     {
         $command = $this->prophesize(CommandInterface::class);
         $command->isSuccessful()->willReturn(true);

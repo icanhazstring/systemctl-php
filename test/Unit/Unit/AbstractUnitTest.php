@@ -1,6 +1,6 @@
 <?php
 
-namespace SystemCtl\Tests\Unit\Unit;
+namespace SystemCtl\Test\Unit\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -11,7 +11,7 @@ use SystemCtl\Exception\CommandFailedException;
 /**
  * Class AbstractUnitTest
  *
- * @package SystemCtl\Tests\Unit\Unit
+ * @package SystemCtl\Test\Unit\Unit
  */
 class AbstractUnitTest extends TestCase
 {
@@ -26,7 +26,7 @@ class AbstractUnitTest extends TestCase
      *
      * @param string $name
      */
-    public function itShouldReturnCorrectName(string $name)
+    public function itShouldReturnCorrectName(string $name): void
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
@@ -68,7 +68,7 @@ class AbstractUnitTest extends TestCase
      * @test
      * @dataProvider itDetectsMultiInstanceUnitsCorrectlyDataProvider
      */
-    public function itDetectsMultiInstanceUnitsCorrectly(string $name, bool $isMultiInstance)
+    public function itDetectsMultiInstanceUnitsCorrectly(string $name, bool $isMultiInstance): void
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
@@ -79,7 +79,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @return array
      */
-    public function itDetectsMultiInstanceUnitsCorrectlyDataProvider()
+    public function itDetectsMultiInstanceUnitsCorrectlyDataProvider(): array
     {
         return [
             [
@@ -120,7 +120,7 @@ class AbstractUnitTest extends TestCase
      * @test
      * @dataProvider itDetectsMultiInstanceInstanceNamesCorrectlyDataProvider
      */
-    public function itDetectsMultiInstanceInstanceNamesCorrectly(string $name, ?string $instanceName)
+    public function itDetectsMultiInstanceInstanceNamesCorrectly(string $name, ?string $instanceName): void
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
@@ -131,7 +131,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @return array
      */
-    public function itDetectsMultiInstanceInstanceNamesCorrectlyDataProvider()
+    public function itDetectsMultiInstanceInstanceNamesCorrectlyDataProvider(): array
     {
         return [
             [
@@ -168,7 +168,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnTrueIfServiceEnabledCommandRanSuccessfully()
+    public function itShouldReturnTrueIfServiceEnabledCommandRanSuccessfully(): void
     {
         $command = $this->prophesize(CommandInterface::class);
         $command->getOutput()->willReturn('enabled');
@@ -183,7 +183,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      */
-    public function itShouldRaiseAnExceptionIfServiceEnabledCommandFailed()
+    public function itShouldRaiseAnExceptionIfServiceEnabledCommandFailed(): void
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
@@ -204,7 +204,7 @@ class AbstractUnitTest extends TestCase
     public function itShouldReturnFalseIfServiceEnabledCommandOutputDoesNotEqualEnabled(
         $commandSuccessful,
         $commandOutput
-    ) {
+    ): void {
         $command = $this->prophesize(CommandInterface::class);
         $command->isSuccessful()->willReturn($commandSuccessful);
         $command->getOutput()->willReturn($commandOutput);
@@ -241,7 +241,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      */
-    public function itShouldReturnTrueIfServiceActiveCommandRanSuccessfully()
+    public function itShouldReturnTrueIfServiceActiveCommandRanSuccessfully(): void
     {
         $command = $this->prophesize(CommandInterface::class);
         $command->getOutput()->willReturn('active');
@@ -257,7 +257,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      */
-    public function itShouldRaiseExceptionIfServiceActiveCommandFailed()
+    public function itShouldRaiseExceptionIfServiceActiveCommandFailed(): void
     {
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
@@ -278,7 +278,7 @@ class AbstractUnitTest extends TestCase
     public function itShouldReturnFalseIfServiceActiveCommandOutputDoesNotEqualActive(
         $commandSuccessful,
         $commandOutput
-    ) {
+    ): void {
         $command = $this->prophesize(CommandInterface::class);
         $command->isSuccessful()->willReturn($commandSuccessful);
         $command->getOutput()->willReturn($commandOutput);
@@ -315,7 +315,7 @@ class AbstractUnitTest extends TestCase
     /**
      * @test
      */
-    public function testIfExecuteAppendsTheUnitNameAndSuffix()
+    public function testIfExecuteAppendsTheUnitNameAndSuffix(): void
     {
         $commandStub = $this->prophesize(CommandInterface::class);
         $commandStub->isSuccessful()->willReturn(true);
