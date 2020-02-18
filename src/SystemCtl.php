@@ -255,10 +255,22 @@ class SystemCtl
      * Restart the daemon to reload specs and new units
      *
      * @return bool
+     * @throws Exception\CommandFailedException
      */
     public function daemonReload(): bool
     {
         return $this->getCommandDispatcher()->dispatch('daemon-reload')->isSuccessful();
+    }
+
+    /**
+     * Reset failed state of all unit so they won't be listed using listUnits
+     *
+     * @return bool
+     * @throws Exception\CommandFailedException
+     */
+    public function resetFailed(): bool
+    {
+        return $this->getCommandDispatcher()->dispatch('reset-failed')->isSuccessful();
     }
 
     /**
