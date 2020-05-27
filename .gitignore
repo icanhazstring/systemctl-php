@@ -5,6 +5,7 @@ composer.lock
 
 # PHPUnit
 build/
+.phpunit.result.cache
 
 # Vagrant
 .vagrant

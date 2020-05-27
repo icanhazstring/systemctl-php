@@ -11,6 +11,7 @@ use icanhazstring\SystemCtl\Exception\CommandFailedException;
 use icanhazstring\SystemCtl\Unit\Service;
 use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
+use icanhazstring\SystemCtl\Unit\Scope;
 
 /**
  * Class UnitTest
@@ -113,5 +114,34 @@ class UnitTest extends TestCase
 
         $this->expectException(CommandFailedException::class);
         $socket->start();
+    }
+
+    public function testScopeCommandsIfProcessIsSuccessfulShouldReturnTrue(): void
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
+
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
+
+        $scope = new Scope('AwesomeScope', $commandDispatcher->reveal());
+
+        $this->assertTrue($scope->start());
+        $this->assertTrue($scope->stop());
+        $this->assertTrue($scope->enable());
+        $this->assertTrue($scope->disable());
+        $this->assertTrue($scope->reload());
+        $this->assertTrue($scope->restart());
+    }
+
+    public function testScopeCommandsIfProcessIsUnsuccessFulShouldRaiseException(): void
+    {
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
+
+        $scope = new Scope('AwesomeScope', $commandDispatcher->reveal());
+
+        $this->expectException(CommandFailedException::class);
+        $scope->start();
     }
 }
