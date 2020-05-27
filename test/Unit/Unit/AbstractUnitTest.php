@@ -53,6 +53,9 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.socket',
             ],
             [
+                'name' => 'test1.scope',
+            ],
+            [
                 'name' => 'test1.mount',
             ],
             [
@@ -110,6 +113,10 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.socket',
                 'isMultiInstance' => false,
             ],
+            [
+                'name' => 'test1.scope',
+                'isMultiInstance' => false,
+            ],
         ];
     }
 
@@ -160,6 +167,10 @@ class AbstractUnitTest extends TestCase
             ],
             [
                 'name' => 'test1.socket',
+                'instanceName' => null,
+            ],
+            [
+                'name' => 'test1.scope',
                 'instanceName' => null,
             ],
         ];

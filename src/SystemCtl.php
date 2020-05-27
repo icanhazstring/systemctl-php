@@ -9,6 +9,7 @@ use icanhazstring\SystemCtl\Exception\UnitTypeNotSupportedException;
 use icanhazstring\SystemCtl\Unit\Service;
 use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
+use icanhazstring\SystemCtl\Unit\Scope;
 use icanhazstring\SystemCtl\Unit\UnitInterface;
 
 /**
@@ -226,6 +227,38 @@ class SystemCtl
 
         return array_map(function ($unitName) {
             return new Socket($unitName, $this->getCommandDispatcher());
+        }, $units);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Scope
+     */
+    public function getScope(string $name): Scope
+    {
+        $units = $this->listUnits($name, [Scope::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Scope::UNIT, $name);
+        }
+
+        return new Scope($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Scope[]
+     */
+    public function getScopes(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Scope::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Scope($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 

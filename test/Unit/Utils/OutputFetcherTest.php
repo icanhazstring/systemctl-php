@@ -39,10 +39,12 @@ class OutputFetcherTest extends TestCase
   awesomeservice.service       active running
   nonservice.timer             active running
   nonservice.socket            active running
+  nonservice.scope             active running
   superservice.mount           active running
   awesomeservice.mount         active running
   nonservice.timer             active running
   nonservice.socket            active running
+  nonservice.scope             active running
   superservice.service         active running
   awesomeservice.service       active running
 ● failed-service@foo.service   loaded failed failed
@@ -62,6 +64,11 @@ OUTPUT;
             [
                 'output' => $output,
                 'suffix' => 'socket',
+                'amount' => 2,
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'scope',
                 'amount' => 2,
             ],
             [
@@ -101,10 +108,12 @@ OUTPUT;
   foo-bar.service    Active running
   a-timer.timer          Active running
   a-socket.socket          Active running
+  a-scope.scope          Active running
   super.mount        Active running
   awesome.mount      Active running
   nonservice.timer          Active running
   nonservice.socket          Active running
+  nonservice.scope          Active running
   instance-service@1.service      Active running
   instance-service@foo.service    Active running
 ● failed-service@foo.service loaded failed failed
@@ -135,6 +144,14 @@ OUTPUT;
                 'suffix' => 'socket',
                 'units'  => [
                     'a-socket',
+                    'nonservice',
+                ],
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'scope',
+                'units'  => [
+                    'a-scope',
                     'nonservice',
                 ],
             ],
