@@ -2,6 +2,7 @@
 
 namespace icanhazstring\SystemCtl\Test\Unit;
 
+use icanhazstring\SystemCtl\Unit\Device;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -260,5 +261,41 @@ class SystemCtlTest extends TestCase
 
         $service = $systemctl->getService($unitName);
         $this->assertEquals('testService', $service->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnDeviceGetting()
+    {
+        $unitName = 'testDevice';
+        $output = ' testDevice.device     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $device = $systemctl->getDevice($unitName);
+        $this->assertInstanceOf(Device::class, $device);
+        $this->assertEquals($unitName, $device->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExceptionIfNoDeviceCouldBeFound()
+    {
+        $unitName = 'testDevice';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub(''));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getSocket($unitName);
     }
 }
