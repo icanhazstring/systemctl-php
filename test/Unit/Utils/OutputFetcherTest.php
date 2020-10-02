@@ -39,11 +39,13 @@ class OutputFetcherTest extends TestCase
   awesomeservice.service       active running
   nonservice.timer             active running
   nonservice.socket            active running
+  nonservice.device            active running
   nonservice.scope             active running
   superservice.mount           active running
   awesomeservice.mount         active running
   nonservice.timer             active running
   nonservice.socket            active running
+  nonservice.device            active running
   nonservice.scope             active running
   superservice.service         active running
   awesomeservice.service       active running
@@ -64,6 +66,11 @@ OUTPUT;
             [
                 'output' => $output,
                 'suffix' => 'socket',
+                'amount' => 2,
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'device',
                 'amount' => 2,
             ],
             [
@@ -108,11 +115,13 @@ OUTPUT;
   foo-bar.service    Active running
   a-timer.timer          Active running
   a-socket.socket          Active running
+  a-device.device          Active running
   a-scope.scope          Active running
   super.mount        Active running
   awesome.mount      Active running
   nonservice.timer          Active running
   nonservice.socket          Active running
+  nonservice.device          Active running
   nonservice.scope          Active running
   instance-service@1.service      Active running
   instance-service@foo.service    Active running
@@ -136,6 +145,14 @@ OUTPUT;
                 'suffix' => 'timer',
                 'units'  => [
                     'a-timer',
+                    'nonservice',
+                ],
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'device',
+                'units'  => [
+                    'a-device',
                     'nonservice',
                 ],
             ],

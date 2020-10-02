@@ -6,6 +6,7 @@ use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
 use icanhazstring\SystemCtl\Command\SymfonyCommandDispatcher;
 use icanhazstring\SystemCtl\Exception\UnitNotFoundException;
 use icanhazstring\SystemCtl\Exception\UnitTypeNotSupportedException;
+use icanhazstring\SystemCtl\Unit\Device;
 use icanhazstring\SystemCtl\Unit\Service;
 use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
@@ -310,5 +311,37 @@ class SystemCtl
             ->setBinary(self::$binary);
 
         return $this;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Device
+     */
+    public function getDevice(string $name): Device
+    {
+        $units = $this->listUnits($name, [Device::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Device::UNIT, $name);
+        }
+
+        return new Device($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param string|null $unitPrefix
+     *
+     * @return Device[]
+     */
+    public function getDevices(?string  $unitPrefix = null): array
+    {
+         $units = $this->listUnits($unitPrefix, [Device::UNIT]);
+
+         return array_map(function ($unitName) {
+             return new Device($unitName,  $this->getCommandDispatcher());
+         }, $units);
     }
 }

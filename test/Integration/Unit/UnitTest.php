@@ -2,6 +2,7 @@
 
 namespace icanhazstring\SystemCtl\Test\Integration\Unit;
 
+use icanhazstring\SystemCtl\Unit\Device;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -143,5 +144,34 @@ class UnitTest extends TestCase
 
         $this->expectException(CommandFailedException::class);
         $scope->start();
+    }
+
+    public function testDeviceCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
+
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
+
+        $device = new Device('AwesomeDevice', $commandDispatcher->reveal());
+
+        $this->assertTrue($device->start());
+        $this->assertTrue($device->stop());
+        $this->assertTrue($device->enable());
+        $this->assertTrue($device->disable());
+        $this->assertTrue($device->reload());
+        $this->assertTrue($device->restart());
+    }
+
+    public function testDeviceCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    {
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
+
+        $device = new Device('AwesomeDevice', $commandDispatcher->reveal());
+
+        $this->expectException(CommandFailedException::class);
+        $device->start();
     }
 }

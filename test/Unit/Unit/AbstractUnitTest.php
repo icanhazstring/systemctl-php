@@ -59,6 +59,9 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.mount',
             ],
             [
+                'name' => 'test1.device',
+            ],
+            [
                 'name' => 'test1@2.service',
             ],
         ];
@@ -111,6 +114,10 @@ class AbstractUnitTest extends TestCase
             ],
             [
                 'name' => 'test1.socket',
+                'isMultiInstance' => false,
+            ],
+            [
+                'name' => 'test1.device',
                 'isMultiInstance' => false,
             ],
             [
