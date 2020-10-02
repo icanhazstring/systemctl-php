@@ -35,7 +35,7 @@ class SymfonyCommandTest extends TestCase
         $process->getOutput()->willReturn('test');
 
         $command = new SymfonyCommand($process->reveal());
-        $this->assertEquals('test', $command->getOutput());
+        $this->assertSame('test', $command->getOutput());
     }
 
     /**

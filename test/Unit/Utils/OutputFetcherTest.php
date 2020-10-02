@@ -102,7 +102,7 @@ OUTPUT;
     public function itOnlyExtractsTheUnitNames(string $output, string $suffix, array $expectedUnitNames): void
     {
         $units = OutputFetcher::fetchUnitNames($suffix, $output);
-        $this->assertEquals($expectedUnitNames, $units);
+        $this->assertSame($expectedUnitNames, $units);
     }
 
     /**

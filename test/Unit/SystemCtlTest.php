@@ -63,7 +63,7 @@ class SystemCtlTest extends TestCase
 
         $service = $systemctl->getService($unitName);
         $this->assertInstanceOf(Service::class, $service);
-        $this->assertEquals('testService', $service->getName());
+        $this->assertSame('testService', $service->getName());
     }
 
     /**
@@ -99,7 +99,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertEquals('testService', $service->getName());
+        $this->assertSame('testService', $service->getName());
     }
 
     /**
@@ -135,7 +135,7 @@ class SystemCtlTest extends TestCase
 
         $timer = $systemctl->getTimer($unitName);
         $this->assertInstanceOf(Timer::class, $timer);
-        $this->assertEquals($unitName, $timer->getName());
+        $this->assertSame($unitName, $timer->getName());
     }
 
     /**
@@ -154,7 +154,7 @@ class SystemCtlTest extends TestCase
 
         $socket = $systemctl->getSocket($unitName);
         $this->assertInstanceOf(Socket::class, $socket);
-        $this->assertEquals($unitName, $socket->getName());
+        $this->assertSame($unitName, $socket->getName());
     }
 
     /**
@@ -173,7 +173,7 @@ class SystemCtlTest extends TestCase
 
         $scope = $systemctl->getScope($unitName);
         $this->assertInstanceOf(Scope::class, $scope);
-        $this->assertEquals($unitName, $scope->getName());
+        $this->assertSame($unitName, $scope->getName());
     }
 
     /**
@@ -260,7 +260,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertEquals('testService', $service->getName());
+        $this->assertSame('testService', $service->getName());
     }
 
     /**
@@ -279,7 +279,7 @@ class SystemCtlTest extends TestCase
 
         $device = $systemctl->getDevice($unitName);
         $this->assertInstanceOf(Device::class, $device);
-        $this->assertEquals($unitName, $device->getName());
+        $this->assertSame($unitName, $device->getName());
     }
 
     /**
