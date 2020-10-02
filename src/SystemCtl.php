@@ -336,12 +336,12 @@ class SystemCtl
      *
      * @return Device[]
      */
-    public function getDevices(?string  $unitPrefix = null): array
+    public function getDevices(?string $unitPrefix = null): array
     {
          $units = $this->listUnits($unitPrefix, [Device::UNIT]);
 
          return array_map(function ($unitName) {
-             return new Device($unitName,  $this->getCommandDispatcher());
+             return new Device($unitName, $this->getCommandDispatcher());
          }, $units);
     }
 }
