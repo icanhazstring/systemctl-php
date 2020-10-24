@@ -30,6 +30,11 @@
             "email": "blubb0r05+github@gmail.com"
         }
     ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.8.x-dev"
+        }
+    },
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse --no-progress",
         "test": "vendor/bin/phpunit",
