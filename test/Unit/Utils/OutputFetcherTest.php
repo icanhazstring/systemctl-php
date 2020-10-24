@@ -4,6 +4,7 @@ namespace icanhazstring\SystemCtl\Test\Unit\Utils;
 
 use PHPUnit\Framework\TestCase;
 use icanhazstring\SystemCtl\Utils\OutputFetcher;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Class OutputFetcherTest
@@ -12,6 +13,8 @@ use icanhazstring\SystemCtl\Utils\OutputFetcher;
  */
 class OutputFetcherTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @param string $output
      * @param string $suffix
@@ -26,7 +29,7 @@ class OutputFetcherTest extends TestCase
         int $expectedAmount
     ): void {
         $units = OutputFetcher::fetchUnitNames($suffix, $output);
-        $this->assertCount($expectedAmount, $units);
+        self::assertCount($expectedAmount, $units);
     }
 
     /**
@@ -102,7 +105,7 @@ OUTPUT;
     public function itOnlyExtractsTheUnitNames(string $output, string $suffix, array $expectedUnitNames): void
     {
         $units = OutputFetcher::fetchUnitNames($suffix, $output);
-        $this->assertEquals($expectedUnitNames, $units);
+        self::assertEquals($expectedUnitNames, $units);
     }
 
     /**

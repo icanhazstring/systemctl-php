@@ -3,7 +3,6 @@
 namespace icanhazstring\SystemCtl\Command;
 
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class SymfonyCommandDispatcher
@@ -38,10 +37,7 @@ class SymfonyCommandDispatcher implements CommandDispatcherInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function dispatch(...$commands): CommandInterface
+    public function dispatch(string ...$commands): CommandInterface
     {
         $process = new Process(array_merge([$this->binary], $commands));
         $process->setTimeout($this->timeout);

@@ -4,6 +4,7 @@ namespace icanhazstring\SystemCtl\Test\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
 use icanhazstring\SystemCtl\Command\CommandInterface;
@@ -19,6 +20,8 @@ use icanhazstring\SystemCtl\Unit\UnitInterface;
  */
 class SystemCtlTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @return ObjectProphecy
      */
@@ -58,7 +61,7 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
 
         $units = $systemctl->listUnits(null, SystemCtl::AVAILABLE_UNITS);
-        $this->assertCount(12, $units);
+        self::assertCount(12, $units);
     }
 
     public function testListUnitsWithSupportedUnits(): void
@@ -87,15 +90,15 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
 
         $units = $systemctl->listUnits();
-        $this->assertCount(5, $units);
+        self::assertCount(5, $units);
     }
 
     public function testCreateUnitFromSupportedSuffixShouldWord(): void
     {
         $unit = SystemCtl::unitFromSuffix('service', 'SuccessService');
-        $this->assertInstanceOf(UnitInterface::class, $unit);
-        $this->assertInstanceOf(Service::class, $unit);
-        $this->assertEquals('SuccessService', $unit->getName());
+        self::assertInstanceOf(UnitInterface::class, $unit);
+        self::assertInstanceOf(Service::class, $unit);
+        self::assertEquals('SuccessService', $unit->getName());
     }
 
     public function testCreateUnitFromUnsupportedSuffixShouldRaiseException(): void
@@ -126,7 +129,7 @@ EOT;
 
         $services = $systemctl->getServices();
 
-        $this->assertCount(2, $services);
+        self::assertCount(2, $services);
     }
 
     public function testGetTimers(): void
@@ -150,7 +153,7 @@ EOT;
         $systemctl->setCommandDispatcher($dispatcherStub->reveal());
         $timers = $systemctl->getTimers();
 
-        $this->assertCount(2, $timers);
+        self::assertCount(2, $timers);
     }
 
     /**
@@ -167,6 +170,6 @@ EOT;
         $systemCtl = new SystemCtl();
         $systemCtl->setCommandDispatcher($dispatcher->reveal());
 
-        $this->assertTrue($systemCtl->daemonReload());
+        self::assertTrue($systemCtl->daemonReload());
     }
 }

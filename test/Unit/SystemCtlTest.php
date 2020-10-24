@@ -5,6 +5,7 @@ namespace icanhazstring\SystemCtl\Test\Unit;
 use icanhazstring\SystemCtl\Unit\Device;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
 use icanhazstring\SystemCtl\Command\CommandInterface;
@@ -22,6 +23,8 @@ use icanhazstring\SystemCtl\Unit\Scope;
  */
 class SystemCtlTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @return ObjectProphecy
      */
@@ -62,8 +65,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertInstanceOf(Service::class, $service);
-        $this->assertEquals('testService', $service->getName());
+        self::assertEquals('testService', $service->getName());
     }
 
     /**
@@ -81,7 +83,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertInstanceOf(Service::class, $service);
+        self::assertSame($unitName, $service->getName());
     }
 
     /**
@@ -99,7 +101,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertEquals('testService', $service->getName());
+        self::assertEquals('testService', $service->getName());
     }
 
     /**
@@ -134,8 +136,8 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $timer = $systemctl->getTimer($unitName);
-        $this->assertInstanceOf(Timer::class, $timer);
-        $this->assertEquals($unitName, $timer->getName());
+        self::assertInstanceOf(Timer::class, $timer);
+        self::assertEquals($unitName, $timer->getName());
     }
 
     /**
@@ -153,8 +155,8 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $socket = $systemctl->getSocket($unitName);
-        $this->assertInstanceOf(Socket::class, $socket);
-        $this->assertEquals($unitName, $socket->getName());
+        self::assertInstanceOf(Socket::class, $socket);
+        self::assertEquals($unitName, $socket->getName());
     }
 
     /**
@@ -172,8 +174,8 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $scope = $systemctl->getScope($unitName);
-        $this->assertInstanceOf(Scope::class, $scope);
-        $this->assertEquals($unitName, $scope->getName());
+        self::assertInstanceOf(Scope::class, $scope);
+        self::assertEquals($unitName, $scope->getName());
     }
 
     /**
@@ -242,7 +244,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertInstanceOf(Service::class, $service);
+        self::assertInstanceOf(Service::class, $service);
     }
 
     /**
@@ -260,7 +262,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        $this->assertEquals('testService', $service->getName());
+        self::assertEquals('testService', $service->getName());
     }
 
     /**
@@ -278,8 +280,8 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $device = $systemctl->getDevice($unitName);
-        $this->assertInstanceOf(Device::class, $device);
-        $this->assertEquals($unitName, $device->getName());
+        self::assertInstanceOf(Device::class, $device);
+        self::assertEquals($unitName, $device->getName());
     }
 
     /**
