@@ -5,6 +5,7 @@ namespace icanhazstring\SystemCtl\Test\Integration\Unit;
 use icanhazstring\SystemCtl\Unit\Device;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use icanhazstring\SystemCtl\Command\CommandDispatcherInterface;
 use icanhazstring\SystemCtl\Command\CommandInterface;
@@ -21,6 +22,8 @@ use icanhazstring\SystemCtl\Unit\Scope;
  */
 class UnitTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testServiceCommandsIfProcessIsSuccessfulShouldReturnTrue(): void
     {
         $command = $this->prophesize(CommandInterface::class);
@@ -31,12 +34,12 @@ class UnitTest extends TestCase
 
         $service = new Service('AwesomeService', $commandDispatcher->reveal());
 
-        $this->assertTrue($service->start());
-        $this->assertTrue($service->stop());
-        $this->assertTrue($service->enable());
-        $this->assertTrue($service->disable());
-        $this->assertTrue($service->reload());
-        $this->assertTrue($service->restart());
+        self::assertTrue($service->start());
+        self::assertTrue($service->stop());
+        self::assertTrue($service->enable());
+        self::assertTrue($service->disable());
+        self::assertTrue($service->reload());
+        self::assertTrue($service->restart());
     }
 
     public function createCommandDispatcherStub(): ObjectProphecy
@@ -69,12 +72,12 @@ class UnitTest extends TestCase
 
         $timer = new Timer('AwesomeService', $commandDispatcher->reveal());
 
-        $this->assertTrue($timer->start());
-        $this->assertTrue($timer->stop());
-        $this->assertTrue($timer->enable());
-        $this->assertTrue($timer->disable());
-        $this->assertTrue($timer->reload());
-        $this->assertTrue($timer->restart());
+        self::assertTrue($timer->start());
+        self::assertTrue($timer->stop());
+        self::assertTrue($timer->enable());
+        self::assertTrue($timer->disable());
+        self::assertTrue($timer->reload());
+        self::assertTrue($timer->restart());
     }
 
     public function testTimerCommandsIfProcessIsUnsuccessFulShouldRaiseException(): void
@@ -98,12 +101,12 @@ class UnitTest extends TestCase
 
         $socket = new Socket('AwesomeSocket', $commandDispatcher->reveal());
 
-        $this->assertTrue($socket->start());
-        $this->assertTrue($socket->stop());
-        $this->assertTrue($socket->enable());
-        $this->assertTrue($socket->disable());
-        $this->assertTrue($socket->reload());
-        $this->assertTrue($socket->restart());
+        self::assertTrue($socket->start());
+        self::assertTrue($socket->stop());
+        self::assertTrue($socket->enable());
+        self::assertTrue($socket->disable());
+        self::assertTrue($socket->reload());
+        self::assertTrue($socket->restart());
     }
 
     public function testSocketCommandsIfProcessIsUnsuccessFulShouldRaiseException(): void
@@ -127,12 +130,12 @@ class UnitTest extends TestCase
 
         $scope = new Scope('AwesomeScope', $commandDispatcher->reveal());
 
-        $this->assertTrue($scope->start());
-        $this->assertTrue($scope->stop());
-        $this->assertTrue($scope->enable());
-        $this->assertTrue($scope->disable());
-        $this->assertTrue($scope->reload());
-        $this->assertTrue($scope->restart());
+        self::assertTrue($scope->start());
+        self::assertTrue($scope->stop());
+        self::assertTrue($scope->enable());
+        self::assertTrue($scope->disable());
+        self::assertTrue($scope->reload());
+        self::assertTrue($scope->restart());
     }
 
     public function testScopeCommandsIfProcessIsUnsuccessFulShouldRaiseException(): void
@@ -156,12 +159,12 @@ class UnitTest extends TestCase
 
         $device = new Device('AwesomeDevice', $commandDispatcher->reveal());
 
-        $this->assertTrue($device->start());
-        $this->assertTrue($device->stop());
-        $this->assertTrue($device->enable());
-        $this->assertTrue($device->disable());
-        $this->assertTrue($device->reload());
-        $this->assertTrue($device->restart());
+        self::assertTrue($device->start());
+        self::assertTrue($device->stop());
+        self::assertTrue($device->enable());
+        self::assertTrue($device->disable());
+        self::assertTrue($device->reload());
+        self::assertTrue($device->restart());
     }
 
     public function testDeviceCommandsIfProcessIsUnsuccessFulShouldRaiseException()

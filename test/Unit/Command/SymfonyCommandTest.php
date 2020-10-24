@@ -3,6 +3,7 @@
 namespace icanhazstring\SystemCtl\Test\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Process\Process;
 use icanhazstring\SystemCtl\Command\SymfonyCommand;
 use icanhazstring\SystemCtl\Exception\CommandFailedException;
@@ -15,6 +16,8 @@ use icanhazstring\SystemCtl\Exception\CommandFailedException;
  */
 class SymfonyCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -23,7 +26,7 @@ class SymfonyCommandTest extends TestCase
         $process = $this->prophesize(Process::class);
         $command = new SymfonyCommand($process->reveal());
 
-        $this->assertInstanceOf(SymfonyCommand::class, $command);
+        self::assertInstanceOf(SymfonyCommand::class, $command);
     }
 
     /**
@@ -35,7 +38,7 @@ class SymfonyCommandTest extends TestCase
         $process->getOutput()->willReturn('test');
 
         $command = new SymfonyCommand($process->reveal());
-        $this->assertEquals('test', $command->getOutput());
+        self::assertEquals('test', $command->getOutput());
     }
 
     /**
@@ -47,7 +50,7 @@ class SymfonyCommandTest extends TestCase
         $process->isSuccessful()->willReturn(true);
 
         $command = new SymfonyCommand($process->reveal());
-        $this->assertTrue($command->isSuccessful());
+        self::assertTrue($command->isSuccessful());
     }
 
     /**
@@ -61,7 +64,7 @@ class SymfonyCommandTest extends TestCase
         $process->isSuccessful()->willReturn(true);
 
         $command = new SymfonyCommand($process->reveal());
-        $this->assertEquals($command, $command->run());
+        self::assertEquals($command, $command->run());
     }
 
     /**

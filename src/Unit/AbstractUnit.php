@@ -74,12 +74,10 @@ abstract class AbstractUnit implements UnitInterface
     abstract protected function getUnitSuffix(): string;
 
     /**
-     * @param array<int, string> $commands
-     *
      * @return CommandInterface
      * @throws CommandFailedException
      */
-    public function execute(...$commands): CommandInterface
+    public function execute(string ...$commands): CommandInterface
     {
         $commands[] = implode(
             '.',
