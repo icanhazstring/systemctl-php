@@ -9,9 +9,7 @@ $ composer require icanhazstring/systemctl-php
 ```
 
 ## Current supported units
-- service
-- timer
-- socket
+See [Units](src/Unit)
 
 > If you like to add support for more units, feel free to grab an issue and contribute.
 
@@ -57,7 +55,7 @@ $systemCtl->getService('nginx')->stop();
 ```
 
 # How to Contribute
-Simply clone the repo and install using `composer`
+Clone the repo and install using `composer`
 
 ```bash
 $ composer install

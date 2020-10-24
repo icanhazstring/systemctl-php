@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.8.0] - TBA
+### Changed
+- Dropped support for php7.2
+- Dropped support for `symfony/process:^4.4`
+
 ## [0.7.1] - 2020-05-27
 ### Added
 - Added `Scope` unit ([#32](https://github.com/icanhazstring/systemctl-php/pull/32)) (thanks to [@peter279k](https://github.com/peter279k))
