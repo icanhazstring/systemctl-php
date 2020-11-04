@@ -11,6 +11,7 @@ use icanhazstring\SystemCtl\Unit\Service;
 use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
 use icanhazstring\SystemCtl\Unit\Scope;
+use icanhazstring\SystemCtl\Unit\Slice;
 use icanhazstring\SystemCtl\Unit\UnitInterface;
 
 /**
@@ -260,6 +261,38 @@ class SystemCtl
 
         return array_map(function ($unitName) {
             return new Scope($unitName, $this->getCommandDispatcher());
+        }, $units);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Slice
+     */
+    public function getSlice(string $name): Slice
+    {
+        $units = $this->listUnits($name, [Slice::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Slice::UNIT, $name);
+        }
+
+        return new Slice($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Slice[]
+     */
+    public function getSlices(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Slice::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Slice($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 

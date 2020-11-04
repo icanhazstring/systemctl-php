@@ -15,6 +15,7 @@ use icanhazstring\SystemCtl\Unit\Service;
 use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
 use icanhazstring\SystemCtl\Unit\Scope;
+use icanhazstring\SystemCtl\Unit\Slice;
 
 /**
  * Class SystemCtlTest
@@ -181,6 +182,25 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnSliceGetting()
+    {
+        $unitName = 'testSlice';
+        $output = ' testSlice.slice     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $slice = $systemctl->getSlice($unitName);
+        $this->assertInstanceOf(Slice::class, $slice);
+        $this->assertEquals($unitName, $slice->getName());
+    }
+
+    /**
+     * @test
+     */
     public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound(): void
     {
         $unitName = 'testTimer';
@@ -227,6 +247,23 @@ class SystemCtlTest extends TestCase
 
         $this->expectException(UnitNotFoundException::class);
         $systemctl->getScope($unitName);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExceptionIfNoSliceCouldBeFound()
+    {
+        $unitName = 'testSlice';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub(''));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getSlice($unitName);
     }
 
     /**
