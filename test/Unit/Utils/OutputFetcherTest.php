@@ -44,12 +44,14 @@ class OutputFetcherTest extends TestCase
   nonservice.socket            active running
   nonservice.device            active running
   nonservice.scope             active running
+  nonservice.slice             active running
   superservice.mount           active running
   awesomeservice.mount         active running
   nonservice.timer             active running
   nonservice.socket            active running
   nonservice.device            active running
   nonservice.scope             active running
+  nonservice.slice             active running
   superservice.service         active running
   awesomeservice.service       active running
 ● failed-service@foo.service   loaded failed failed
@@ -79,6 +81,11 @@ OUTPUT;
             [
                 'output' => $output,
                 'suffix' => 'scope',
+                'amount' => 2,
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'slice',
                 'amount' => 2,
             ],
             [
@@ -120,12 +127,14 @@ OUTPUT;
   a-socket.socket          Active running
   a-device.device          Active running
   a-scope.scope          Active running
+  a-slice.slice          Active running
   super.mount        Active running
   awesome.mount      Active running
   nonservice.timer          Active running
   nonservice.socket          Active running
   nonservice.device          Active running
   nonservice.scope          Active running
+  nonservice.slice          Active running
   instance-service@1.service      Active running
   instance-service@foo.service    Active running
 ● failed-service@foo.service loaded failed failed
@@ -172,6 +181,14 @@ OUTPUT;
                 'suffix' => 'scope',
                 'units'  => [
                     'a-scope',
+                    'nonservice',
+                ],
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'slice',
+                'units'  => [
+                    'a-slice',
                     'nonservice',
                 ],
             ],
