@@ -16,6 +16,7 @@ use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
 use icanhazstring\SystemCtl\Unit\Scope;
 use icanhazstring\SystemCtl\Unit\Slice;
+use icanhazstring\SystemCtl\Unit\Swap;
 use icanhazstring\SystemCtl\Unit\Target;
 
 /**
@@ -221,6 +222,25 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnSwapGetting()
+    {
+        $unitName = 'testSwap';
+        $output = ' testSwap.swap     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $swap = $systemctl->getSwap($unitName);
+        $this->assertInstanceOf(Swap::class, $swap);
+        $this->assertEquals($unitName, $swap->getName());
+    }
+
+    /**
+     * @test
+     */
     public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound(): void
     {
         $unitName = 'testTimer';
@@ -267,6 +287,23 @@ class SystemCtlTest extends TestCase
 
         $this->expectException(UnitNotFoundException::class);
         $systemctl->getTarget($unitName);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExceptionIfNoSwapCouldBeFound()
+    {
+        $unitName = 'testSwap';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub(''));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getSwap($unitName);
     }
 
     /**

@@ -12,6 +12,7 @@ use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
 use icanhazstring\SystemCtl\Unit\Scope;
 use icanhazstring\SystemCtl\Unit\Slice;
+use icanhazstring\SystemCtl\Unit\Swap;
 use icanhazstring\SystemCtl\Unit\Target;
 use icanhazstring\SystemCtl\Unit\UnitInterface;
 
@@ -326,6 +327,38 @@ class SystemCtl
 
         return array_map(function ($unitName) {
             return new Target($unitName, $this->getCommandDispatcher());
+        }, $units);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Swap
+     */
+    public function getSwap(string $name): Swap
+    {
+        $units = $this->listUnits($name, [Swap::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Swap::UNIT, $name);
+        }
+
+        return new Swap($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Swap[]
+     */
+    public function getSwaps(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Swap::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Swap($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 
