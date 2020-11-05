@@ -12,6 +12,7 @@ use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
 use icanhazstring\SystemCtl\Unit\Scope;
 use icanhazstring\SystemCtl\Unit\Slice;
+use icanhazstring\SystemCtl\Unit\Target;
 use icanhazstring\SystemCtl\Unit\UnitInterface;
 
 /**
@@ -293,6 +294,38 @@ class SystemCtl
 
         return array_map(function ($unitName) {
             return new Slice($unitName, $this->getCommandDispatcher());
+        }, $units);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Target
+     */
+    public function getTarget(string $name): Target
+    {
+        $units = $this->listUnits($name, [Target::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Target::UNIT, $name);
+        }
+
+        return new Target($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Target[]
+     */
+    public function getTargets(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Target::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Target($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 
