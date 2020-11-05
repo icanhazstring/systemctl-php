@@ -1,6 +1,12 @@
 # Changelog
 
-## [0.8.0] - TBA
+## [Unreleased]
+
+## [0.8.0] - 2020-11-05
+### Added
+- Added `Slice` unit ([#36](https://github.com/icanhazstring/systemctl-php/pull/36)) (thanks to [@peter279k](https://github.com/peter279k))
+- Added method `SystemCtl::reset-failed()` ([#37](https://github.com/icanhazstring/systemctl-php/pull/37)) (thanks to [@icanhazstring](https://github.com/icanhazstring))
+
 ### Changed
 - Dropped support for php7.2
 - Dropped support for `symfony/process:^4.4`
