@@ -15,6 +15,7 @@ use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
 use icanhazstring\SystemCtl\Unit\Scope;
 use icanhazstring\SystemCtl\Unit\Slice;
+use icanhazstring\SystemCtl\Unit\Target;
 
 /**
  * Class UnitTest
@@ -177,6 +178,35 @@ class UnitTest extends TestCase
 
         $this->expectException(CommandFailedException::class);
         $slice->start();
+    }
+
+    public function testTargetCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
+
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
+
+        $target = new Target('AwesomeTarget', $commandDispatcher->reveal());
+
+        $this->assertTrue($target->start());
+        $this->assertTrue($target->stop());
+        $this->assertTrue($target->enable());
+        $this->assertTrue($target->disable());
+        $this->assertTrue($target->reload());
+        $this->assertTrue($target->restart());
+    }
+
+    public function testTargetCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    {
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
+
+        $target = new Target('AwesomeTarget', $commandDispatcher->reveal());
+
+        $this->expectException(CommandFailedException::class);
+        $target->start();
     }
 
     public function testDeviceCommandsIfProcessIsSuccessfulShouldReturnTrue()

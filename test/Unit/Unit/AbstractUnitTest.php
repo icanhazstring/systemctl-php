@@ -62,6 +62,9 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.slice',
             ],
             [
+                'name' => 'test1.target',
+            ],
+            [
                 'name' => 'test1.mount',
             ],
             [
@@ -134,6 +137,10 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.slice',
                 'isMultiInstance' => false,
             ],
+            [
+                'name' => 'test1.target',
+                'isMultiInstance' => false,
+            ],
         ];
     }
 
@@ -192,6 +199,10 @@ class AbstractUnitTest extends TestCase
             ],
             [
                 'name' => 'test1.slice',
+                'instanceName' => null,
+            ],
+            [
+                'name' => 'test1.target',
                 'instanceName' => null,
             ],
         ];
