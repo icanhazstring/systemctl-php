@@ -15,6 +15,7 @@ use icanhazstring\SystemCtl\Unit\Timer;
 use icanhazstring\SystemCtl\Unit\Socket;
 use icanhazstring\SystemCtl\Unit\Scope;
 use icanhazstring\SystemCtl\Unit\Slice;
+use icanhazstring\SystemCtl\Unit\Swap;
 use icanhazstring\SystemCtl\Unit\Target;
 
 /**
@@ -207,6 +208,36 @@ class UnitTest extends TestCase
 
         $this->expectException(CommandFailedException::class);
         $target->start();
+    }
+
+
+    public function testSwapCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
+
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
+
+        $swap = new Swap('AwesomeSwap', $commandDispatcher->reveal());
+
+        $this->assertTrue($swap->start());
+        $this->assertTrue($swap->stop());
+        $this->assertTrue($swap->enable());
+        $this->assertTrue($swap->disable());
+        $this->assertTrue($swap->reload());
+        $this->assertTrue($swap->restart());
+    }
+
+    public function testSwapCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    {
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
+
+        $swap = new Swap('AwesomeSwap', $commandDispatcher->reveal());
+
+        $this->expectException(CommandFailedException::class);
+        $swap->start();
     }
 
     public function testDeviceCommandsIfProcessIsSuccessfulShouldReturnTrue()

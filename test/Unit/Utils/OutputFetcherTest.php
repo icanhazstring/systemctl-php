@@ -45,6 +45,7 @@ class OutputFetcherTest extends TestCase
   nonservice.device            active running
   nonservice.scope             active running
   nonservice.slice             active running
+  nonservice.swap              active running
   nonservice.target            active running
   superservice.mount           active running
   awesomeservice.mount         active running
@@ -53,6 +54,7 @@ class OutputFetcherTest extends TestCase
   nonservice.device            active running
   nonservice.scope             active running
   nonservice.slice             active running
+  nonservice.swap              active running
   nonservice.target            active running
   superservice.service         active running
   awesomeservice.service       active running
@@ -88,6 +90,11 @@ OUTPUT;
             [
                 'output' => $output,
                 'suffix' => 'slice',
+                'amount' => 2,
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'swap',
                 'amount' => 2,
             ],
             [
@@ -135,6 +142,7 @@ OUTPUT;
   a-device.device          Active running
   a-scope.scope          Active running
   a-slice.slice          Active running
+  a-swap.swap          Active running
   a-target.target          Active running
   super.mount        Active running
   awesome.mount      Active running
@@ -143,6 +151,7 @@ OUTPUT;
   nonservice.device          Active running
   nonservice.scope          Active running
   nonservice.slice          Active running
+  nonservice.swap          Active running
   nonservice.target          Active running
   instance-service@1.service      Active running
   instance-service@foo.service    Active running
@@ -198,6 +207,14 @@ OUTPUT;
                 'suffix' => 'slice',
                 'units'  => [
                     'a-slice',
+                    'nonservice',
+                ],
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'swap',
+                'units'  => [
+                    'a-swap',
                     'nonservice',
                 ],
             ],
