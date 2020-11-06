@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added `Target` unit ([#38](https://github.com/icanhazstring/systemctl-php/pull/38)) (thanks to [@peter279k](https://github.com/peter279k))
 - Added `Swap` unit ([#39](https://github.com/icanhazstring/systemctl-php/pull/39)) (thanks to [@peter279k](https://github.com/peter279k))
 
 ## [0.8.0] - 2020-11-05
