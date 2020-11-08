@@ -47,6 +47,7 @@ class OutputFetcherTest extends TestCase
   nonservice.slice             active running
   nonservice.swap              active running
   nonservice.target            active running
+  nonservice.mount             active running
   superservice.mount           active running
   awesomeservice.mount         active running
   superservice.automount       active running
@@ -58,6 +59,7 @@ class OutputFetcherTest extends TestCase
   nonservice.slice             active running
   nonservice.swap              active running
   nonservice.target            active running
+  nonservice.mount             active running
   superservice.service         active running
   awesomeservice.service       active running
 ● failed-service@foo.service   loaded failed failed
@@ -107,7 +109,7 @@ OUTPUT;
             [
                 'output' => $output,
                 'suffix' => 'mount',
-                'amount' => 2,
+                'amount' => 4,
             ],
             [
                 'output' => $output,
@@ -151,6 +153,7 @@ OUTPUT;
   a-slice.slice          Active running
   a-swap.swap          Active running
   a-target.target          Active running
+  a-mount.mount          Active running
   super.mount        Active running
   awesome.mount      Active running
   super.automount        Active running
@@ -162,6 +165,7 @@ OUTPUT;
   nonservice.slice          Active running
   nonservice.swap          Active running
   nonservice.target          Active running
+  nonservice.mount          Active running
   instance-service@1.service      Active running
   instance-service@foo.service    Active running
 ● failed-service@foo.service loaded failed failed
@@ -239,8 +243,10 @@ OUTPUT;
                 'output' => $output,
                 'suffix' => 'mount',
                 'units'  => [
+                    'a-mount',
                     'super',
                     'awesome',
+                    'nonservice',
                 ],
             ],
             [

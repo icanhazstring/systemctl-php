@@ -74,6 +74,9 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.automount',
             ],
             [
+                'name' => 'test1.mount',
+            ],
+            [
                 'name' => 'test1.device',
             ],
             [
@@ -155,6 +158,10 @@ class AbstractUnitTest extends TestCase
                 'name' => 'test1.target',
                 'isMultiInstance' => false,
             ],
+            [
+                'name' => 'test1.mount',
+                'isMultiInstance' => false,
+            ],
         ];
     }
 
@@ -221,6 +228,10 @@ class AbstractUnitTest extends TestCase
             ],
             [
                 'name' => 'test1.target',
+                'instanceName' => null,
+            ],
+            [
+                'name' => 'test1.mount',
                 'instanceName' => null,
             ],
         ];

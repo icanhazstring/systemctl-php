@@ -18,6 +18,7 @@ use icanhazstring\SystemCtl\Unit\Slice;
 use icanhazstring\SystemCtl\Unit\Swap;
 use icanhazstring\SystemCtl\Unit\Target;
 use icanhazstring\SystemCtl\Unit\Automount;
+use icanhazstring\SystemCtl\Unit\Mount;
 
 /**
  * Class UnitTest
@@ -297,5 +298,34 @@ class UnitTest extends TestCase
 
         $this->expectException(CommandFailedException::class);
         $automount->start();
+    }
+
+    public function testMountCommandsIfProcessIsSuccessfulShouldReturnTrue()
+    {
+        $command = $this->prophesize(CommandInterface::class);
+        $command->isSuccessful()->willReturn(true);
+
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willReturn($command);
+
+        $mount = new Mount('AwesomeMount', $commandDispatcher->reveal());
+
+        $this->assertTrue($mount->start());
+        $this->assertTrue($mount->stop());
+        $this->assertTrue($mount->enable());
+        $this->assertTrue($mount->disable());
+        $this->assertTrue($mount->reload());
+        $this->assertTrue($mount->restart());
+    }
+
+    public function testMountCommandsIfProcessIsUnsuccessFulShouldRaiseException()
+    {
+        $commandDispatcher = $this->createCommandDispatcherStub();
+        $commandDispatcher->dispatch(Argument::cetera())->willThrow(CommandFailedException::class);
+
+        $mount = new Mount('AwesomeMount', $commandDispatcher->reveal());
+
+        $this->expectException(CommandFailedException::class);
+        $mount->start();
     }
 }
