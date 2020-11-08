@@ -49,6 +49,8 @@ class OutputFetcherTest extends TestCase
   nonservice.target            active running
   superservice.mount           active running
   awesomeservice.mount         active running
+  superservice.automount       active running
+  awesomeservice.automount     active running
   nonservice.timer             active running
   nonservice.socket            active running
   nonservice.device            active running
@@ -109,6 +111,11 @@ OUTPUT;
             ],
             [
                 'output' => $output,
+                'suffix' => 'automount',
+                'amount' => 2,
+            ],
+            [
+                'output' => $output,
                 'suffix' => 'notThere',
                 'amount' => 0,
             ],
@@ -146,6 +153,8 @@ OUTPUT;
   a-target.target          Active running
   super.mount        Active running
   awesome.mount      Active running
+  super.automount        Active running
+  awesome.automount      Active running
   nonservice.timer          Active running
   nonservice.socket          Active running
   nonservice.device          Active running
@@ -229,6 +238,14 @@ OUTPUT;
             [
                 'output' => $output,
                 'suffix' => 'mount',
+                'units'  => [
+                    'super',
+                    'awesome',
+                ],
+            ],
+            [
+                'output' => $output,
+                'suffix' => 'automount',
                 'units'  => [
                     'super',
                     'awesome',
