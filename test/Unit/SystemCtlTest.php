@@ -19,6 +19,7 @@ use icanhazstring\SystemCtl\Unit\Slice;
 use icanhazstring\SystemCtl\Unit\Swap;
 use icanhazstring\SystemCtl\Unit\Target;
 use icanhazstring\SystemCtl\Unit\Automount;
+use icanhazstring\SystemCtl\Unit\Mount;
 
 /**
  * Class SystemCtlTest
@@ -106,6 +107,25 @@ class SystemCtlTest extends TestCase
 
         $service = $systemctl->getService($unitName);
         self::assertEquals('testService', $service->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnMountGetting()
+    {
+        $unitName = 'testMount';
+        $output = ' testMount.mount     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $mount = $systemctl->getMount($unitName);
+        $this->assertInstanceOf(Mount::class, $mount);
+        $this->assertEquals($unitName, $mount->getName());
     }
 
     /**
@@ -447,5 +467,22 @@ class SystemCtlTest extends TestCase
 
         $this->expectException(UnitNotFoundException::class);
         $systemctl->getAutomount($unitName);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExceptionIfNoMountCouldBeFound()
+    {
+        $unitName = 'testMount';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub(''));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getMount($unitName);
     }
 }

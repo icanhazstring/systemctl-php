@@ -15,6 +15,7 @@ use icanhazstring\SystemCtl\Unit\Slice;
 use icanhazstring\SystemCtl\Unit\Swap;
 use icanhazstring\SystemCtl\Unit\Target;
 use icanhazstring\SystemCtl\Unit\Automount;
+use icanhazstring\SystemCtl\Unit\Mount;
 use icanhazstring\SystemCtl\Unit\UnitInterface;
 
 /**
@@ -474,6 +475,39 @@ class SystemCtl
 
         return array_map(function ($unitName) {
             return new Automount($unitName, $this->getCommandDispatcher());
+        }, $units);
+    }
+
+
+    /**
+     * @param string $name
+     *
+     * @return Mount
+     */
+    public function getMount(string $name): Mount
+    {
+        $units = $this->listUnits($name, [Mount::UNIT]);
+
+        $unitName = $this->searchForUnitInUnits($name, $units);
+
+        if (is_null($unitName)) {
+            throw UnitNotFoundException::create(Mount::UNIT, $name);
+        }
+
+        return new Mount($unitName, $this->getCommandDispatcher());
+    }
+
+    /**
+     * @param null|string $unitPrefix
+     *
+     * @return Mount[]
+     */
+    public function getMounts(?string $unitPrefix = null): array
+    {
+        $units = $this->listUnits($unitPrefix, [Mount::UNIT]);
+
+        return array_map(function ($unitName) {
+            return new Mount($unitName, $this->getCommandDispatcher());
         }, $units);
     }
 }
