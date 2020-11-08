@@ -18,6 +18,7 @@ use icanhazstring\SystemCtl\Unit\Scope;
 use icanhazstring\SystemCtl\Unit\Slice;
 use icanhazstring\SystemCtl\Unit\Swap;
 use icanhazstring\SystemCtl\Unit\Target;
+use icanhazstring\SystemCtl\Unit\Automount;
 
 /**
  * Class SystemCtlTest
@@ -241,6 +242,25 @@ class SystemCtlTest extends TestCase
     /**
      * @test
      */
+    public function itShouldCallCommandDispatcherWithListUnitsAndUnitPrefixOnAutomountGetting()
+    {
+        $unitName = 'testAutomount';
+        $output = ' testAutomount.automount     Active running';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub($output));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $automount = $systemctl->getAutomount($unitName);
+        $this->assertInstanceOf(Automount::class, $automount);
+        $this->assertEquals($unitName, $automount->getName());
+    }
+
+    /**
+     * @test
+     */
     public function itShouldThrowAnExeceptionIfNotTimerCouldBeFound(): void
     {
         $unitName = 'testTimer';
@@ -410,5 +430,22 @@ class SystemCtlTest extends TestCase
 
         $this->expectException(UnitNotFoundException::class);
         $systemctl->getSocket($unitName);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowAnExceptionIfNoAutomountCouldBeFound()
+    {
+        $unitName = 'testAutomount';
+        $commandDispatcherStub = $this->buildCommandDispatcherStub();
+        $commandDispatcherStub
+            ->dispatch(...['list-units', $unitName . '*'])
+            ->willReturn($this->buildCommandStub(''));
+
+        $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
+
+        $this->expectException(UnitNotFoundException::class);
+        $systemctl->getAutomount($unitName);
     }
 }
