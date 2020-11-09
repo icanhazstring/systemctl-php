@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         colors="true">
-    <testsuites>
-        <testsuite name="unit">
-            <directory>./test/Unit</directory>
-        </testsuite>
-        <testsuite name="integration">
-            <directory>./test/Integration</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="false">
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
-    <php>
-        <ini name="date.timezone" value="Europe/Berlin"/>
-        <ini name="display_errors" value="true" />
-        <!-- error_reporting(E_ALL) -->
-        <ini name="error_reporting" value="32767"/>
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true">
+  <coverage processUncoveredFiles="false">
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="unit">
+      <directory>./test/Unit</directory>
+    </testsuite>
+    <testsuite name="integration">
+      <directory>./test/Integration</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <ini name="date.timezone" value="Europe/Berlin"/>
+    <ini name="display_errors" value="true"/>
+    <!-- error_reporting(E_ALL) -->
+    <ini name="error_reporting" value="32767"/>
+  </php>
 </phpunit>
