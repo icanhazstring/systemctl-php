@@ -6,8 +6,10 @@
 - Added `Swap` unit ([#39](https://github.com/icanhazstring/systemctl-php/pull/39)) (thanks to [@peter279k](https://github.com/peter279k))
 - Added `Automount` unit ([#40](https://github.com/icanhazstring/systemctl-php/pull/40)) (thanks to [@peter279k](https://github.com/peter279k))
 - Added `Mount` unit ([#41](https://github.com/icanhazstring/systemctl-php/pull/41)) (thanks to [@peter279k](https://github.com/peter279k))
-- Migrate `phpunit.xml` for new version ([#42](https://github.com/icanhazstring/systemctl-php/pull/42)) (thanks to [@peter279k](https://github.com/peter279k))
+
+### Changed
 - Replace Travis CI with GitHub Action status badge ([#44](https://github.com/icanhazstring/systemctl-php/pull/44)) (thanks to [@peter279k](https://github.com/peter279k))
+- Migrate `phpunit.xml` for new version ([#42](https://github.com/icanhazstring/systemctl-php/pull/42)) (thanks to [@peter279k](https://github.com/peter279k))
 
 ## [0.8.0] - 2020-11-05
 ### Added
