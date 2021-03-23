@@ -65,14 +65,16 @@ Make your changes and make sure you run *test* and *codesniffer*.
 
 ```bash
 $ composer test
-> vendor/bin/phpunit tests/
-PHPUnit 6.1.4 by Sebastian Bergmann and contributors.
+> vendor/bin/phpunit
+PHPUnit 9.5.3 by Sebastian Bergmann and contributors.
 
-........                                                            8 / 8 (100%)
+...............................................................  63 / 128 ( 49%)
+............................................................... 126 / 128 ( 98%)
+..                                                              128 / 128 (100%)
 
-Time: 130 ms, Memory: 2.00MB
+Time: 00:00.033, Memory: 10.00 MB
 
-OK (8 tests, 13 assertions)
+OK (128 tests, 192 assertions)
 
 $ composer cs
 > vendor/bin/phpcs --standard=PSR2 src/ && vendor/bin/phpcs --standard=PSR2 tests/
