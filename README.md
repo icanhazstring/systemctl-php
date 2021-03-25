@@ -61,7 +61,7 @@ Clone the repo and install using `composer`
 $ composer install
 ```
 
-Make your changes and make sure you run *test* and *codesniffer*.
+Make your changes and make sure you run *test*, *codesniffer* and *phpstan*.
 
 ```bash
 $ composer test
@@ -78,6 +78,15 @@ OK (128 tests, 192 assertions)
 
 $ composer cs
 > vendor/bin/phpcs --standard=PSR2 src/ && vendor/bin/phpcs --standard=PSR2 tests/
+
+$
+
+$ composer analyse
+> vendor/bin/phpstan analyse --no-progress
+Note: Using configuration file /data/systemctl-php/phpstan.neon.
+
+
+ [OK] No errors
 
 $
 ```
