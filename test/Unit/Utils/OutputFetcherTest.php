@@ -135,7 +135,7 @@ OUTPUT;
     public function itOnlyExtractsTheUnitNames(string $output, string $suffix, array $expectedUnitNames): void
     {
         $units = OutputFetcher::fetchUnitNames($suffix, $output);
-        self::assertEquals($expectedUnitNames, $units);
+        self::assertSame($expectedUnitNames, $units);
     }
 
     /**

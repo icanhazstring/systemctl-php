@@ -98,7 +98,7 @@ EOT;
         $unit = SystemCtl::unitFromSuffix('service', 'SuccessService');
         self::assertInstanceOf(UnitInterface::class, $unit);
         self::assertInstanceOf(Service::class, $unit);
-        self::assertEquals('SuccessService', $unit->getName());
+        self::assertSame('SuccessService', $unit->getName());
     }
 
     public function testCreateUnitFromUnsupportedSuffixShouldRaiseException(): void

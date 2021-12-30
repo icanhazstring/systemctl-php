@@ -9,5 +9,4 @@ namespace icanhazstring\SystemCtl\Exception;
  */
 class UnitTypeNotSupportedException extends \Exception
 {
-
 }

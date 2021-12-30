@@ -70,7 +70,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        self::assertEquals('testService', $service->getName());
+        self::assertSame('testService', $service->getName());
     }
 
     /**
@@ -106,7 +106,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        self::assertEquals('testService', $service->getName());
+        self::assertSame('testService', $service->getName());
     }
 
     /**
@@ -125,7 +125,7 @@ class SystemCtlTest extends TestCase
 
         $mount = $systemctl->getMount($unitName);
         $this->assertInstanceOf(Mount::class, $mount);
-        $this->assertEquals($unitName, $mount->getName());
+        $this->assertSame($unitName, $mount->getName());
     }
 
     /**
@@ -161,7 +161,7 @@ class SystemCtlTest extends TestCase
 
         $timer = $systemctl->getTimer($unitName);
         self::assertInstanceOf(Timer::class, $timer);
-        self::assertEquals($unitName, $timer->getName());
+        self::assertSame($unitName, $timer->getName());
     }
 
     /**
@@ -180,7 +180,7 @@ class SystemCtlTest extends TestCase
 
         $socket = $systemctl->getSocket($unitName);
         self::assertInstanceOf(Socket::class, $socket);
-        self::assertEquals($unitName, $socket->getName());
+        self::assertSame($unitName, $socket->getName());
     }
 
     /**
@@ -199,7 +199,7 @@ class SystemCtlTest extends TestCase
 
         $scope = $systemctl->getScope($unitName);
         self::assertInstanceOf(Scope::class, $scope);
-        self::assertEquals($unitName, $scope->getName());
+        self::assertSame($unitName, $scope->getName());
     }
 
     /**
@@ -218,7 +218,7 @@ class SystemCtlTest extends TestCase
 
         $slice = $systemctl->getSlice($unitName);
         $this->assertInstanceOf(Slice::class, $slice);
-        $this->assertEquals($unitName, $slice->getName());
+        $this->assertSame($unitName, $slice->getName());
     }
 
     /**
@@ -237,7 +237,7 @@ class SystemCtlTest extends TestCase
 
         $target = $systemctl->getTarget($unitName);
         $this->assertInstanceOf(Target::class, $target);
-        $this->assertEquals($unitName, $target->getName());
+        $this->assertSame($unitName, $target->getName());
     }
 
     /**
@@ -256,7 +256,7 @@ class SystemCtlTest extends TestCase
 
         $swap = $systemctl->getSwap($unitName);
         $this->assertInstanceOf(Swap::class, $swap);
-        $this->assertEquals($unitName, $swap->getName());
+        $this->assertSame($unitName, $swap->getName());
     }
 
     /**
@@ -275,7 +275,7 @@ class SystemCtlTest extends TestCase
 
         $automount = $systemctl->getAutomount($unitName);
         $this->assertInstanceOf(Automount::class, $automount);
-        $this->assertEquals($unitName, $automount->getName());
+        $this->assertSame($unitName, $automount->getName());
     }
 
     /**
@@ -413,7 +413,7 @@ class SystemCtlTest extends TestCase
         $systemctl = (new SystemCtl())->setCommandDispatcher($commandDispatcherStub->reveal());
 
         $service = $systemctl->getService($unitName);
-        self::assertEquals('testService', $service->getName());
+        self::assertSame('testService', $service->getName());
     }
 
     /**
@@ -432,7 +432,7 @@ class SystemCtlTest extends TestCase
 
         $device = $systemctl->getDevice($unitName);
         self::assertInstanceOf(Device::class, $device);
-        self::assertEquals($unitName, $device->getName());
+        self::assertSame($unitName, $device->getName());
     }
 
     /**
