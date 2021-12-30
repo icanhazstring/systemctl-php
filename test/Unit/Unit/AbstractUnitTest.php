@@ -34,7 +34,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
 
-        self::assertEquals($name, $unit->getName());
+        self::assertSame($name, $unit->getName());
     }
 
     /**
@@ -97,7 +97,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
 
-        self::assertEquals($isMultiInstance, $unit->isMultiInstance());
+        self::assertSame($isMultiInstance, $unit->isMultiInstance());
     }
 
     /**
@@ -177,7 +177,7 @@ class AbstractUnitTest extends TestCase
         $commandDispatcher = $this->prophesize(CommandDispatcherInterface::class);
         $unit = new UnitStub($name, $commandDispatcher->reveal());
 
-        self::assertEquals($instanceName, $unit->getInstanceName());
+        self::assertSame($instanceName, $unit->getInstanceName());
     }
 
     /**

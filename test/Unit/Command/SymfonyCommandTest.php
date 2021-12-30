@@ -38,7 +38,7 @@ class SymfonyCommandTest extends TestCase
         $process->getOutput()->willReturn('test');
 
         $command = new SymfonyCommand($process->reveal());
-        self::assertEquals('test', $command->getOutput());
+        self::assertSame('test', $command->getOutput());
     }
 
     /**
@@ -64,7 +64,7 @@ class SymfonyCommandTest extends TestCase
         $process->isSuccessful()->willReturn(true);
 
         $command = new SymfonyCommand($process->reveal());
-        self::assertEquals($command, $command->run());
+        self::assertSame($command, $command->run());
     }
 
     /**
