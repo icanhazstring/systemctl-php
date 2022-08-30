@@ -39,5 +39,10 @@
         "analyse": "vendor/bin/phpstan analyse --no-progress",
         "test": "vendor/bin/phpunit",
         "cs": "vendor/bin/phpcs"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
