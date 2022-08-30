@@ -66,11 +66,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["7.3", "7.4", "8.0"]
+        php-version: ["7.3", "7.4", "8.0", "8.1"]
         operating-system: ["ubuntu-latest"]
         experimental: [false]
         include:
           - php: "8.0"
+            composer-options: "--ignore-platform-req=php"
+          - php: "8.1"
             composer-options: "--ignore-platform-req=php"
 
     steps:
