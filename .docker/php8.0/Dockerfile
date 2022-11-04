@@ -1,8 +1,8 @@
-FROM php:8.0.0RC2-alpine
+FROM php:8.0-alpine
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 WORKDIR /docker
