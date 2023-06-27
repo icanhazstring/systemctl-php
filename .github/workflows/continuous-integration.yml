@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
       matrix:
         operating-system: ['ubuntu-latest']
-        php-version: ['7.4']
+        php-version: ['8.1']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-version: ['7.4']
+        php-version: ['8.1']
         operating-system: ['ubuntu-latest']
 
     steps:
@@ -67,7 +67,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["7.3", "7.4", "8.0", "8.1"]
+        php-version: ["8.1","8.2"]
         operating-system: ["ubuntu-latest"]
         experimental: [false]
 
@@ -81,12 +81,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           tools: "composer:v2"
 
-      - name: Install dependencies for PHP 7
-        if: matrix.php-version < '8.0'
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
-
-      - name: Install dependencies for PHP 8
-        if: matrix.php-version >= '8.0'
+      - name: Install dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader --ignore-platform-req=php
 
       - name: Execute tests
