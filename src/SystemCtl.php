@@ -93,6 +93,7 @@ class SystemCtl
             ->setTimeout(self::$timeout)
             ->setBinary(self::$binary);
 
+        // @phpstan-ignore-next-line
         return new $unitClass($unitName, $commandDispatcher);
     }
 
